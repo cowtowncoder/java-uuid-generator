@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+ <!-- General information -->
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.safehaus.jug</groupId>
+  <artifactId>jug</artifactId>
+  <packaging>bundle</packaging>
+  <name>Java UUID Generator</name>
+  <version>2.0.2</version>
+  <description>
+JUG is a pure java UUID generator, that can be used either as a component in a bigger application, or as a standalone command line tool.
+JUG generates UUIDs according to the IETF UUID draft specification.
+JUG supports all 3 official UUID generation  methods.
+</description>
+
+ <!-- Contact information -->
+
+  <url>http://github.com/cowtowncoder/java-uuid-generator</url>
+  <issueManagement>
+    <url>
+http://github.com/cowtowncoder/java-uuid-generator/issues
+</url>
+  </issueManagement>
+
+ <!-- Dependency information -->
+ 
+  <dependencies>
+    <dependency> <!-- log4j is optional, but needed for compilation -->
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.13</version>
+      <scope>compile</scope>
+    </dependency>
+    <!-- and for testing, JUnit is needed -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>[4.0.0,5.0.0)</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+ <!-- Also: must specify non-standard source level -->
+  <build>
+    <plugins>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <source>1.2</source>
+            <target>1.1</target>
+          </configuration>
+        </plugin>
+        <plugin><!-- plug-in to attach source bundle in repo -->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+       <!-- Plus, let's make jars OSGi bundles as well  -->
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+<!--version>2.0.0</version-->
+          <extensions>true</extensions>
+          <configuration>
+            <instructions>
+              <Bundle-Name>Jug</Bundle-Name>
+              <Bundle-SymbolicName>${pom.artifactId}</Bundle-SymbolicName>
+              <Bundle-Description>Java UUID Generator
+
+</Bundle-Description>
+              <Bundle-Vendor>FasterXML.com</Bundle-Vendor>
+              <Import-Package>
+</Import-Package>
+              <Private-Package>
+org.safehaus.uuid.ext
+</Private-Package>
+              <Export-Package>
+org.safehaus.uuid
+</Export-Package>
+            </instructions>
+          </configuration>
+       </plugin>
+
+    </plugins>
+  </build>
+
+  <!-- Licensing -->
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>FasterXML.com</name>
+    <url>http://fasterxml.com</url>
+  </organization>
+
+</project>

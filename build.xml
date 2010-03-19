@@ -1,0 +1,296 @@
+<?xml version="1.0" ?>
+
+    <project name="jug" basedir="." default="readme">
+    <property name="ProjectName" value="JUG" />
+    <!-- Source directories -->
+    <property name="SrcDir" location="${basedir}/src" />
+    <property name="LibDir" location="${basedir}/lib" />
+    <property name="JavaSrcDir" location="${SrcDir}/java" />
+    <property name="NativeSrcDir" location="${SrcDir}/c" />
+    <property name="TestSrcDir" location="${SrcDir}/test" />
+    <property name="RelNotesDir" location="${basedir}/release-notes" />
+    <!-- Pre-compiled native code -->
+    <property name="NativeLibDir" location="${basedir}/jug-native" />
+    <!-- Build-related -->
+    <property name="BuildDir" location="${basedir}/build" />
+    <property name="BuildClassesDir" location="${BuildDir}/classes" />
+    <property name="BuildNativeDir" location="${BuildDir}/jug-native" />
+    <!-- Documentation -->
+    <property name="DocDir" location="${basedir}/doc" />
+    <property name="JavaDocDir" location="${basedir}/javadoc" />
+    <!-- Test suite -->
+    <property name="TestDir" location="${basedir}/test" />
+    <property name="TestBuildDir" location="${TestDir}/build" />
+    <property name="TestResultsDir" location="${TestDir}/results" />
+    <property name="TestXmlResultsDir" location="${TestResultsDir}/xml" />
+    <!-- Distribution -->
+    <property name="DistDir" location="${basedir}/dist" />
+
+    <!-- Version information -->
+
+    <!-- spec version -->
+    <property name="UUID_TITLE" value="UUID specification" />
+    <property name="UUID_VERSION" value="1.0" />
+    <property name="UUID_VENDOR" value="http://hegel.ittc.ku.edu/topics/internet/internet-drafts/draft-l/draft-leach-uuids-guids-01.txt" />
+    <!-- JUG version -->
+    <property name="IMPL_TITLE" value="Java Uuid/guid Generator" />
+    <property name="IMPL_VERSION" value="2.0.1" />
+    <property name="IMPL_VENDOR" value="www.safehaus.org" />
+
+    <!-- jars needed for compilation -->
+    <path id="classpath">
+        <!-- log4j needed for compilation optional logger interface -->
+        <fileset dir="${LibDir}" includes="log4j*.jar" />
+    </path>
+
+    <!-- Source files to include in source packages (tar, zip) -->
+    <patternset id="dist-src-files">
+          <include name="build.xml" />
+          <include name="src/**/*.java" />
+          <include name="src/java/**/*.html" />
+          <include name="src/c/*.c" />
+          <include name="src/c/makefile" />
+          <include name="src/maven/*.pom" />
+          <include name="src/**/README*" />
+          <include name="release-notes/*" />
+          <include name="release-notes/asl/*" />
+          <include name="release-notes/lgpl/*" />
+    </patternset>
+
+    <!--*********************************************************************-->
+    <!-- The readme target shows a brief description of all targets          -->
+    <!-- supported by this ant build file                                    -->
+    <!--*********************************************************************-->
+    <target name="readme">
+        <echo message = "${ProjectName}'s Available Targets" />
+        <echo message = "---------------------------------------------------" />
+        <echo message = "1)  readme - Displays this information (default target)." />
+        <echo message = "2)  clean - Remove any generated files/directories." />
+        <echo message = "3)  compile - Compile all non-test JUG code." />
+        <echo message = "4)  jars - Compile and create jars for non-test JUG code." />
+        <echo message = "5)  javadoc - Generate JUG code documentation." />
+        <echo message = "6)  dist - Create all jars and generate javadocs (calls jars and javadoc)" />
+        <echo message = "7)  compile_test - Compile JUG code and test code" />
+        <echo message = "       for JUnit tests." />
+        <echo message = "8)  test - Run JUnit tests." />
+        <echo message = "       Reports results and generates html output." />
+        <echo message = "9) all - Run the clean, dist and test targets." />  
+    </target>
+
+    <target name="prepare">
+        <!-- make build directories -->
+        <mkdir dir="${BuildDir}" />
+        <mkdir dir="${BuildClassesDir}" />
+        <mkdir dir="${BuildNativeDir}" />
+
+        <!-- make docs directories -->
+        <mkdir dir="${DocDir}" />
+        <mkdir dir="${JavaDocDir}" />
+
+        <!-- make test output directories -->
+        <mkdir dir="${TestDir}" />
+        <mkdir dir="${TestBuildDir}" />
+        <mkdir dir="${TestResultsDir}" />
+        <mkdir dir="${TestXmlResultsDir}" />
+
+        <!-- and finally distribution dir -->
+        <mkdir dir="${DistDir}" />
+    </target>
+
+    <!--*********************************************************************-->
+    <!-- clean - Removes all generated files/directories.                    -->
+    <!--*********************************************************************-->
+    <target name="clean">
+        <delete dir="${BuildDir}"/>
+        <delete dir="${DocDir}"/>
+        <delete dir="${TestDir}"/>
+        <delete dir="${DistDir}"/>
+    </target>
+
+    <target name="compile_java" depends="prepare">
+        <javac SrcDir="${JavaSrcDir}" destdir="${BuildClassesDir}"
+         source="1.2" target="1.1"
+         debug="true">
+            <include name="com/ccg/net/ethernet/BadAddressException.java" />
+            <include name="com/ccg/net/ethernet/EthernetAddress.java" />
+            <include name="org/safehaus/uuid/*.java" />
+            <include name="org/safehaus/uuid/ext/*.java" />
+            <include name="test/*.java" />
+            <classpath refid="classpath" />
+        </javac>
+    </target>
+
+    <!-- Convenience target for easier invocation... -->
+    <target name="compile" depends="compile_java">
+    </target>
+
+    <target name="compile_c" depends="prepare">
+      <!-- To be able to test native code, let's copy JNI code -->
+      <copy todir="${BuildNativeDir}">
+        <fileset dir="${NativeLibDir}">
+          <include name="*.dll"/>
+          <include name="*.jnilib"/>
+          <include name="*.so"/>
+        </fileset>
+      </copy>
+    </target>
+
+    <target name="jars" depends="jar.asl, jar.lgpl, jar.native"
+    />
+
+    <target name="jar.asl" depends="compile_java">
+        <jar jarfile="${BuildDir}/jug-asl-${IMPL_VERSION}.jar" filesonly="true">
+          <manifest>
+            <attribute name="Main-class" value="org.safehaus.uuid.Jug" />
+            <attribute name="Built-By" value="${user.name}"/>
+            <attribute name="Specification-Title"   value="${UUID_TITLE}"/>
+            <attribute name="Specification-Version" value="${UUID_VERSION}"/>
+            <attribute name="Specification-Vendor"  value="${UUID_VENDOR}"/>
+            <attribute name="Implementation-Title"   value="${IMPL_TITLE}"/>
+            <attribute name="Implementation-Version" value="${IMPL_VERSION}"/>
+            <attribute name="Implementation-Vendor"  value="${IMPL_VENDOR}"/>
+          </manifest>
+          <fileset dir="${BuildClassesDir}">
+             <include name="org/safehaus/uuid/*.class" />
+             <include name="org/safehaus/uuid/ext/*.class" />
+             <include name="com/ccg/net/ethernet/**" />
+          </fileset>
+          <fileset dir="${RelNotesDir}/asl">
+            <include name="LICENSE" />
+            <include name="NOTICE" />
+            <include name="ASL2.0" />
+          </fileset>
+        </jar>
+    </target> 
+
+    <target name="jar.lgpl" depends="compile_java">
+        <jar jarfile="${BuildDir}/jug-lgpl-${IMPL_VERSION}.jar" filesonly="true">
+          <manifest>
+            <attribute name="Main-class" value="org.safehaus.uuid.Jug" />
+            <attribute name="Built-By" value="${user.name}"/>
+            <attribute name="Specification-Title"   value="${UUID_TITLE}"/>
+            <attribute name="Specification-Version" value="${UUID_VERSION}"/>
+            <attribute name="Specification-Vendor"  value="${UUID_VENDOR}"/>
+            <attribute name="Implementation-Title"   value="${IMPL_TITLE}"/>
+            <attribute name="Implementation-Version" value="${IMPL_VERSION}"/>
+            <attribute name="Implementation-Vendor"  value="${IMPL_VENDOR}"/>
+          </manifest>
+          <fileset dir="${BuildClassesDir}">
+             <include name="org/safehaus/uuid/*.class" />
+             <include name="org/safehaus/uuid/ext/*.class" />
+             <include name="com/ccg/net/ethernet/**" />
+          </fileset>
+          <fileset dir="${RelNotesDir}/lgpl">
+            <include name="LICENSE" />
+            <include name="NOTICE" />
+            <include name="LGPL2.1" />
+          </fileset>
+        </jar>
+    </target> 
+
+    <!-- Need to copy native code libs -->
+    <target name="jar.native" depends="compile_c">
+        <zip zipfile="${BuildDir}/jug-native.zip" filesonly="true">
+            <zipfileset dir="." filemode="755">
+                <include name="jug-native/*.dll"/>
+                <include name="jug-native/*.jnilib"/>
+                <include name="jug-native/*.so"/>
+            </zipfileset>
+        </zip>
+    </target>
+
+    <target name="javadoc" depends="compile_java">
+        <!-- Build a dirpath that contains just the "source" tree -->
+        <javadoc windowtitle="${ProjectName}"
+            destdir="${JavaDocDir}" author="true" version="true">
+            <classpath refid="classpath" />
+            <packageset dir="${JavaSrcDir}" defaultexcludes="yes">
+                <include name="com/ccg/net/ethernet/**" />
+                <include name="org/safehaus/uuid/**" />
+            </packageset>
+        </javadoc>
+    </target> 
+
+    <target name="dist" depends="jars,javadoc">
+       <!-- First, let's copy the binary jars to dist -->
+       <copy todir="${DistDir}">
+         <fileset dir="${BuildDir}">
+           <include name="jug*.jar" />
+           <include name="jug-native.zip" />
+         </fileset>
+       </copy>
+       <!-- Then let's create the source distribution tar package -->
+       <tar basedir="${basedir}" destfile="${DistDir}/jug-src.tar"
+        includes="build.xml" >
+          <patternset refid="dist-src-files" />
+       </tar>
+       <gzip zipfile="${DistDir}/jug-src.tar.gz" src="${DistDir}/jug-src.tar" />
+       <!-- as well as zip
+          -->
+       <zip basedir="${basedir}" destfile="${DistDir}/jug-src.zip">
+          <patternset refid="dist-src-files" />
+       </zip>
+
+       <!-- Then copy javadocs -->
+       <copy todir="${DistDir}">
+         <fileset dir="${JavaDocDir}/.." includes="javadoc/**/*" />
+       </copy>
+       <!-- Plus, let's also just copy README and compatibility files, in
+            addition to being included in source package
+         -->
+       <copy todir="${DistDir}" >
+            <fileset dir="." includes="release-notes/**" />
+       </copy>
+       <!-- And also additional Maven stuff -->
+       <copy todir="${DistDir}">
+            <fileset dir="${SrcDir}/maven" includes="*.pom" />
+            <globmapper from="*.pom" to="*-${IMPL_VERSION}.pom" />
+            <filterset>
+              <filter token="VERSION" value="${IMPL_VERSION}" />
+            </filterset>
+       </copy>
+    </target>
+ 
+    <target name="all" depends="clean,dist,test">
+        <!-- This target simply depends on others to do it's job -->
+    </target>
+
+    <!--*********************************************************************-->
+    <!-- Tasks from here down are in support of junit tests.                 -->
+    <!--*********************************************************************-->
+    <target name="junit">
+        <available property="junit.present" classname="junit.framework.TestCase" />
+    </target>
+
+    <target name="compile_test" depends="junit, jars" if="junit.present">
+        <javac SrcDir="${TestSrcDir}" destdir="${TestBuildDir}" debug="true">
+            <include name="**/*.java" />
+            <classpath>
+                <pathelement location="${BuildClassesDir}" />
+            </classpath>     
+        </javac>
+    </target>
+
+    <target name="test" depends="compile_test" if="junit.present">
+        <junit fork="yes" printsummary="yes" haltonfailure="no">
+            <batchtest fork="yes" todir="${TestXmlResultsDir}">
+                <fileset dir="${TestBuildDir}">
+                    <include name="**/*Test.class"/>
+                </fileset>
+            </batchtest>
+            <formatter type="xml" />
+            <classpath>
+              <pathelement location="${BuildClassesDir}" />
+              <pathelement location="${TestBuildDir}" />
+            </classpath>     
+        </junit>
+
+        <junitreport todir="${TestResultsDir}">
+            <fileset dir="${TestXmlResultsDir}">
+                <include name="TEST-*.xml" />
+            </fileset>
+            <report todir="${TestResultsDir}" />
+        </junitreport>
+    </target>
+
+</project>
