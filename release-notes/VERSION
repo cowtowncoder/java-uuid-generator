@@ -1,0 +1,94 @@
+Version: 2.0.0
+
+Release date: 29-Oct-2005
+
+Description:
+  The official 2.0 release. No functional changes since rc6, just
+  documentation updates.
+
+  
+History:
+  2.0-rc6: (25-Sep-2005):
+
+  Added simple logger wrappers for log4j and java.util.logging: now it
+  should be trivial to make JUG use either of these logging sub-systems,
+  when integrating it to an existing system.
+
+  2.0-rc5: (05-Sep-2005):
+
+  Integrated non-NetBIOS-based JNI Windows code, contributed by Klaus R.
+  Also, improved src/c/makefile a bit, which lead to name change of the
+  JNI libraries (due to my inexperience with make files, had to make some
+  system-dependant parts lower-case).
+
+  2.0-rc4: (16-Aug-2005),
+  2.0-rc3: (09-Aug-2005)
+    Cleanup; integrating last minor fixes to JNI code, compiled macos and linux
+    modules, added missing classes to jar.
+
+  2.0-rc2:
+    New functionality:
+    - Simple configurable logging sub-system
+    - External synchronization for time-stamp persistence, as well as
+      file-locking based multi-JVM-safe locking. Can prevent running
+      Jug from multiple JVMs, as well as all are configured to properly
+      use shared locking file(s).
+
+  2.0-rc1:
+    Changes:
+     - Renamed package 'org.doomdark.uuid' to 'org.safehaus.uuid' as part of
+       the transition to become one of official Safehaus projects (at
+       http://jug.safehaus.org).
+    Fixes:
+     - JNI fix on Linux code: now properly frees socket data structure on
+       all use cases
+     - Fix to MacOsX (and thus BSD) code: will not get into infinite loop
+       when trying to access multiple interfaces.
+
+  1.1.2: Minor fix:
+     - Added Main-Class definition to jar manifest, to allow normal invocation
+       (of Jug command-line functionality) from jar.
+
+  1.1.1: Minor fixes:
+     - Added FreeBSD recognition check suggested by Jonas Fügedi.
+
+  1.1: Better native support, full unit test suite.
+     - Fixed a bug in Windows MAC address access, which would cause
+       infinite loop under some conditions on Win9x/2K/XP.
+     - Added FreeBSD/x86 native code.
+     - Added full unit test suite.
+     - Fixed a bug in dummy ethernet broadcast generation code.
+     - Changed API to allow using any Random implementation, not just
+       SecureRandom or its subclasses.
+
+  1.0.3: Better native support, a minor bugfix.
+     - Bug fix to UUID.java class (another bug in toByteArray(),
+       or potentially regressed first one?)
+     - Mac OS X native MAC address access support (for primary
+       interface)
+     - Small improvements Ant build definitions (need to include targets
+       for doing JavaDocs and source distribution
+     - Added BUGS file that contains known problems.
+
+  1.0.2: Minor updates:
+     - Native code can now be loaded either from application specific
+       location (default case, supported since 1.0.0), or from
+	   system-dependant standard lib location (new to 1.0.2)
+     - Trying to add ant build support to replace make. Not yet
+	   fully done.
+
+  1.0.1: Minor fixes:
+	- UUID.java class (bug in toByteArray() fixed)
+	- Updated README file to contain reference to a new IETF draft:
+
+	  http://www.ietf.org/internet-drafts/draft-mealling-uuid-urn-00.txt
+
+	  which describes UUIDs as well as presents a suggested way for
+	  'encapsulating' UUIDs in a URN name space.
+
+  1.0.0: Added native modules for obtaining Ethernet MAC address (see
+	CREDITS for details about source of these sources)
+
+-----
+Note: release notes for versions prior to 1.0 removed; refer to version 1.1.2
+for those versions for details.

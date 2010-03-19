@@ -1,0 +1,80 @@
+== "JUG" - Java Uuid Generator ==
+
+=== Generic ===
+
+
+JUG can be used as a command-line tool (via class org.safehaus.uuid.Jug),
+or as a pluggable component.
+
+
+=== Pluggable component ===
+
+
+As a pluggable component, UUIDs are created through factory methods
+in org.safehaus.uuid.UUIDGenerator; the JVM-wide singleton UUIDGenerator
+instance is gotten via UUIDGenerator.getInstance(). UUIDGenerator
+is singleton to minimize chance of getting duplicate UUIDs when using
+time-based UUID generation methods. If separate JVMs are used (with
+their own UUIDGenerators) it's best to either not use time-based
+UUID generation, or to give them separate ethernet addresses (possibly
+including using one or more dummy addresses).
+
+UUIDs can be converted to and from strings, can be compared for
+equality, and should hash nicely so they can be used as keys
+in hash tables (same applies to class EthernetAddress).
+
+The trickiest part about creating time-based UUIDs is usually how to obtain
+the ethernet address; this is briefly covered in javadocs for class
+org.safehaus.uuid.NativeInterfaces.
+
+
+=== Running unit tests ===
+
+
+Components can be unit tested using 'ant' build tool (which is also needed
+for compiling JUG from sources). Use 'ant' without arguments to get
+listing of available options, including how to run unit tests.
+
+Before submitting patches, unit tests need to be run succesfully,
+to minimize risk of unintended bugs. Similarly, for all new functionality
+(if any), new unit tests should be added.
+
+
+=== Command-line tool ===
+
+
+To get list of options and arguments, you can start the command line
+tool without any arguments, something like:
+
+ java -jar jug.jar
+
+or
+
+ java -cp jug.jar org.safehaus.uuid.Jug
+
+This lists actual usage information.
+
+When used as a command-line tool there are some caveats, because of
+the way a new JVM is usually instantiated between calls:
+
+* Generating the first UUID is usually remarkably slow. This is because
+  a new secure random number generator is initialized at that time.
+  Subsequent calls are faster, but this has to be done using --count
+  command-line argument, to create multiple UUIDs with same invocation.
+* Generating time-based UUIDs is not as secure due to JVM being re-initialized
+  between calls. However, as long as timer resolution JVM has is granular
+  enough, this shouldn't be a problem in practice; clock should have
+  different value between invocations (and inside one invocation clock
+  counter is used to guarantee uniqueness).
+* If you want to generate UUIDs that can be 'verified', use either
+  name-based UUID generation, or tagURI-based UUID generation without
+  time stamps. These will give reproducible UUIDs (ie. given same
+  name and namespace options, same UUID is returned). In this case
+  UUID generation is actually just used to produce 128-bit hash value
+  of name and namespace arguments.
+
+If you want more information about specific configuration of UUID
+generation, you can use --version - option with command-line tool.
+This will output additional information about random number
+generator, hashing algorithm and the dummy ethernet address
+used (wherever applicable).

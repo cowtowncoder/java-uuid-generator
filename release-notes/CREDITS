@@ -1,0 +1,100 @@
+Here are people who have contributed to JUG development:
+
+Tatu Saloranta, tatu.saloranta@iki.fi: Author
+
+Leonid Kunin: suggested adding 2 constructors (that were missing);
+	needed when storing binary representations of UUIDs
+	(added to v0.9.2)
+    [v 0.9.2]
+
+Paul Blankenbaker: provided the native code for accessing Ethernet
+	MAC-addresses (on linux/x86, Solaris/sparc, Windows); first
+	included in 1.0.0 release.
+    [v 1.0.0]
+
+Gernot Koller: pointed out a bug in UUID.toByteArray() method; was
+	not using offset (fixed in 1.0.1)
+    [v 1.0.1]
+
+Dominique Jean-Prost: Suggested that there should be alternate method
+    	of loading native libs (implemented in 1.0.2).
+	Also pointed out that method 'setLibDir' should be public, not
+     	protected (fixed in 1.0.2).
+    [v 1.0.2]
+
+Jeff Woodward: Pointed and fixed a bug in UUID.toByteArray() method
+   (not sure if Gernot's fix was somehow overwritten in codebase
+   or what...).
+  [v 1.0.3]
+
+D.J Hagberg: Submitted native code to use with Mac OS X, to use for
+   accessing MAC address of primary network interface (code should
+   also work with *BSDs?).
+   Also contributed improvements to Ant's build.xml.
+   [v 1.0.3]
+
+Göran Löwkrantz: Submitted native code for FreeBSD/x86
+  [v 1.1]
+
+Eric Bie: Wrote full unit test suite, using JUnit! Really REALLY
+   useful addition (old ad hoc tests needed replacement).
+   Also cleaned up ant build file significantly.
+  [v 1.1]
+
+Bill Sarra: Pointed out and fix Windows native code bug that would
+   under some circumstances cause infinite looping when trying to
+   access MAC addresses of all interfaces.
+  [v 1.1]
+
+Ralf S. Engelschall: Pointed out and fixed a bug in generating
+  dummy broadcast ethernet addresses; interpretation of LSB/MSB
+  was incorrect with respect to ethernet broadcast & structs.
+  [v 1.1] 
+ 
+Wolfgang Hoschek: Suggested useful improvement to random UUIDs;
+  there's no requirement for API to enforce use of SecureRandom.
+  Thus, code now only expects Random, although still creates
+  SecureRandom if no explicit generator is passed. This can help
+  in reducing startup time of generator, as well as max. rate
+  of UUID generation, depending on how quickly Random instance
+  can be initialized & generates new numbers.
+
+Jonas Fügedi: Contributed the patch to check for FreeBSD platform
+  (which actually was part of an earlier patch that I somehow had
+   managed not to get in... :-/ )
+  [v 1.1.1]
+
+David Pawson: Pointed out that the jar file was missing the necessary
+  Main-Class definition, which prevented it from being invoked from
+  command line using -jar switch.
+  [v 1.1.2]
+
+Pekka Enberg: Pointed out a bug in Linux JNI code; the socket was not
+  properly closed
+  [v 2.0.0]
+
+Thomas Wernitz: Pointed out a problem with MacOS JNI code; wasn't
+  properly looping through the interfaces
+  [v 2.0.0]
+
+Asher Glynn: Suggested usefulness of external file-based synchronization,
+  to ensure that system clock moving backwards during reboot does not
+  compromise uniqueness of produced UUIDs (which is obviously also mentioned
+  in UUID specs, but previously not implemented in Jug).
+  [v 2.0.0]
+
+Wim Deblauwe: Pointed out problems with 2.0rc3 jars (missing
+  com.ccg.net.ethernet package, no downloadable JNI code).
+  [v 2.0rc3]
+
+Klaus Rheinwald: Contributed non-netbios Windows JNI code for accessing
+  Ethernet addresses
+  [v 2.0rc5]
+
+François Berenger:
+  Pointed out a method signature problem that prevent unit test compilation
+  [v2.1]
+
+Tarusawa Hiroyuki:
+  Reported missing Maven(2) jars for JUG.
+

@@ -1,0 +1,33 @@
+== "JUG" - Java Uuid Generator ==
+
+JUG is a set of Java classes for generating UUIDs. It generates
+UUIDs according to the UUID specification (IETF draft), found 
+(for example) at:
+
+http://www1.ics.uci.edu/~ejw/authoring/uuid-guid/draft-leach-uuids-guids-01.txt
+[draft id being '<draft-leach-uuids-guids-01.txt>']
+
+Alternatively you can also read newer IETF draft that described URN
+name space for UUIDs, as it contains UUID definition:
+
+http://www.ietf.org/internet-drafts/draft-mealling-uuid-urn-00.txt
+
+JUG can be used as a command-line tool (via class org.doomdark.uuid.Jug),
+or as a pluggable component; see file USAGE for details.
+
+JUG was created by Tatu Saloranta (<tatu.saloranta@iki.fi>).
+Code portions related to native access of Ethernet interfaces
+(code under jug-native and com/ccg) were written by
+Paul Blankenbaker (Windows, Linux, Solaris) and DJ Hagberg (Mac OS X).
+In addition, many other individuals have helped fix bugs and implement
+new feeatures: please see CREDITS for the complete list.
+
+Jug licensing is explained in file LICENSE; basically you have either
+a choice of oneof 2 common Open Source licenses (when downloading source
+package); or choose one of these licenses (when downloading specific jar
+file).
+Please read LICENSE to understand requirements of the license you choose.
+
+Contributions to the source code need to be made as specified by
+the License; so that they can be distributed according to the
+License terms.

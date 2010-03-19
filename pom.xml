@@ -64,6 +64,16 @@ http://github.com/cowtowncoder/java-uuid-generator/issues
             </execution>
           </executions>
         </plugin>
+
+        <!-- javadocs? yes please -->
+       <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-javadoc-plugin</artifactId>
+         <version>2.6.1</version>
+         <configuration>
+         </configuration>
+       </plugin>
+
        <!-- Plus, let's make jars OSGi bundles as well  -->
         <plugin>
           <groupId>org.apache.felix</groupId>
@@ -75,13 +85,15 @@ http://github.com/cowtowncoder/java-uuid-generator/issues
               <Bundle-Name>Jug</Bundle-Name>
               <Bundle-SymbolicName>${pom.artifactId}</Bundle-SymbolicName>
               <Bundle-Description>Java UUID Generator
-
 </Bundle-Description>
               <Bundle-Vendor>FasterXML.com</Bundle-Vendor>
               <Import-Package>
 </Import-Package>
+              <DynamicImport-Package>
+org.apache.log4j
+</DynamicImport-Package>
               <Private-Package>
-org.safehaus.uuid.ext
+org.safehaus.uuid.ext, com.ccg.net.ethernet
 </Private-Package>
               <Export-Package>
 org.safehaus.uuid
@@ -106,5 +118,54 @@ org.safehaus.uuid
     <name>FasterXML.com</name>
     <url>http://fasterxml.com</url>
   </organization>
+
+  <!-- 18-Mar-2010, tatu: Let's publish via Codehaus repo
+    -->
+  <repositories>
+    <repository>
+      <id>codehaus</id>
+      <name>Codehaus</name>
+      <layout>default</layout>
+      <url>http://repository.codehaus.org</url>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+    </repository>
+    <repository>
+      <id>maven</id>
+      <name>Maven</name>
+      <layout>default</layout>
+      <url>http://repo1.maven.org/maven2</url>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+    </repository>
+
+  </repositories>
+
+  <!-- Let's also try to automate deployments?
+       18-Mar-2010, tatu: For now let's actually import via StaxMate
+           section... see if that works ok.
+    -->
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>codehaus-release</id>
+      <name>Codehaus Maven2 Repository</name>
+      <url>dav:https://dav.codehaus.org/repository/staxmate</url>
+      <layout>default</layout>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>true</uniqueVersion>
+      <id>codehaus-snapshot</id>
+      <name>Codehaus Snapshots</name>
+      <url>dav:https://dav.codehaus.org/snapshots.repository/staxmate</url>
+      <layout>default</layout>
+    </snapshotRepository>
+  </distributionManagement>
 
 </project>
