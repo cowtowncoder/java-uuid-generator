@@ -15,6 +15,13 @@ JUG generates UUIDs according to the IETF UUID draft specification.
 JUG supports all 3 official UUID generation  methods.
 </description>
 
+  <prerequisites>
+    <maven>2.0.9</maven>
+  </prerequisites>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
  <!-- Contact information -->
 
   <url>http://github.com/cowtowncoder/java-uuid-generator</url>
