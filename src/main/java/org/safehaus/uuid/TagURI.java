@@ -104,7 +104,6 @@ public class TagURI
 	};
 
 	Calendar c = null;
-	String auth = null;
 	for (int i = 0; i < 4; ++i) {
 	    // Let's just change the date & URL a bit:
 	    switch (i) {

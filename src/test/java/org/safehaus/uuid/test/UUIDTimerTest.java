@@ -70,7 +70,7 @@ public class UUIDTimerTest extends TestCase
         // try passing a null SecureRandom argument
         try
         {
-            UUIDTimer uuid_timer = new UUIDTimer((SecureRandom)null);
+            /*UUIDTimer uuid_timer =*/ new UUIDTimer((SecureRandom)null);
             // if we reach here we didn't catch what we should have
             fail("Expected exception not caught");
         }

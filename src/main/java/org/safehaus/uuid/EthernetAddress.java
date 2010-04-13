@@ -367,11 +367,9 @@ public class EthernetAddress
         System.out.println("EthernetAddress.main, test:");
         System.out.println("---------------------------");
 
-        int len;
         long rnd = 0;
         if (args == null || args.length == 0) {
             System.out.println("[no address passed, using a random address]");
-            len = 1;
             rnd = System.currentTimeMillis()
                 ^ (long) (Math.random() * (double) 0x100000000L);
             args = new String[] { new EthernetAddress(rnd).toString() };

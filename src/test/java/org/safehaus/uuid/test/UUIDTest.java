@@ -81,7 +81,7 @@ public class UUIDTest extends TestCase
         // passing null
         try
         {
-            UUID uuid = new UUID((byte[])null);
+            /*UUID uuid =*/ new UUID((byte[])null);
             fail("Expected exception not caught");
         }
         catch (NullPointerException ex)
@@ -96,7 +96,7 @@ public class UUIDTest extends TestCase
         // passing array that is too small
         try
         {
-            UUID uuid = new UUID(new byte[UUID_BYTE_ARRAY_LENGTH - 1]);
+            /*UUID uuid =*/ new UUID(new byte[UUID_BYTE_ARRAY_LENGTH - 1]);
             fail("Expected exception not caught");
         }
         catch (ArrayIndexOutOfBoundsException ex)
@@ -141,7 +141,7 @@ public class UUIDTest extends TestCase
         // passing null and 0
         try
         {
-            UUID uuid = new UUID((byte[])null, 0);
+            /*UUID uuid =*/ new UUID((byte[])null, 0);
             fail("Expected exception not caught");
         }
         catch (NullPointerException ex)
@@ -156,7 +156,7 @@ public class UUIDTest extends TestCase
         // passing an array that is too small
         try
         {
-            UUID uuid = new UUID(new byte[UUID_BYTE_ARRAY_LENGTH - 1], 0);
+            /*UUID uuid =*/ new UUID(new byte[UUID_BYTE_ARRAY_LENGTH - 1], 0);
             fail("Expected exception not caught");
         }
         catch (ArrayIndexOutOfBoundsException ex)
@@ -171,7 +171,7 @@ public class UUIDTest extends TestCase
         // passing an index that is negative
         try
         {
-            UUID uuid = new UUID(new byte[UUID_BYTE_ARRAY_LENGTH], -1);
+            /*UUID uuid =*/ new UUID(new byte[UUID_BYTE_ARRAY_LENGTH], -1);
             fail("Expected exception not caught");
         }
         catch (ArrayIndexOutOfBoundsException ex)
@@ -186,7 +186,7 @@ public class UUIDTest extends TestCase
         // passing an index that is too big
         try
         {
-            UUID uuid =
+            /*UUID uuid =*/
                 new UUID(
                     new byte[UUID_BYTE_ARRAY_LENGTH], UUID_BYTE_ARRAY_LENGTH);
             fail("Expected exception not caught");
@@ -204,7 +204,7 @@ public class UUIDTest extends TestCase
         // but without enough bytes to read UUID_BYTE_ARRAY_LENGTH
         try
         {
-            UUID uuid = new UUID(new byte[UUID_BYTE_ARRAY_LENGTH], 1);
+            /*UUID uuid =*/ new UUID(new byte[UUID_BYTE_ARRAY_LENGTH], 1);
             fail("Expected exception not caught");
         }
         catch (ArrayIndexOutOfBoundsException ex)
@@ -270,7 +270,7 @@ public class UUIDTest extends TestCase
         // test a null string case
         try
         {
-            UUID uuid = new UUID((String)null);
+            /*UUID uuid =*/ new UUID((String)null);
             fail("Expected exception not caught");
         }
         catch (NullPointerException ex)
@@ -553,8 +553,6 @@ public class UUIDTest extends TestCase
                     x.equals(w));
 
         // test refelexivity
-        assertTrue("x == x didn't return true",
-                    x == x);
         assertTrue("x.equals(x) didn't return true",
                     x.equals(x));
         
@@ -680,8 +678,6 @@ public class UUIDTest extends TestCase
         // execution of an application to another execution of the
         // same application
         UUID x = new UUID(VALID_UUID_BYTE_ARRAY);
-        assertTrue("x == x didn't return true",
-                    x == x);
         assertTrue("x.equals(x) didn't return true",
                     x.equals(x));
         assertEquals("x.hashCode() didn't equal x.hashCode()",
@@ -771,7 +767,7 @@ public class UUIDTest extends TestCase
         // to check that if a UUID is created and desc caching is set false
         // then two different calls to toString give 2 strings which are !=
         UUID uuid = new UUID(VALID_UUID_BYTE_ARRAY);
-        uuid.setDescCaching(false);
+        UUID.setDescCaching(false);
         
         String x = uuid.toString();
         String y = uuid.toString();
@@ -781,7 +777,7 @@ public class UUIDTest extends TestCase
                     x,
                     y);
         
-        uuid.setDescCaching(true);
+        UUID.setDescCaching(true);
         String a = uuid.toString();
         String b = uuid.toString();
         assertTrue("a == b was not true",
@@ -955,7 +951,7 @@ public class UUIDTest extends TestCase
             UUID test_uuid = new UUID();
             test_uuid.toByteArray((byte[])null, 0);
             
-            UUID uuid = UUID.valueOf((byte[])null, 0);
+            /*UUID uuid = */UUID.valueOf((byte[])null, 0);
             
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
@@ -1192,7 +1188,7 @@ public class UUIDTest extends TestCase
         // first, passing null
         try
         {
-            UUID uuid = UUID.valueOf((byte[])null);
+            /*UUID uuid =*/ UUID.valueOf((byte[])null);
             
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
@@ -1209,7 +1205,7 @@ public class UUIDTest extends TestCase
         // now an array that is too small
         try
         {
-            UUID uuid = UUID.valueOf(new byte[UUID_BYTE_ARRAY_LENGTH - 1]);
+            /*UUID uuid =*/ UUID.valueOf(new byte[UUID_BYTE_ARRAY_LENGTH - 1]);
             
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
@@ -1255,7 +1251,7 @@ public class UUIDTest extends TestCase
         // first, passing null and 0
         try
         {
-            UUID uuid = UUID.valueOf((byte[])null, 0);
+            /*UUID uuid =*/ UUID.valueOf((byte[])null, 0);
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
         }
@@ -1271,7 +1267,7 @@ public class UUIDTest extends TestCase
         // now an array that is too small
         try
         {
-            UUID uuid = UUID.valueOf(new byte[UUID_BYTE_ARRAY_LENGTH - 1], 0);
+            /*UUID uuid =*/ UUID.valueOf(new byte[UUID_BYTE_ARRAY_LENGTH - 1], 0);
             
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
@@ -1288,7 +1284,7 @@ public class UUIDTest extends TestCase
         // now an index that is negative
         try
         {
-            UUID uuid = UUID.valueOf(new byte[UUID_BYTE_ARRAY_LENGTH], -1);
+            /*UUID uuid =*/ UUID.valueOf(new byte[UUID_BYTE_ARRAY_LENGTH], -1);
             
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
@@ -1305,7 +1301,7 @@ public class UUIDTest extends TestCase
         // now an index that is too big
         try
         {
-            UUID uuid =
+            /*UUID uuid =*/
                 UUID.valueOf(
                     new byte[UUID_BYTE_ARRAY_LENGTH], UUID_BYTE_ARRAY_LENGTH);
             
@@ -1325,7 +1321,7 @@ public class UUIDTest extends TestCase
         // but without enough bytes to read UUID_BYTE_ARRAY_LENGTH
         try
         {
-            UUID uuid = UUID.valueOf(new byte[UUID_BYTE_ARRAY_LENGTH], 1);
+            /*UUID uuid =*/ UUID.valueOf(new byte[UUID_BYTE_ARRAY_LENGTH], 1);
             
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
@@ -1389,7 +1385,7 @@ public class UUIDTest extends TestCase
         // test a null string case
         try
         {
-            UUID uuid = UUID.valueOf((String)null);
+           /* UUID uuid =*/ UUID.valueOf((String)null);
             fail("Expected exception not caught");
         }
         catch (NullPointerException ex)
@@ -1425,7 +1421,7 @@ public class UUIDTest extends TestCase
     {
         try
         {
-            UUID uuid = new UUID(uuidString);
+            /*UUID uuid =*/ new UUID(uuidString);
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
         }
@@ -1460,7 +1456,7 @@ public class UUIDTest extends TestCase
     {
         try
         {
-            UUID uuid = UUID.valueOf(uuidString);
+            /*UUID uuid =*/ UUID.valueOf(uuidString);
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
         }
@@ -1592,8 +1588,7 @@ public class UUIDTest extends TestCase
         'o', 'n', ' ', 't', 'h', 'e', ' ', 'e', 'n', 'd',
         ' ', 'a', 's', ' ', 'w', 'e', 'l', 'l'
     };
-    private static final String ANOTHER_VALID_UUID_STRING =
-        "4aba2d17-08c9-4376-92fe-4cdefbba5a1c";
+    //private static final String ANOTHER_VALID_UUID_STRING = "4aba2d17-08c9-4376-92fe-4cdefbba5a1c";
     private static final byte[] ANOTHER_VALID_UUID_BYTE_ARRAY =
     {
         (byte)0x4a, (byte)0xba, (byte)0x2d, (byte)0x17,
@@ -1614,8 +1609,7 @@ public class UUIDTest extends TestCase
     };
     
     // dummy DCE based UUID string since I have no real examples to use
-    private static final String DCE_BASED_UUID_STRING =
-       "01234567-0123-2000-8000-0123456789ab";
+    //private static final String DCE_BASED_UUID_STRING = "01234567-0123-2000-8000-0123456789ab";
     private static final byte[] DCE_BASED_UUID_BYTE_ARRAY =
     {
         (byte)0x01, (byte)0x23, (byte)0x45, (byte)0x67,

@@ -22,8 +22,6 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import java.util.Arrays;
-
 import org.safehaus.uuid.EthernetAddress;
 
 /**
@@ -35,18 +33,15 @@ import org.safehaus.uuid.EthernetAddress;
 public class EthernetAddressPackageAccessTest extends TestCase
 {
     // constant defining the length of a valid ethernet address byte array
-    private static final int ETHERNET_ADDRESS_ARRAY_LENGTH = 6;
+    //private static final int ETHERNET_ADDRESS_ARRAY_LENGTH = 6;
     
     // here are some sets of good ethernet addresses in various forms
     private static final String NULL_ETHERNET_ADDRESS_STRING =
         "00:00:00:00:00:00";
     private static final long NULL_ETHERNET_ADDRESS_LONG = 0x0000000000000000L;
-    private static final byte[] NULL_ETHERNET_ADDRESS_BYTE_ARRAY =
-        new byte[ETHERNET_ADDRESS_ARRAY_LENGTH];
-    private static final int[] NULL_ETHERNET_ADDRESS_INT_ARRAY =
-        new int[ETHERNET_ADDRESS_ARRAY_LENGTH];
-    private static final EthernetAddress NULL_ETHERNET_ADDRESS =
-        new EthernetAddress(0L);
+    //private static final byte[] NULL_ETHERNET_ADDRESS_BYTE_ARRAY = new byte[ETHERNET_ADDRESS_ARRAY_LENGTH];
+    //private static final int[] NULL_ETHERNET_ADDRESS_INT_ARRAY = new int[ETHERNET_ADDRESS_ARRAY_LENGTH];
+    //private static final EthernetAddress NULL_ETHERNET_ADDRESS = new EthernetAddress(0L);
     
     public EthernetAddressPackageAccessTest(java.lang.String testName)
     {

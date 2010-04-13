@@ -18,7 +18,6 @@
 package org.safehaus.uuid;
 
 import junit.framework.*;
-import java.util.Arrays;
 
 import org.safehaus.uuid.UUID;
 
@@ -57,7 +56,7 @@ public class UUIDPackageAccessTest extends TestCase
         // passing null
         try
         {
-            UUID uuid = new UUID(UUID.TYPE_RANDOM_BASED, (byte[])null);
+            /*UUID uuid =*/ new UUID(UUID.TYPE_RANDOM_BASED, (byte[])null);
             fail("Expected exception not caught");
         }
         catch (NullPointerException ex)
@@ -72,7 +71,7 @@ public class UUIDPackageAccessTest extends TestCase
         // passing array that is too small
         try
         {
-            UUID uuid =
+            /*UUID uuid =*/
                 new UUID(UUID.TYPE_RANDOM_BASED,
                     new byte[UUID_BYTE_ARRAY_LENGTH - 1]);
             fail("Expected exception not caught");
@@ -149,12 +148,9 @@ public class UUIDPackageAccessTest extends TestCase
      *************************************************************************/
     private static final int UUID_BYTE_ARRAY_LENGTH = 16;
 
-    private static final String UPPER_CASE_VALID_UUID_STRING =
-        "4D687664-3A1E-4F30-ACC1-87F59306D30C";
-    private static final String MIXED_CASE_VALID_UUID_STRING =
-        "4d687664-3A1e-4F30-aCc1-87F59306d30C";
-    private static final String LOWER_CASE_VALID_UUID_STRING =
-        "4d687664-3a1e-4f30-acc1-87f59306d30c";
+    //private static final String UPPER_CASE_VALID_UUID_STRING = "4D687664-3A1E-4F30-ACC1-87F59306D30C";
+    private static final String MIXED_CASE_VALID_UUID_STRING = "4d687664-3A1e-4F30-aCc1-87F59306d30C";
+    //private static final String LOWER_CASE_VALID_UUID_STRING = "4d687664-3a1e-4f30-acc1-87f59306d30c";
     private static final byte[] VALID_UUID_BYTE_ARRAY =
     {
         (byte)0x4d, (byte)0x68, (byte)0x76, (byte)0x64,
@@ -162,6 +158,8 @@ public class UUIDPackageAccessTest extends TestCase
         (byte)0xac, (byte)0xc1, (byte)0x87, (byte)0xf5,
         (byte)0x93, (byte)0x06, (byte)0xd3, (byte)0x0c
     };
+
+    /*
     private static final byte[] VALID_UUID_BYTE_ARRAY_WITH_EXTRA_START =
     {
         'e', 'x', 't', 'r', 'a', ' ', 'j', 'u', 'n', 'k',
@@ -189,12 +187,11 @@ public class UUIDPackageAccessTest extends TestCase
         'o', 'n', ' ', 't', 'h', 'e', ' ', 'e', 'n', 'd',
         ' ', 'a', 's', ' ', 'w', 'e', 'l', 'l'
     };
+    */
     
     // valid null UUID string
-    private static final String NULL_UUID_STRING =
-        "00000000-0000-0000-0000-000000000000";
-    private static final byte[] NULL_UUID_BYTE_ARRAY =
-        new byte[UUID_BYTE_ARRAY_LENGTH];
+    //private static final String NULL_UUID_STRING = "00000000-0000-0000-0000-000000000000";
+    //private static final byte[] NULL_UUID_BYTE_ARRAY = new byte[UUID_BYTE_ARRAY_LENGTH];
     
     // valid time based UUID string
     private static final String TIME_BASED_UUID_STRING =

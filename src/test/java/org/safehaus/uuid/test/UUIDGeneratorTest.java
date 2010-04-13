@@ -264,7 +264,7 @@ public class UUIDGeneratorTest extends TestCase
         // first, check that a null passed in causes the appropriate exception
         try
         {
-            UUID uuid = uuid_gen.generateRandomBasedUUID((Random)null);
+            /*UUID uuid =*/ uuid_gen.generateRandomBasedUUID((Random)null);
             fail("Expected exception not thrown");
         }
         catch (NullPointerException ex)
@@ -367,7 +367,7 @@ public class UUIDGeneratorTest extends TestCase
         // first, check that a null passed in causes the appropriate exception
         try
         {
-            UUID uuid = uuid_gen.generateTimeBasedUUID((EthernetAddress)null);
+            /*UUID uuid =*/ uuid_gen.generateTimeBasedUUID((EthernetAddress)null);
             fail("Expected exception not thrown");
         }
         catch (NullPointerException ex)
@@ -436,7 +436,7 @@ public class UUIDGeneratorTest extends TestCase
         // first, check that a null passed in causes the appropriate exception
         try
         {
-            UUID uuid =
+            /*UUID uuid =*/
                 uuid_gen.generateNameBasedUUID(NAMESPACE_UUID, (String)null);
             fail("Expected exception not thrown");
         }
@@ -553,7 +553,7 @@ public class UUIDGeneratorTest extends TestCase
         // first, check that a null passed in causes the appropriate exception
         try
         {
-            UUID uuid =
+            /*UUID uuid =*/
                 uuid_gen.generateNameBasedUUID(
                     NAMESPACE_UUID, (String)null, MESSAGE_DIGEST);
             fail("Expected exception not thrown");
@@ -569,7 +569,7 @@ public class UUIDGeneratorTest extends TestCase
         
         try
         {
-            UUID uuid =
+            /*UUID uuid =*/
                 uuid_gen.generateNameBasedUUID(
                     NAMESPACE_UUID, "test name", (MessageDigest)null);
             fail("Expected exception not thrown");
@@ -585,7 +585,7 @@ public class UUIDGeneratorTest extends TestCase
 
         try
         {
-            UUID uuid =
+            /*UUID uuid =*/
                 uuid_gen.generateNameBasedUUID(
                     NAMESPACE_UUID, (String)null, (MessageDigest)null);
             fail("Expected exception not thrown");
@@ -695,7 +695,7 @@ public class UUIDGeneratorTest extends TestCase
         // first, check that a null passed in causes the appropriate exception
         try
         {
-            UUID uuid = uuid_gen.generateTagURIBasedUUID(null);
+            /*UUID uuid =*/ uuid_gen.generateTagURIBasedUUID(null);
             fail("Expected exception not thrown");
         }
         catch (NullPointerException ex)
@@ -791,7 +791,7 @@ public class UUIDGeneratorTest extends TestCase
         // first, check that a null passed in causes the appropriate exception
         try
         {
-            UUID uuid = uuid_gen.generateTagURIBasedUUID(null, MESSAGE_DIGEST);
+            /*UUID uuid =*/ uuid_gen.generateTagURIBasedUUID(null, MESSAGE_DIGEST);
             fail("Expected exception not thrown");
         }
         catch (NullPointerException ex)
@@ -807,7 +807,7 @@ public class UUIDGeneratorTest extends TestCase
         {
             TagURI test_tag =
                 new TagURI(TEST_AUTHORITY, "test id", Calendar.getInstance());
-            UUID uuid = uuid_gen.generateTagURIBasedUUID(test_tag, null);
+            /*UUID uuid =*/ uuid_gen.generateTagURIBasedUUID(test_tag, null);
             fail("Expected exception not thrown");
         }
         catch (NullPointerException ex)
@@ -821,7 +821,7 @@ public class UUIDGeneratorTest extends TestCase
 
         try
         {
-            UUID uuid = uuid_gen.generateTagURIBasedUUID(null, null);
+            /*UUID uuid =*/ uuid_gen.generateTagURIBasedUUID(null, null);
             fail("Expected exception not thrown");
         }
         catch (NullPointerException ex)

@@ -160,7 +160,7 @@ public final class FileBasedTimestampSynchronizer
             Logger.logWarning("Could not determine safe timer starting point: assuming current system time is acceptable");
         } else {
             long now = System.currentTimeMillis();
-            long diff = now - result;
+            //long diff = now - result;
 
             /* It's more suspicious if old time was ahead... although with
              * longer iteration values, it can be ahead without errors. So

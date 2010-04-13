@@ -166,8 +166,6 @@ public class TagURITest extends TestCase
                     x.equals(w));
 
         // test refelexivity
-        assertTrue("x == x didn't return true",
-                    x == x);
         assertTrue("x.equals(x) didn't return true",
                     x.equals(x));
         

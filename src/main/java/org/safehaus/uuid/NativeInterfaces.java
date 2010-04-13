@@ -18,7 +18,6 @@
 package org.safehaus.uuid;
 
 import java.io.*;
-import java.security.*;
 import java.util.*;
 
 /**

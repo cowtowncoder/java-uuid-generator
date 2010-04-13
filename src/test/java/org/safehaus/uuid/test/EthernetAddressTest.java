@@ -104,8 +104,7 @@ public class EthernetAddressTest extends TestCase
     private static final long NULL_ETHERNET_ADDRESS_LONG = 0x0000000000000000L;
     private static final byte[] NULL_ETHERNET_ADDRESS_BYTE_ARRAY =
         new byte[ETHERNET_ADDRESS_ARRAY_LENGTH];
-    private static final int[] NULL_ETHERNET_ADDRESS_INT_ARRAY =
-        new int[ETHERNET_ADDRESS_ARRAY_LENGTH];
+    //private static final int[] NULL_ETHERNET_ADDRESS_INT_ARRAY = new int[ETHERNET_ADDRESS_ARRAY_LENGTH];
     private static final EthernetAddress NULL_ETHERNET_ADDRESS =
         new EthernetAddress(0L);
     
@@ -127,23 +126,21 @@ public class EthernetAddressTest extends TestCase
     {
         0x87, 0xf5, 0x93, 0x06, 0xd3, 0x0c
     };
-    private static final EthernetAddress VALID_ETHERNET_ADDRESS =
-        new EthernetAddress(VALID_ETHERNET_ADDRESS_LONG);
 
-    private static final String ANOTHER_VALID_ETHERNET_ADDRESS_STRING =
-        "4c:de:fb:ba:5a:1c";
-    private static final long ANOTHER_VALID_ETHERNET_ADDRESS_LONG =
-        0x00004cdefbba5a1cL;
     private static final byte[] ANOTHER_VALID_ETHERNET_ADDRESS_BYTE_ARRAY =
     {
         (byte)0x4c, (byte)0xde, (byte)0xfb, (byte)0xba, (byte)0x5a, (byte)0x1c
     };
+    /*
+    private static final EthernetAddress VALID_ETHERNET_ADDRESS = new EthernetAddress(VALID_ETHERNET_ADDRESS_LONG);
+    private static final String ANOTHER_VALID_ETHERNET_ADDRESS_STRING = "4c:de:fb:ba:5a:1c";
+    private static final long ANOTHER_VALID_ETHERNET_ADDRESS_LONG = 0x00004cdefbba5a1cL;
     private static final int[] ANOTHER_VALID_ETHERNET_ADDRESS_INT_ARRAY =
     {
         0x4c, 0xde, 0xfb, 0xba, 0x5a, 0x1c
     };
-    private static final EthernetAddress ANOTHER_VALID_ETHERNET_ADDRESS =
-        new EthernetAddress(ANOTHER_VALID_ETHERNET_ADDRESS_LONG);
+    */
+    //private static final EthernetAddress ANOTHER_VALID_ETHERNET_ADDRESS = new EthernetAddress(ANOTHER_VALID_ETHERNET_ADDRESS_LONG);
         
     // some ethernet addresses for the ordering tests
     private static final EthernetAddress MAC0_ETHERNET_ADDRESS =
@@ -197,7 +194,7 @@ public class EthernetAddressTest extends TestCase
         // first, passing null
         try
         {
-            EthernetAddress ethernet_address =
+            /*EthernetAddress ethernet_address =*/
                 new EthernetAddress((byte[])null);
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
@@ -214,7 +211,7 @@ public class EthernetAddressTest extends TestCase
         // now an array that is too small
         try
         {
-            EthernetAddress ethernet_address =
+            /*EthernetAddress ethernet_address =*/
                 new EthernetAddress(
                     new byte[ETHERNET_ADDRESS_ARRAY_LENGTH - 1]);
             // if we reached here we failed because we didn't get an exception
@@ -232,7 +229,7 @@ public class EthernetAddressTest extends TestCase
         // now an array that is too big
         try
         {
-            EthernetAddress ethernet_address =
+            /*EthernetAddress ethernet_address =*/
                 new EthernetAddress(
                     new byte[ETHERNET_ADDRESS_ARRAY_LENGTH + 1]);
             // if we reached here we failed because we didn't get an exception
@@ -297,7 +294,7 @@ public class EthernetAddressTest extends TestCase
         // test a null string case
         try
         {
-            EthernetAddress ethernet_address =
+            /*EthernetAddress ethernet_address =*/
                 new EthernetAddress((String)null);
             fail("Expected exception not caught");
         }
@@ -639,8 +636,6 @@ public class EthernetAddressTest extends TestCase
                     x.equals(w));
 
         // test refelexivity
-        assertTrue("x == x didn't return true",
-                    x == x);
         assertTrue("x.equals(x) didn't return true",
                     x.equals(x));
         
@@ -1092,7 +1087,7 @@ public class EthernetAddressTest extends TestCase
         // first, passing null
         try
         {
-            EthernetAddress ethernet_address =
+            /*EthernetAddress ethernet_address =*/
                 EthernetAddress.valueOf((byte[])null);
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
@@ -1109,7 +1104,7 @@ public class EthernetAddressTest extends TestCase
         // now an array that is too small
         try
         {
-            EthernetAddress ethernet_address =
+            /*EthernetAddress ethernet_address =*/
                 EthernetAddress.valueOf(
                     new byte[ETHERNET_ADDRESS_ARRAY_LENGTH - 1]);
             // if we reached here we failed because we didn't get an exception
@@ -1127,7 +1122,7 @@ public class EthernetAddressTest extends TestCase
         // now an array that is too big
         try
         {
-            EthernetAddress ethernet_address =
+            /*EthernetAddress ethernet_address =*/
                 EthernetAddress.valueOf(
                     new byte[ETHERNET_ADDRESS_ARRAY_LENGTH + 1]);
             // if we reached here we failed because we didn't get an exception
@@ -1170,7 +1165,7 @@ public class EthernetAddressTest extends TestCase
         // first, passing null
         try
         {
-            EthernetAddress ethernet_address =
+            /*EthernetAddress ethernet_address =*/
                 EthernetAddress.valueOf((int[])null);
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
@@ -1187,7 +1182,7 @@ public class EthernetAddressTest extends TestCase
         // now an array that is too small
         try
         {
-            EthernetAddress ethernet_address =
+            /*EthernetAddress ethernet_address =*/
                 EthernetAddress.valueOf(
                     new int[ETHERNET_ADDRESS_ARRAY_LENGTH - 1]);
             // if we reached here we failed because we didn't get an exception
@@ -1205,7 +1200,7 @@ public class EthernetAddressTest extends TestCase
         // now an array that is too big
         try
         {
-            EthernetAddress ethernet_address =
+            /*EthernetAddress ethernet_address =*/
                 EthernetAddress.valueOf(
                     new int[ETHERNET_ADDRESS_ARRAY_LENGTH + 1]);
             // if we reached here we failed because we didn't get an exception
@@ -1271,7 +1266,7 @@ public class EthernetAddressTest extends TestCase
         // test a null string case
         try
         {
-            EthernetAddress ethernet_address =
+            /*EthernetAddress ethernet_address =*/
                 EthernetAddress.valueOf((String)null);
             fail("Expected exception not caught");
         }
@@ -1357,7 +1352,7 @@ public class EthernetAddressTest extends TestCase
     {
         try
         {
-            EthernetAddress ethernet_address =
+            /*EthernetAddress ethernet_address =*/
                 new EthernetAddress(ethernetAddressString);
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
@@ -1395,7 +1390,7 @@ public class EthernetAddressTest extends TestCase
     {
         try
         {
-            EthernetAddress ethernet_address =
+            /*EthernetAddress ethernet_address =*/
                 EthernetAddress.valueOf(ethernetAddressString);
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");

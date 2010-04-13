@@ -204,7 +204,6 @@ public class UUID
                 }
                 ++i;
             }
-            int index;
             char c = id.charAt(i);
 
             if (c >= '0' && c <= '9') {

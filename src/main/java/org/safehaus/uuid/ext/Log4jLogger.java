@@ -17,8 +17,6 @@ package org.safehaus.uuid.ext;
 
 import java.io.*;
 
-import org.apache.log4j.Logger;
-
 //import org.safehaus.uuid.Logger;
 
 /**
