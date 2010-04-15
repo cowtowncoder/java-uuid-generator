@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-package org.safehaus.uuid.ext;
+package com.fasterxml.uuid.ext;
 
-import org.safehaus.uuid.Logger;
-import org.safehaus.uuid.TimestampSynchronizer;
+import com.fasterxml.uuid.Logger;
+import com.fasterxml.uuid.TimestampSynchronizer;
 
 import java.io.*;
 
@@ -129,7 +129,7 @@ public final class FileBasedTimestampSynchronizer
 
     /**
      * This method is to be called only once by
-     * {@link org.safehaus.uuid.UUIDTimer}. It
+     * {@link com.fasterxml.uuid.UUIDTimer}. It
      * should fetch the persisted timestamp value, which indicates
      * first timestamp value that is guaranteed NOT to have used by
      * a previous incarnation. If it can not determine such value, it

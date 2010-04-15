@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.safehaus.uuid.test;
+package com.fasterxml.uuid.test;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -24,10 +24,10 @@ import junit.textui.TestRunner;
 
 import java.util.Arrays;
 
-import org.safehaus.uuid.EthernetAddress;
+import com.fasterxml.uuid.EthernetAddress;
 
 /**
- * JUnit Test class for the org.safehaus.uuid.EthernetAddress class.
+ * JUnit Test class for the com.fasterxml.uuid.EthernetAddress class.
  *
  * @author Eric Bie
  */
@@ -186,7 +186,7 @@ public class EthernetAddressTest extends TestCase
      *************************************************************************/
     /**
      * Test of EthernetAddress(byte[]) constructor,
-     * of class org.safehaus.uuid.EthernetAddress.
+     * of class com.fasterxml.uuid.EthernetAddress.
      */
     public void testByteArrayEthernetAddressConstructor()
     {
@@ -264,7 +264,7 @@ public class EthernetAddressTest extends TestCase
     
     /**
      * Test of EthernetAddress(long) constructor,
-     * of class org.safehaus.uuid.EthernetAddress.
+     * of class com.fasterxml.uuid.EthernetAddress.
      */
     public void testLongEthernetAddressConstructor()
     {
@@ -287,7 +287,7 @@ public class EthernetAddressTest extends TestCase
     
     /**
      * Test of EthernetAddress(String) constructor,
-     * of class org.safehaus.uuid.EthernetAddress.
+     * of class com.fasterxml.uuid.EthernetAddress.
      */
     public void testStringEthernetAddressConstructor()
     {
@@ -409,7 +409,7 @@ public class EthernetAddressTest extends TestCase
      * End Constructor tests
      *************************************************************************/
     /**
-     * Test of asByteArray method, of class org.safehaus.uuid.EthernetAddress.
+     * Test of asByteArray method, of class com.fasterxml.uuid.EthernetAddress.
      */
     public void testAsByteArray()
     {
@@ -453,7 +453,7 @@ public class EthernetAddressTest extends TestCase
     }
     
     /**
-     * Test of clone method, of class org.safehaus.uuid.EthernetAddress.
+     * Test of clone method, of class com.fasterxml.uuid.EthernetAddress.
      */
     public void testClone()
     {
@@ -482,7 +482,7 @@ public class EthernetAddressTest extends TestCase
     }
     
     /**
-     * Test of compareTo method, of class org.safehaus.uuid.EthernetAddress.
+     * Test of compareTo method, of class com.fasterxml.uuid.EthernetAddress.
      */
     public void testCompareTo()
     {
@@ -612,7 +612,7 @@ public class EthernetAddressTest extends TestCase
     }
     
     /**
-     * Test of equals method, of class org.safehaus.uuid.EthernetAddress.
+     * Test of equals method, of class com.fasterxml.uuid.EthernetAddress.
      */
     public void testEquals()
     {
@@ -677,7 +677,7 @@ public class EthernetAddressTest extends TestCase
     }
     
     /**
-     * Test of toByteArray method, of class org.safehaus.uuid.EthernetAddress.
+     * Test of toByteArray method, of class com.fasterxml.uuid.EthernetAddress.
      */
     public void testToByteArray()
     {
@@ -722,7 +722,7 @@ public class EthernetAddressTest extends TestCase
     
     /**
      * Test of toByteArray(byte[]) method,
-     * of class org.safehaus.uuid.EthernetAddress.
+     * of class com.fasterxml.uuid.EthernetAddress.
      */
     public void testToByteArrayDest()
     {
@@ -819,7 +819,7 @@ public class EthernetAddressTest extends TestCase
     
     /**
      * Test of toByteArray(byte[], int) method,
-     * of class org.safehaus.uuid.EthernetAddress.
+     * of class com.fasterxml.uuid.EthernetAddress.
      */
     public void testToByteArrayDestOffset()
     {
@@ -1016,7 +1016,7 @@ public class EthernetAddressTest extends TestCase
     }
     
     /**
-     * Test of toLong method, of class org.safehaus.uuid.EthernetAddress.
+     * Test of toLong method, of class com.fasterxml.uuid.EthernetAddress.
      */
     public void testToLong()
     {
@@ -1038,7 +1038,7 @@ public class EthernetAddressTest extends TestCase
     }
     
     /**
-     * Test of toString method, of class org.safehaus.uuid.EthernetAddress.
+     * Test of toString method, of class com.fasterxml.uuid.EthernetAddress.
      */
     public void testToString()
     {
@@ -1079,7 +1079,7 @@ public class EthernetAddressTest extends TestCase
     
     /**
      * Test of valueOf(byte[]) method,
-     * of class org.safehaus.uuid.EthernetAddress.
+     * of class com.fasterxml.uuid.EthernetAddress.
      */
     public void testValueOfByteArray()
     {
@@ -1157,7 +1157,7 @@ public class EthernetAddressTest extends TestCase
     
     /**
      * Test of valueOf(int[]) method,
-     * of class org.safehaus.uuid.EthernetAddress.
+     * of class com.fasterxml.uuid.EthernetAddress.
      */
     public void testValueOfIntArray()
     {
@@ -1235,7 +1235,7 @@ public class EthernetAddressTest extends TestCase
     
     /**
      * Test of valueOf(long) method,
-     * of class org.safehaus.uuid.EthernetAddress.
+     * of class com.fasterxml.uuid.EthernetAddress.
      */
     public void testValueOfLong()
     {
@@ -1259,7 +1259,7 @@ public class EthernetAddressTest extends TestCase
     
     /**
      * Test of valueOf(String) method,
-     * of class org.safehaus.uuid.EthernetAddress.
+     * of class com.fasterxml.uuid.EthernetAddress.
      */
     public void testValueOfString()
     {

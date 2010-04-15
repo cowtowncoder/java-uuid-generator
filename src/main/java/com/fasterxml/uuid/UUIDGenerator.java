@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.safehaus.uuid;
+package com.fasterxml.uuid;
 
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
@@ -126,7 +126,7 @@ public final class UUIDGenerator
      * Caller needs to instantiate an instance of
      * {@link TimestampSynchronizer}; currently the only standard
      * implementation is
-     * {@link org.safehaus.uuid.ext.FileBasedTimestampSynchronizer} (which
+     * {@link com.fasterxml.uuid.ext.FileBasedTimestampSynchronizer} (which
      * is JDK 1.4+).
      *<p>
      * Note: since the generator instance is a singleton, calling this

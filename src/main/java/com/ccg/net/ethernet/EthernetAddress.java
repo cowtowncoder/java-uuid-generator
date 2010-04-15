@@ -324,9 +324,10 @@ public final class EthernetAddress {
   //----------------------------------------------------------------
 
   public static EthernetAddress fromBytes(byte[] val) 
-    throws BadAddressException {
+    throws IllegalArgumentException
+  {
     if (val == null || val.length != 6) {
-      throw new BadAddressException("ethernet address not 6 bytes long");
+      throw new IllegalArgumentException("ethernet address not 6 bytes long");
     }
 
     EthernetAddress ea = new EthernetAddress();
@@ -386,7 +387,7 @@ public final class EthernetAddress {
   //----------------------------------------------------------------
 
   public static EthernetAddress fromString(String sval)
-    throws BadAddressException {
+    throws IllegalArgumentException {
 
     byte[] eab = new byte[6];
     int ei = 0;
@@ -407,7 +408,7 @@ public final class EthernetAddress {
 	}
 	else if (val != -1) {	// if we have value to store
 	  if (ei >= eab.length) {
-	    throw new BadAddressException("too many bytes in \""+sval+"\"");
+	    throw new IllegalArgumentException("too many bytes in \""+sval+"\"");
 	  }
 	  eab[ei++] = (byte) val;
 	  val = -1;
@@ -425,7 +426,7 @@ public final class EthernetAddress {
 	  val += cval;
 	  needHiNyb = true;
 	  if (ei >= eab.length) {
-	    throw new BadAddressException("too many bytes in \""+sval+"\"");
+	    throw new IllegalArgumentException("too many bytes in \""+sval+"\"");
 	  }
 	  eab[ei++] = (byte) val;
 	  val = -1;
@@ -437,13 +438,13 @@ public final class EthernetAddress {
 				// catch it here outside of loop
     if ((val != -1) && !needHiNyb) {
       if (ei >= eab.length) {
-	throw new BadAddressException("too many bytes in \""+sval+"\"");
+	throw new IllegalArgumentException("too many bytes in \""+sval+"\"");
       }
       eab[ei++] = (byte) val;
     }
 
     if (ei != eab.length) {
-      throw new BadAddressException("not enough bytes in \""+sval+"\"");
+      throw new IllegalArgumentException("not enough bytes in \""+sval+"\"");
     }
 
     EthernetAddress ea = new EthernetAddress();

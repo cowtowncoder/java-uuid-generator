@@ -6,7 +6,6 @@
     <property name="SrcDir" location="${basedir}/src" />
     <property name="LibDir" location="${basedir}/lib" />
     <property name="JavaSrcDir" location="${SrcDir}/java" />
-    <property name="NativeSrcDir" location="${SrcDir}/c" />
     <property name="TestSrcDir" location="${SrcDir}/test" />
     <property name="RelNotesDir" location="${basedir}/release-notes" />
     <!-- Pre-compiled native code -->
@@ -14,7 +13,6 @@
     <!-- Build-related -->
     <property name="BuildDir" location="${basedir}/build" />
     <property name="BuildClassesDir" location="${BuildDir}/classes" />
-    <property name="BuildNativeDir" location="${BuildDir}/jug-native" />
     <!-- Documentation -->
     <property name="DocDir" location="${basedir}/doc" />
     <property name="JavaDocDir" location="${basedir}/javadoc" />
@@ -34,8 +32,8 @@
     <property name="UUID_VENDOR" value="http://hegel.ittc.ku.edu/topics/internet/internet-drafts/draft-l/draft-leach-uuids-guids-01.txt" />
     <!-- JUG version -->
     <property name="IMPL_TITLE" value="Java Uuid/guid Generator" />
-    <property name="IMPL_VERSION" value="2.0.1" />
-    <property name="IMPL_VENDOR" value="www.safehaus.org" />
+    <property name="IMPL_VERSION" value="3.0.0" />
+    <property name="IMPL_VENDOR" value="fasterxml.com" />
 
     <!-- jars needed for compilation -->
     <path id="classpath">
@@ -46,15 +44,13 @@
     <!-- Source files to include in source packages (tar, zip) -->
     <patternset id="dist-src-files">
           <include name="build.xml" />
+          <include name="pom.xml" />
           <include name="src/**/*.java" />
           <include name="src/java/**/*.html" />
-          <include name="src/c/*.c" />
-          <include name="src/c/makefile" />
           <include name="src/maven/*.pom" />
           <include name="src/**/README*" />
           <include name="release-notes/*" />
           <include name="release-notes/asl/*" />
-          <include name="release-notes/lgpl/*" />
     </patternset>
 
     <!--*********************************************************************-->
@@ -81,7 +77,6 @@
         <!-- make build directories -->
         <mkdir dir="${BuildDir}" />
         <mkdir dir="${BuildClassesDir}" />
-        <mkdir dir="${BuildNativeDir}" />
 
         <!-- make docs directories -->
         <mkdir dir="${DocDir}" />
@@ -113,8 +108,8 @@
          debug="true">
             <include name="com/ccg/net/ethernet/BadAddressException.java" />
             <include name="com/ccg/net/ethernet/EthernetAddress.java" />
-            <include name="org/safehaus/uuid/*.java" />
-            <include name="org/safehaus/uuid/ext/*.java" />
+            <include name="com/fasterxml/uuid/*.java" />
+            <include name="com/fasterxml/uuid/ext/*.java" />
             <include name="test/*.java" />
             <classpath refid="classpath" />
         </javac>
@@ -124,24 +119,13 @@
     <target name="compile" depends="compile_java">
     </target>
 
-    <target name="compile_c" depends="prepare">
-      <!-- To be able to test native code, let's copy JNI code -->
-      <copy todir="${BuildNativeDir}">
-        <fileset dir="${NativeLibDir}">
-          <include name="*.dll"/>
-          <include name="*.jnilib"/>
-          <include name="*.so"/>
-        </fileset>
-      </copy>
-    </target>
-
-    <target name="jars" depends="jar.asl, jar.lgpl, jar.native"
+    <target name="jars" depends="jar.asl"
     />
 
     <target name="jar.asl" depends="compile_java">
-        <jar jarfile="${BuildDir}/jug-asl-${IMPL_VERSION}.jar" filesonly="true">
+        <jar jarfile="${BuildDir}/jug-${IMPL_VERSION}.jar" filesonly="true">
           <manifest>
-            <attribute name="Main-class" value="org.safehaus.uuid.Jug" />
+            <attribute name="Main-class" value="com.fasterxml.uuid.Jug" />
             <attribute name="Built-By" value="${user.name}"/>
             <attribute name="Specification-Title"   value="${UUID_TITLE}"/>
             <attribute name="Specification-Version" value="${UUID_VERSION}"/>
@@ -151,8 +135,8 @@
             <attribute name="Implementation-Vendor"  value="${IMPL_VENDOR}"/>
           </manifest>
           <fileset dir="${BuildClassesDir}">
-             <include name="org/safehaus/uuid/*.class" />
-             <include name="org/safehaus/uuid/ext/*.class" />
+             <include name="com/fasterxml/uuid/*.class" />
+             <include name="com/fasterxml/uuid/ext/*.class" />
              <include name="com/ccg/net/ethernet/**" />
           </fileset>
           <fileset dir="${RelNotesDir}/asl">
@@ -162,42 +146,6 @@
           </fileset>
         </jar>
     </target> 
-
-    <target name="jar.lgpl" depends="compile_java">
-        <jar jarfile="${BuildDir}/jug-lgpl-${IMPL_VERSION}.jar" filesonly="true">
-          <manifest>
-            <attribute name="Main-class" value="org.safehaus.uuid.Jug" />
-            <attribute name="Built-By" value="${user.name}"/>
-            <attribute name="Specification-Title"   value="${UUID_TITLE}"/>
-            <attribute name="Specification-Version" value="${UUID_VERSION}"/>
-            <attribute name="Specification-Vendor"  value="${UUID_VENDOR}"/>
-            <attribute name="Implementation-Title"   value="${IMPL_TITLE}"/>
-            <attribute name="Implementation-Version" value="${IMPL_VERSION}"/>
-            <attribute name="Implementation-Vendor"  value="${IMPL_VENDOR}"/>
-          </manifest>
-          <fileset dir="${BuildClassesDir}">
-             <include name="org/safehaus/uuid/*.class" />
-             <include name="org/safehaus/uuid/ext/*.class" />
-             <include name="com/ccg/net/ethernet/**" />
-          </fileset>
-          <fileset dir="${RelNotesDir}/lgpl">
-            <include name="LICENSE" />
-            <include name="NOTICE" />
-            <include name="LGPL2.1" />
-          </fileset>
-        </jar>
-    </target> 
-
-    <!-- Need to copy native code libs -->
-    <target name="jar.native" depends="compile_c">
-        <zip zipfile="${BuildDir}/jug-native.zip" filesonly="true">
-            <zipfileset dir="." filemode="755">
-                <include name="jug-native/*.dll"/>
-                <include name="jug-native/*.jnilib"/>
-                <include name="jug-native/*.so"/>
-            </zipfileset>
-        </zip>
-    </target>
 
     <target name="javadoc" depends="compile_java">
         <!-- Build a dirpath that contains just the "source" tree -->
@@ -216,7 +164,6 @@
        <copy todir="${DistDir}">
          <fileset dir="${BuildDir}">
            <include name="jug*.jar" />
-           <include name="jug-native.zip" />
          </fileset>
        </copy>
        <!-- Then let's create the source distribution tar package -->

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.safehaus.uuid.test;
+package com.fasterxml.uuid.test;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -29,10 +29,10 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.safehaus.uuid.UUIDTimer;
+import com.fasterxml.uuid.UUIDTimer;
 
 /**
- * JUnit Test class for the org.safehaus.uuid.UUIDTimer class.
+ * JUnit Test class for the com.fasterxml.uuid.UUIDTimer class.
  *
  * @author Eric Bie
  */
@@ -63,7 +63,7 @@ public class UUIDTimerTest extends TestCase
      *************************************************************************/
     /**
      * Test of UUIDTimer(SecureRandom) constructor,
-     * of class org.safehaus.uuid.UUIDTimer.
+     * of class com.fasterxml.uuid.UUIDTimer.
      */
     public void testSecureRandomUUIDTimerConstructor()
     {
@@ -100,7 +100,7 @@ public class UUIDTimerTest extends TestCase
      *************************************************************************/
 
     /**
-     * Test of getAndSetTimestamp method, of class org.safehaus.uuid.UUIDTimer.
+     * Test of getAndSetTimestamp method, of class com.fasterxml.uuid.UUIDTimer.
      */
     public void testGetTimestamp()
     {

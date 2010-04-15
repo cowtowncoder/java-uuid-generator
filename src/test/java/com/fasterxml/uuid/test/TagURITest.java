@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.safehaus.uuid.test;
+package com.fasterxml.uuid.test;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -23,10 +23,10 @@ import junit.framework.TestSuite;
 
 import java.util.Calendar;
 
-import org.safehaus.uuid.TagURI;
+import com.fasterxml.uuid.TagURI;
 
 /**
- * JUnit Test class for the org.safehaus.uuid.TagURI class.
+ * JUnit Test class for the com.fasterxml.uuid.TagURI class.
  *
  * @author Eric Bie
  */
@@ -60,7 +60,7 @@ public class TagURITest extends TestCase
     }
     
     /**
-     * Test of toString method, of class org.safehaus.uuid.TagURI.
+     * Test of toString method, of class com.fasterxml.uuid.TagURI.
      */
     public void testToString()
     {
@@ -144,7 +144,7 @@ public class TagURITest extends TestCase
     }
     
     /**
-     * Test of equals method, of class org.safehaus.uuid.TagURI.
+     * Test of equals method, of class com.fasterxml.uuid.TagURI.
      */
     public void testEquals()
     {

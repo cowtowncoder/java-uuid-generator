@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package org.safehaus.uuid;
+package com.fasterxml.uuid;
 
 import java.io.*;
 
@@ -35,11 +35,11 @@ import java.io.*;
  * For simple configuration (suppress all, redirect to another stream)
  * default implementation should be sufficient, however.
  *<p>
- * Note: package <code>org.safehaus.uuid.ext</code> does contain
+ * Note: package <code>com.fasterxml.uuid.ext</code> does contain
  * simple wrappers to connect JUG logging to log4j and java.util.logging:
  *
- * @see org.safehaus.uuid.ext.Log4jLogger
- * @see org.safehaus.uuid.ext.JavaUtilLogger
+ * @see com.fasterxml.uuid.ext.Log4jLogger
+ * @see com.fasterxml.uuid.ext.JavaUtilLogger
  */
 public class Logger
 {

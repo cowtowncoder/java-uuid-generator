@@ -1,7 +1,8 @@
 package test;
 
-import org.safehaus.uuid.*;
-import org.safehaus.uuid.ext.*;
+
+import com.fasterxml.uuid.*;
+import com.fasterxml.uuid.ext.*;
 
 /**
  * Simple manual utility test class for manually checking whether file-based

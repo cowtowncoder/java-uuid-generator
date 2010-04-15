@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package org.safehaus.uuid;
+package com.fasterxml.uuid;
 
 import java.io.IOException;
 
@@ -24,7 +24,7 @@ import java.io.IOException;
  * is ever used on a single system, even in presence of multiple JVMs.
  *<p>
  * The default implementation used by JUG is
- * {@link org.safehaus.uuid.ext.FileBasedTimestampSynchronizer}.
+ * {@link com.fasterxml.uuid.ext.FileBasedTimestampSynchronizer}.
  */
 public abstract class TimestampSynchronizer
 {

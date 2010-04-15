@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package org.safehaus.uuid;
+package com.fasterxml.uuid;
 
 import java.util.*;
 

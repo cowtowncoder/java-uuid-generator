@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.safehaus.uuid;
+package com.fasterxml.uuid;
 
 import java.io.*;
 import java.util.*;
@@ -186,7 +186,7 @@ public class NativeInterfaces
         }
     }
     
-    public static org.safehaus.uuid.EthernetAddress getPrimaryInterface()
+    public static com.fasterxml.uuid.EthernetAddress getPrimaryInterface()
     {
         checkLoad();
 
@@ -194,7 +194,7 @@ public class NativeInterfaces
             com.ccg.net.ethernet.EthernetAddress ea =
                 com.ccg.net.ethernet.EthernetAddress.getPrimaryAdapter();
             if (ea != null) {
-                return new org.safehaus.uuid.EthernetAddress(ea.getBytes());
+                return new com.fasterxml.uuid.EthernetAddress(ea.getBytes());
             }
         } catch (UnsatisfiedLinkError ue) {
             /* Should never happen as checkLoad() should have taken
@@ -206,21 +206,21 @@ public class NativeInterfaces
         return null;
     }
 
-    public static org.safehaus.uuid.EthernetAddress[] getAllInterfaces()
+    public static com.fasterxml.uuid.EthernetAddress[] getAllInterfaces()
     {
-        org.safehaus.uuid.EthernetAddress[] eas = null;
+        com.fasterxml.uuid.EthernetAddress[] eas = null;
 
         checkLoad();
 
         try {
             Collection c = com.ccg.net.ethernet.EthernetAddress.getAllAdapters();
-            eas = new org.safehaus.uuid.EthernetAddress[c.size()];
+            eas = new com.fasterxml.uuid.EthernetAddress[c.size()];
             Iterator it = c.iterator();
 
             for (int i = 0; it.hasNext(); ++i) {
                 com.ccg.net.ethernet.EthernetAddress ea =
                     (com.ccg.net.ethernet.EthernetAddress) it.next();
-                eas[i] = new org.safehaus.uuid.EthernetAddress(ea.getBytes());
+                eas[i] = new com.fasterxml.uuid.EthernetAddress(ea.getBytes());
             }
         } catch (UnsatisfiedLinkError ue) {
             /* Should never happen as checkLoad() should have taken
@@ -249,7 +249,7 @@ public class NativeInterfaces
 
         System.out.println("Trying to access primary ethernet interface:");
         try {
-            org.safehaus.uuid.EthernetAddress pea = getPrimaryInterface();
+            com.fasterxml.uuid.EthernetAddress pea = getPrimaryInterface();
 
             System.out.println("Ok, the interface MAC-address is: "
                                +pea.toString());

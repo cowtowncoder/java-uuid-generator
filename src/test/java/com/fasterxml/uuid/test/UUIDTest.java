@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.safehaus.uuid.test;
+package com.fasterxml.uuid.test;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -24,7 +24,7 @@ import junit.textui.TestRunner;
 
 import java.util.Arrays;
 
-import org.safehaus.uuid.UUID;
+import com.fasterxml.uuid.UUID;
 
 
 /**
@@ -57,7 +57,7 @@ public class UUIDTest extends TestCase
      * Begin constructor tests
      *************************************************************************/
     /**
-     * Test of UUID() constructor, of class org.safehaus.uuid.UUID.
+     * Test of UUID() constructor, of class com.fasterxml.uuid.UUID.
      */
     public void testDefaultUUIDConstructor()
     {
@@ -74,7 +74,7 @@ public class UUIDTest extends TestCase
     }
     
     /**
-     * Test of UUID(byte[]) constructor, of class org.safehaus.uuid.UUID.
+     * Test of UUID(byte[]) constructor, of class com.fasterxml.uuid.UUID.
      */
     public void testByteArrayUUIDConstructor()
     {
@@ -131,7 +131,7 @@ public class UUIDTest extends TestCase
     }
     
     /**
-     * Test of UUID(byte[], int) constructor, of class org.safehaus.uuid.UUID.
+     * Test of UUID(byte[], int) constructor, of class com.fasterxml.uuid.UUID.
      */
     public void testByteArrayFromOffsetUUIDConstructor()
     {
@@ -263,7 +263,7 @@ public class UUIDTest extends TestCase
     }
     
     /**
-     * Test of UUID(String) constructor, of class org.safehaus.uuid.UUID.
+     * Test of UUID(String) constructor, of class com.fasterxml.uuid.UUID.
      */
     public void testStringUUIDConstructor()
     {
@@ -303,7 +303,7 @@ public class UUIDTest extends TestCase
      *************************************************************************/
     
     /**
-     * Test of asByteArray method, of class org.safehaus.uuid.UUID.
+     * Test of asByteArray method, of class com.fasterxml.uuid.UUID.
      */
     public void testAsByteArray()
     {
@@ -348,7 +348,7 @@ public class UUIDTest extends TestCase
     }
     
     /**
-     * Test of clone method, of class org.safehaus.uuid.UUID.
+     * Test of clone method, of class com.fasterxml.uuid.UUID.
      */
     public void testClone()
     {
@@ -376,7 +376,7 @@ public class UUIDTest extends TestCase
     }
     
     /**
-     * Test of compareTo method, of class org.safehaus.uuid.UUID.
+     * Test of compareTo method, of class com.fasterxml.uuid.UUID.
      */
     public void testCompareTo()
     {
@@ -531,7 +531,7 @@ public class UUIDTest extends TestCase
     }
     
     /**
-     * Test of equals method, of class org.safehaus.uuid.UUID.
+     * Test of equals method, of class com.fasterxml.uuid.UUID.
      */
     public void testEquals()
     {
@@ -592,7 +592,7 @@ public class UUIDTest extends TestCase
     }
     
     /**
-     * Test of getNullUUID method, of class org.safehaus.uuid.UUID.
+     * Test of getNullUUID method, of class com.fasterxml.uuid.UUID.
      */
     public void testGetNullUUID()
     {
@@ -615,7 +615,7 @@ public class UUIDTest extends TestCase
     }
     
     /**
-     * Test of getType method, of class org.safehaus.uuid.UUID.
+     * Test of getType method, of class com.fasterxml.uuid.UUID.
      */
     public void testGetType()
     {
@@ -665,7 +665,7 @@ public class UUIDTest extends TestCase
     }
     
     /**
-     * Test of hashCode method, of class org.safehaus.uuid.UUID.
+     * Test of hashCode method, of class com.fasterxml.uuid.UUID.
      */
     public void testHashCode()
     {
@@ -706,7 +706,7 @@ public class UUIDTest extends TestCase
     }
     
     /**
-     * Test of isNullUUID method, of class org.safehaus.uuid.UUID.
+     * Test of isNullUUID method, of class com.fasterxml.uuid.UUID.
      */
     public void testIsNullUUID()
     {
@@ -759,7 +759,7 @@ public class UUIDTest extends TestCase
     }
     
     /**
-     * Test of setDescCaching method, of class org.safehaus.uuid.UUID.
+     * Test of setDescCaching method, of class com.fasterxml.uuid.UUID.
      */
     public void testSetDescCaching()
     {
@@ -793,7 +793,7 @@ public class UUIDTest extends TestCase
     }
     
     /**
-     * Test of toByteArray() method, of class org.safehaus.uuid.UUID.
+     * Test of toByteArray() method, of class com.fasterxml.uuid.UUID.
      */
     public void testToByteArray()
     {
@@ -837,7 +837,7 @@ public class UUIDTest extends TestCase
     }
 
     /**
-     * Test of toByteArray(byte[]) method, of class org.safehaus.uuid.UUID.
+     * Test of toByteArray(byte[]) method, of class com.fasterxml.uuid.UUID.
      */
     public void testToByteArrayDest()
     {
@@ -937,7 +937,7 @@ public class UUIDTest extends TestCase
     
     /**
      * Test of toByteArray(byte[], int) method,
-     * of class org.safehaus.uuid.UUID.
+     * of class com.fasterxml.uuid.UUID.
      */
     public void testToByteArrayDestOffset()
     {
@@ -1144,7 +1144,7 @@ public class UUIDTest extends TestCase
     }
     
     /**
-     * Test of toString method, of class org.safehaus.uuid.UUID.
+     * Test of toString method, of class com.fasterxml.uuid.UUID.
      */
     public void testToString()
     {
@@ -1180,7 +1180,7 @@ public class UUIDTest extends TestCase
     }
     
     /**
-     * Test of valueOf(byte[]) method, of class org.safehaus.uuid.UUID.
+     * Test of valueOf(byte[]) method, of class com.fasterxml.uuid.UUID.
      */
     public void testValueOfByteArray()
     {
@@ -1240,7 +1240,7 @@ public class UUIDTest extends TestCase
     }
     
     /**
-     * Test of valueOf(byte[], int) method, of class org.safehaus.uuid.UUID.
+     * Test of valueOf(byte[], int) method, of class com.fasterxml.uuid.UUID.
      */
     public void testValueOfByteArrayFromOffset()
     {
@@ -1378,7 +1378,7 @@ public class UUIDTest extends TestCase
     }
 
     /**
-     * Test of valueOf(String) method, of class org.safehaus.uuid.UUID.
+     * Test of valueOf(String) method, of class com.fasterxml.uuid.UUID.
      */
     public void testValueOfString()
     {

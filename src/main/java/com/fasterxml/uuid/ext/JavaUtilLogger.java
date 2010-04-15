@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 
-package org.safehaus.uuid.ext;
+package com.fasterxml.uuid.ext;
 
 import java.io.*;
 
-//import org.safehaus.uuid.Logger;
+//import com.fasterxml.uuid.Logger;
 
 /**
  * Simple wrapper that allows easy connecting of JUG logging into JDK 1.4+
@@ -26,7 +26,7 @@ import java.io.*;
  * Note: using this class requires JDK 1.4 or above.
  */
 public class JavaUtilLogger
-    extends org.safehaus.uuid.Logger
+    extends com.fasterxml.uuid.Logger
 {
     private java.util.logging.Logger mPeer;
 
@@ -40,7 +40,7 @@ public class JavaUtilLogger
      * through the specified j.u.l <code>Logger</code> instance.
      *<p>
      * Method will create a simple wrapper, and call
-     * {@link org.safehaus.uuid.Logger#setLogger} with the wrapper as
+     * {@link com.fasterxml.uuid.Logger#setLogger} with the wrapper as
      * the argument. This will then re-direct logging from the previously
      * defined Logger (which initially is the simple JUG logger) to the
      * new wrapper, which routes logging messages to the log4j peer Logger
@@ -56,11 +56,11 @@ public class JavaUtilLogger
     /**
      * Static method to call to make JUG use a log4j proxy all of its logging
      * through a j.u.l <code>Logger</code> constructed to correspond with
-     * <code>org.safehaus.uuid.Logger</code> class (this generally determines
+     * <code>com.fasterxml.uuid.Logger</code> class (this generally determines
      * j.u.l category output etc settings).
      *<p>
      * Method will create a simple wrapper, and call
-     * {@link org.safehaus.uuid.Logger#setLogger} with the wrapper as
+     * {@link com.fasterxml.uuid.Logger#setLogger} with the wrapper as
      * the argument. This will then re-direct logging from the previously
      * defined Logger (which initially is the simple JUG logger) to the
      * new wrapper, which routes logging messages to the j.u.l peer Logger
@@ -68,7 +68,7 @@ public class JavaUtilLogger
      */
     public static void connectToJavaUtilLogging()
     {
-        connectToJavaUtilLogging(java.util.logging.Logger.getLogger(org.safehaus.uuid.Logger.class.getName()));
+        connectToJavaUtilLogging(java.util.logging.Logger.getLogger(com.fasterxml.uuid.Logger.class.getName()));
     }
 
     /*

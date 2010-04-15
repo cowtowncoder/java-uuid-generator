@@ -15,18 +15,18 @@
  * limitations under the License.
  */
 
-package org.safehaus.uuid;
+package com.fasterxml.uuid;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.safehaus.uuid.EthernetAddress;
+import com.fasterxml.uuid.EthernetAddress;
 
 /**
  * JUnit Test class for checking the package access
- * methods of the org.safehaus.uuid.EthernetAddress class.
+ * methods of the com.fasterxml.uuid.EthernetAddress class.
  *
  * @author Eric Bie
  */
@@ -65,7 +65,7 @@ public class EthernetAddressPackageAccessTest extends TestCase
      *************************************************************************/
     /**
      * Test of EthernetAddress() constructor,
-     * of class org.safehaus.uuid.EthernetAddress.
+     * of class com.fasterxml.uuid.EthernetAddress.
      */
     public void testDefaultEthernetAddressConstructor()
     {

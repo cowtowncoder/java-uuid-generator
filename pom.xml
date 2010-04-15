@@ -4,7 +4,7 @@
  <!-- General information -->
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.safehaus.jug</groupId>
+  <groupId>com.fasterxml.uuid</groupId>
   <artifactId>jug</artifactId>
   <packaging>bundle</packaging>
   <name>Java UUID Generator</name>
@@ -55,8 +55,8 @@ http://github.com/cowtowncoder/java-uuid-generator/issues
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <configuration>
-            <source>1.2</source>
-            <target>1.1</target>
+            <source>1.6</source>
+            <target>1.6</target>
           </configuration>
         </plugin>
         <plugin><!-- plug-in to attach source bundle in repo -->
@@ -100,10 +100,10 @@ http://github.com/cowtowncoder/java-uuid-generator/issues
 org.apache.log4j
 </DynamicImport-Package>
               <Private-Package>
-org.safehaus.uuid.ext, com.ccg.net.ethernet
+com.fasterxml.uuid.ext, com.ccg.net.ethernet
 </Private-Package>
               <Export-Package>
-org.safehaus.uuid
+com.fasterxml.uuid
 </Export-Package>
             </instructions>
           </configuration>

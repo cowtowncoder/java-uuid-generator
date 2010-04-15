@@ -15,15 +15,15 @@
  * limitations under the License.
  */
 
-package org.safehaus.uuid;
+package com.fasterxml.uuid;
 
 import junit.framework.*;
 
-import org.safehaus.uuid.UUID;
+import com.fasterxml.uuid.UUID;
 
 /**
  * JUnit Test class for checking the package access
- * methods of the org.safehaus.uuid.UUID class.
+ * methods of the com.fasterxml.uuid.UUID class.
  *
  * @author Eric Bie
  */
@@ -49,7 +49,7 @@ public class UUIDPackageAccessTest extends TestCase
      * Begin constructor tests
      *************************************************************************/
     /**
-     * Test of UUID(int, byte[]) constructor, of class org.safehaus.uuid.UUID.
+     * Test of UUID(int, byte[]) constructor, of class com.fasterxml.uuid.UUID.
      */
     public void testTypeAndByteArrayUUIDConstructor()
     {

@@ -13,14 +13,14 @@
  * limitations under the License.
  */
 
-package org.safehaus.uuid.ext;
+package com.fasterxml.uuid.ext;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 
-import org.safehaus.uuid.Logger;
+import com.fasterxml.uuid.Logger;
 
 /**
  * Utility class used by {@link FileBasedTimestampSynchronizer} to do

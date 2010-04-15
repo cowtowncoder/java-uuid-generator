@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 
-package org.safehaus.uuid.ext;
+package com.fasterxml.uuid.ext;
 
 import java.io.*;
 
-//import org.safehaus.uuid.Logger;
+//import com.fasterxml.uuid.Logger;
 
 /**
  * Simple wrapper that allows easy connecting of JUG logging into log4j
@@ -27,7 +27,7 @@ import java.io.*;
  * subsystem in use requires (JDK 1.2 or above, in general)
  */
 public class Log4jLogger
-    extends org.safehaus.uuid.Logger
+    extends com.fasterxml.uuid.Logger
 {
     private org.apache.log4j.Logger mPeer;
 
@@ -41,7 +41,7 @@ public class Log4jLogger
      * through the specified log4j <code>Logger</code> instance.
      *<p>
      * Method will create a simple wrapper, and call
-     * {@link org.safehaus.uuid.Logger#setLogger} with the wrapper as
+     * {@link com.fasterxml.uuid.Logger#setLogger} with the wrapper as
      * the argument. This will then re-direct logging from the previously
      * defined Logger (which initially is the simple JUG logger) to the
      * new wrapper, which routes logging messages to the log4j peer Logger
@@ -57,11 +57,11 @@ public class Log4jLogger
     /**
      * Static method to call to make JUG use a log4j proxy all of its logging
      * through a log4j <code>Logger</code> constructed to correspond with
-     * <code>org.safehaus.uuid.Logger</code> class (this generally determines
+     * <code>com.fasterxml.uuid.Logger</code> class (this generally determines
      * log4j category output etc settings).
      *<p>
      * Method will create a simple wrapper, and call
-     * {@link org.safehaus.uuid.Logger#setLogger} with the wrapper as
+     * {@link com.fasterxml.uuid.Logger#setLogger} with the wrapper as
      * the argument. This will then re-direct logging from the previously
      * defined Logger (which initially is the simple JUG logger) to the
      * new wrapper, which routes logging messages to the log4j peer Logger
@@ -69,7 +69,7 @@ public class Log4jLogger
      */
     public static void connectToLog4j()
     {
-        connectToLog4j(org.apache.log4j.Logger.getLogger(org.safehaus.uuid.Logger.class));
+        connectToLog4j(org.apache.log4j.Logger.getLogger(com.fasterxml.uuid.Logger.class));
     }
 
     /*

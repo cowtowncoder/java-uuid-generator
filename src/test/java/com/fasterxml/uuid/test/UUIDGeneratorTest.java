@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.safehaus.uuid.test;
+package com.fasterxml.uuid.test;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -31,13 +31,13 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Random;
 
-import org.safehaus.uuid.EthernetAddress;
-import org.safehaus.uuid.TagURI;
-import org.safehaus.uuid.UUID;
-import org.safehaus.uuid.UUIDGenerator;
+import com.fasterxml.uuid.EthernetAddress;
+import com.fasterxml.uuid.TagURI;
+import com.fasterxml.uuid.UUID;
+import com.fasterxml.uuid.UUIDGenerator;
 
 /**
- * JUnit Test class for the org.safehaus.uuid.UUIDGenerator class.
+ * JUnit Test class for the com.fasterxml.uuid.UUIDGenerator class.
  *
  * @author Eric Bie
  */
@@ -63,7 +63,7 @@ public class UUIDGeneratorTest extends TestCase
     }
     
     /**
-     * Test of getInstance method, of class org.safehaus.uuid.UUIDGenerator.
+     * Test of getInstance method, of class com.fasterxml.uuid.UUIDGenerator.
      */
     public void testGetInstance()
     {
@@ -85,7 +85,7 @@ public class UUIDGeneratorTest extends TestCase
     
     /**
      * Test of getDummyAddress method,
-     * of class org.safehaus.uuid.UUIDGenerator.
+     * of class com.fasterxml.uuid.UUIDGenerator.
      */
     public void testGetDummyAddress()
     {
@@ -131,7 +131,7 @@ public class UUIDGeneratorTest extends TestCase
     
     /**
      * Test of getRandomNumberGenerator method,
-     * of class org.safehaus.uuid.UUIDGenerator.
+     * of class com.fasterxml.uuid.UUIDGenerator.
      */
     public void testGetRandomNumberGenerator()
     {
@@ -173,7 +173,7 @@ public class UUIDGeneratorTest extends TestCase
     
     /**
      * Test of getHashAlgorithm method,
-     * of class org.safehaus.uuid.UUIDGenerator.
+     * of class com.fasterxml.uuid.UUIDGenerator.
      */
     public void testGetHashAlgorithm()
     {
@@ -215,7 +215,7 @@ public class UUIDGeneratorTest extends TestCase
     
     /**
      * Test of generateRandomBasedUUID method,
-     * of class org.safehaus.uuid.UUIDGenerator.
+     * of class com.fasterxml.uuid.UUIDGenerator.
      */
     public void testGenerateRandomBasedUUID()
     {
@@ -251,7 +251,7 @@ public class UUIDGeneratorTest extends TestCase
     
     /**
      * Test of generateRandomBasedUUID(Random) method,
-     * of class org.safehaus.uuid.UUIDGenerator.
+     * of class com.fasterxml.uuid.UUIDGenerator.
      */
     public void testGenerateRandomBasedUUIDWithRandom()
     {
@@ -303,7 +303,7 @@ public class UUIDGeneratorTest extends TestCase
     
     /**
      * Test of generateTimeBasedUUID() method,
-     * of class org.safehaus.uuid.UUIDGenerator.
+     * of class com.fasterxml.uuid.UUIDGenerator.
      */
     public void testGenerateTimeBasedUUID()
     {
@@ -352,7 +352,7 @@ public class UUIDGeneratorTest extends TestCase
     
     /**
      * Test of generateTimeBasedUUID(EthernetAddress) method,
-     * of class org.safehaus.uuid.UUIDGenerator.
+     * of class com.fasterxml.uuid.UUIDGenerator.
      */
     public void testGenerateTimeBasedUUIDWithEthernetAddress()
     {
@@ -421,7 +421,7 @@ public class UUIDGeneratorTest extends TestCase
     
     /**
      * Test of generateNameBasedUUID(UUID, String)
-     * method, of class org.safehaus.uuid.UUIDGenerator.
+     * method, of class com.fasterxml.uuid.UUIDGenerator.
      */
     public void testGenerateNameBasedUUIDNameSpaceAndName()
     {
@@ -529,7 +529,7 @@ public class UUIDGeneratorTest extends TestCase
     
     /**
      * Test of generateNameBasedUUID(UUID, String, MessageDigest)
-     * method, of class org.safehaus.uuid.UUIDGenerator.
+     * method, of class com.fasterxml.uuid.UUIDGenerator.
      */
     public void testGenerateNameBasedUUIDNameSpaceNameAndMessageDigest()
     {
@@ -680,7 +680,7 @@ public class UUIDGeneratorTest extends TestCase
     
     /**
      * Test of generateTagURIBasedUUID(TagURI) method,
-     * of class org.safehaus.uuid.UUIDGenerator.
+     * of class com.fasterxml.uuid.UUIDGenerator.
      */
     public void testGenerateTagURIBasedUUID()
     {
@@ -767,7 +767,7 @@ public class UUIDGeneratorTest extends TestCase
     
     /**
      * Test of generateTagURIBasedUUID(TagURI, MessageDigest) method,
-     * of class org.safehaus.uuid.UUIDGenerator.
+     * of class com.fasterxml.uuid.UUIDGenerator.
      */
     public void testGenerateTagURIBasedUUIDWithMessageDigest()
     {
