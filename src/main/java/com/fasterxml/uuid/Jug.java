@@ -25,7 +25,7 @@ import java.util.*;
  */
 public class Jug
 {
-    private final static HashMap mTypes = new HashMap();
+    private final static HashMap<String,String> mTypes = new HashMap<String,String>();
     static {
         mTypes.put("time-based", "t");
         mTypes.put("random-based", "r");
@@ -34,7 +34,7 @@ public class Jug
         mTypes.put("tag-uri-with-timestamp", "U");
     }
 
-    private final static HashMap mOptions = new HashMap();
+    private final static HashMap<String,String> mOptions = new HashMap<String,String>();
     static {
         mOptions.put("count", "c");
         mOptions.put("ethernet-address", "e");
@@ -71,17 +71,13 @@ public class Jug
         System.err.println("  name-based / n: generate UUID based on the na the default secure random number generator");
     }
 
-    private static void printMap(Map m, PrintStream out, boolean option)
+    private static void printMap(Map<String,String> m, PrintStream out, boolean option)
     {
-        Iterator it = m.keySet().iterator();
-        int count = 0, len = m.size();
-
-        while (it.hasNext()) {
-            String key = (String) it.next();
-            String value = (String) m.get(key);
-
-            if (++count > 1) {
-                if (count < len) {
+    	int i = 0;
+    	int len = m.size();
+    	for (Map.Entry<String, String> en : m.entrySet()) {
+            if (++i > 1) {
+                if (i < len) {
                     out.print(", ");
                 } else {
                     out.print(" and ");
@@ -90,12 +86,12 @@ public class Jug
             if (option) {
                 out.print("--");
             }
-            out.print(key);
+            out.print(en.getKey());
             out.print(" (");
             if (option) {
                 out.print("-");
             }
-            out.print(value);
+            out.print(en.getValue());
             out.print(")");
         }
     }

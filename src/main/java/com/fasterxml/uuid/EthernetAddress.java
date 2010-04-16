@@ -20,12 +20,14 @@ import java.io.Serializable;
 /**
  * EthernetAddress encapsulates the 6-byte Mac address defined in
  * IEEE 802.1 standard.
+ * 
  */
-
 public class EthernetAddress
-    implements Serializable, Cloneable, Comparable
+    implements Serializable, Cloneable, Comparable<EthernetAddress>
 {
-    private final static String kHexChars = "0123456789abcdefABCDEF";
+	private static final long serialVersionUID = 1L;
+
+	private final static String kHexChars = "0123456789abcdefABCDEF";
 
     private final byte[] mAddress = new byte[6];
 
@@ -166,10 +168,10 @@ public class EthernetAddress
     {
         try {
             return super.clone();
-	} catch (CloneNotSupportedException e) {
-	    // shouldn't happen
-	    return null;
-	}
+        } catch (CloneNotSupportedException e) {
+        	// shouldn't happen
+        	return null;
+        }
     }
     
     /* *** Comparison methods *** */
@@ -194,17 +196,17 @@ public class EthernetAddress
      * argument. Comparison is done simply by comparing individual
      * address bytes in the order.
      *
-     * @return -1 if this EthernetAddress should be sorted before the
-     *  one passed in, 1 if after and 0 if they are equal.
+     * @return negative number if this EthernetAddress should be sorted before the
+     *   parameter address if they are equal, os positive non-zero number if this address
+     *  should be sorted after parameter
      */
-    public int compareTo(Object o)
+    public int compareTo(EthernetAddress other)
     {
-        byte[] thatA = ((EthernetAddress) o).mAddress;
+        byte[] thatA = other.mAddress;
         byte[] thisA = mAddress;
         
         for (int i = 0; i < 6; ++i) {
-            int cmp = (((int) thisA[i]) & 0xFF)
-                - (((int) thatA[i]) & 0xFF);
+            int cmp = (0xFF & thisA[i]) - (0xFF & thatA[i]);
             if (cmp != 0) {
                 return cmp;
             }
@@ -360,57 +362,5 @@ public class EthernetAddress
     public static EthernetAddress valueOf(long addr)
     {
         return new EthernetAddress(addr);
-    }
-
-    public static void main(String[] args)
-    {
-        System.out.println("EthernetAddress.main, test:");
-        System.out.println("---------------------------");
-
-        long rnd = 0;
-        if (args == null || args.length == 0) {
-            System.out.println("[no address passed, using a random address]");
-            rnd = System.currentTimeMillis()
-                ^ (long) (Math.random() * (double) 0x100000000L);
-            args = new String[] { new EthernetAddress(rnd).toString() };
-        }
-
-        for (int i = 0; i < args.length; ++i) {
-            String s = args[i];
-            System.out.println("Address '"+s+"':");
-            try {
-                EthernetAddress a = EthernetAddress.valueOf(s);
-                System.err.println("  Ok, comes out as '"+a.toString()+"'");
-
-                // EthernetAddress <-> long
-                System.err.print("  Converting to long, result = ");
-                long l = a.toLong();
-                System.err.println(""+Long.toHexString(l));
-                System.err.print("  Creating address from long, are equal: ");
-                EthernetAddress b = EthernetAddress.valueOf(l);
-                if (b.equals(a)) {
-                    System.err.println("yes (OK)");
-                } else {
-                    System.err.println("no (FAIL)");
-                    break;
-                }
-
-                // EthernetAddress <-> byte[]
-                System.err.println("  Converting to byte array.");
-                byte[] ba = a.asByteArray();
-                System.err.print("  Creating address from byte[], are equal: ");
-                b = EthernetAddress.valueOf(ba);
-                if (b.equals(a)) {
-                    System.err.println("yes (OK)");
-                } else {
-                    System.err.println("no (FAIL)");
-                    break;
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("  Fail: "+e.toString());
-            }
-        }
-        System.out.println("---------------------------");
-        System.out.println("Done.");
     }
 }

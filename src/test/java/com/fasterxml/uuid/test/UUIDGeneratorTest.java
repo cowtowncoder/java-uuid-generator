@@ -894,16 +894,13 @@ public class UUIDGeneratorTest extends TestCase
     /**************************************************************************
      * Begin Private Helper Methods for use in tests 
      *************************************************************************/
-    private class ReverseOrderUUIDComparator implements Comparator
+    private class ReverseOrderUUIDComparator implements Comparator<UUID>
     {
         // this Comparator class has a compare which orders reverse of the
         // compareTo methond in UUID (so we can be sure our arrays below are
         // 'not ordered in sorted order' before we sort them.
-        public int compare(Object o1, Object o2)
+        public int compare(UUID uuid1, UUID uuid2)
         {
-            UUID uuid1 = (UUID)o1;
-            UUID uuid2 = (UUID)o2;
-            
             return -uuid1.compareTo(uuid2);
         }
         
@@ -952,7 +949,7 @@ public class UUIDGeneratorTest extends TestCase
         // each other (aka, there should be no duplicates) we'll do this by
         // inserting all elements into a HashSet and making sure none of them
         //were already present (add will return false if it was already there)
-        HashSet hash_set = new HashSet();
+        HashSet<UUID> hash_set = new HashSet<UUID>();
         for (int i = 0; i < uuidArray.length; i++)
         {
             assertTrue("Uniqueness test failed on insert into HashSet",

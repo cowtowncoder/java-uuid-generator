@@ -397,23 +397,6 @@ public class UUIDTest extends TestCase
             fail("Caught an unexpected exception: " + ex);
         }
         
-        // now, let's make sure giving compareTo a non-UUID class
-        // results in the appropriate ClassCastException
-        try
-        {
-            // the 'null UUID' will be fine
-            NULL_UUID.compareTo((new Integer(5)));
-            fail("Expected exception not thrown");
-        }
-        catch (ClassCastException ex)
-        {
-            // good, we caught the expected exception, so we passed
-        }
-        catch (Exception ex)
-        {
-            fail("Caught an unexpected exception: " + ex);
-        }
-        
         // now we'll test some simple base cases
         // 2 null uuids always compare to 0
         assertUUIDEqualOrderHelper(NULL_UUID, new UUID());

@@ -43,9 +43,11 @@ import java.io.Serializable;
  */
 
 public class UUID
-    implements Serializable, Cloneable, Comparable
+    implements Serializable, Cloneable, Comparable<UUID>
 {
-    private final static String kHexChars = "0123456789abcdefABCDEF";
+	private static final long serialVersionUID = 1L;
+
+	private final static String kHexChars = "0123456789abcdefABCDEF";
 
     public final static int INDEX_CLOCK_HI = 6;
     public final static int INDEX_CLOCK_MID = 4;
@@ -439,17 +441,11 @@ public class UUID
      * different JVMs or external systems) binary comparison is done
      * over all 16 bytes.
      *
-     * @param o Object to compare this UUID to; should be a UUID
-     *
      * @return -1 if this UUID should be ordered before the one passed,
      *   1 if after, and 0 if they are the same
-     *
-     * @throws ClassCastException if o is not a UUID.
      */
-    public int compareTo(Object o)
+    public int compareTo(UUID other)
     {
-        UUID other = (UUID) o;
-
         int thisType = getType();
         int thatType = other.getType();
 

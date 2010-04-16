@@ -216,17 +216,13 @@ public class UUIDTimerTest extends TestCase
         return array_of_longs;
     }
 
-    private class ReverseOrderUUIDTimerLongComparator implements Comparator
+    private class ReverseOrderUUIDTimerLongComparator implements Comparator<Long>
     {
         // this Comparator class has a compare which orders reverse of the
         // compare method in UUIDTimerArrayComparator (so we can be sure our
         // arrays below are 'not ordered in sorted order'
         // before we sort them).
-        public int compare(Object o1, Object o2)
-        {           
-            Long uuid_timer_long1 = (Long)o1;
-            Long uuid_timer_long2 = (Long)o2;
-            
+        public int compare(Long uuid_timer_long1, Long uuid_timer_long2) {
             return -uuid_timer_long1.compareTo(uuid_timer_long2);
         }
         
@@ -278,14 +274,13 @@ public class UUIDTimerTest extends TestCase
         }
     }
 
-    private void checkUUIDTimerLongArrayForUniqueness(
-        Long[] uuidTimerLongArray)
+    private void checkUUIDTimerLongArrayForUniqueness(Long[] uuidTimerLongArray)
     {
         // here we'll assert that all elements in the list are not equal to
         // each other (aka, there should be no duplicates) we'll do this by
         // inserting all elements into a Set and making sure none of them
         // were already present (add will return false if it was already there)
-        Set set = new HashSet();
+        Set<Long> set = new HashSet<Long>();
         for (int i = 0; i < uuidTimerLongArray.length; i++)
         {
             assertTrue("Uniqueness test failed on insert into HashSet",

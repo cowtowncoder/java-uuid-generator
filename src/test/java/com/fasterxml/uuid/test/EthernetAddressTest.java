@@ -503,23 +503,6 @@ public class EthernetAddressTest extends TestCase
             fail("Caught an unexpected exception: " + ex);
         }
         
-        // now, let's make sure giving compareTo a non-EthernetAddress class
-        // results in the appropriate ClassCastException
-        try
-        {
-            // the 'null EthernetAddress' will be fine
-            NULL_ETHERNET_ADDRESS.compareTo((new Integer(5)));
-            fail("Expected exception not thrown");
-        }
-        catch (ClassCastException ex)
-        {
-            // good, we caught the expected exception, so we passed
-        }
-        catch (Exception ex)
-        {
-            fail("Caught an unexpected exception: " + ex);
-        }
-        
         // now we'll test some simple base cases
         // 2 null EthernetAddresses always compare to 0
         assertEthernetAddressEqualOrderHelper(NULL_ETHERNET_ADDRESS,

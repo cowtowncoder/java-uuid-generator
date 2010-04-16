@@ -104,7 +104,7 @@
 
     <target name="compile_java" depends="prepare">
         <javac SrcDir="${JavaSrcDir}" destdir="${BuildClassesDir}"
-         source="1.2" target="1.1"
+         source="1.6" target="1.6"
          debug="true">
             <include name="com/ccg/net/ethernet/BadAddressException.java" />
             <include name="com/ccg/net/ethernet/EthernetAddress.java" />
