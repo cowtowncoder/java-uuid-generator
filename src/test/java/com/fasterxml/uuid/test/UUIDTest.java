@@ -23,9 +23,10 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import java.util.Arrays;
+import java.util.UUID;
 
-import com.fasterxml.uuid.UUID;
-
+import com.fasterxml.uuid.UUIDType;
+import com.fasterxml.uuid.UUIDUtil;
 
 /**
  * This class tests UUID for correct functionality.
@@ -65,12 +66,12 @@ public class UUIDTest extends TestCase
         // methods of the UUID class working properly.
         // If it fails, that is fine... the test only needs to indicate
         // proper working behavior or that it needs to be fixed.
-        UUID uuid = new UUID();
+        UUID uuid = UUIDUtil.nullUUID();
         assertEquals("Default constructor did not create expected null UUID",
                     NULL_UUID_STRING,
                     uuid.toString());
         assertTrue("Expected array did not equal actual array",
-            Arrays.equals(NULL_UUID_BYTE_ARRAY, uuid.toByteArray()));
+            Arrays.equals(NULL_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
     }
     
     /**
@@ -78,186 +79,36 @@ public class UUIDTest extends TestCase
      */
     public void testByteArrayUUIDConstructor()
     {
-        // passing null
-        try
-        {
-            /*UUID uuid =*/ new UUID((byte[])null);
-            fail("Expected exception not caught");
-        }
-        catch (NullPointerException ex)
-        {
-            // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("Caught unexpected exception: " + ex);
-        }
-        
         // passing array that is too small
         try
         {
-            /*UUID uuid =*/ new UUID(new byte[UUID_BYTE_ARRAY_LENGTH - 1]);
+            /*UUID uuid =*/ UUIDUtil.uuid(new byte[UUID_BYTE_ARRAY_LENGTH - 1]);
             fail("Expected exception not caught");
         }
-        catch (ArrayIndexOutOfBoundsException ex)
-        {
+        catch (ArrayIndexOutOfBoundsException ex) {
             // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             fail("Caught unexpected exception: " + ex);
         }
 
         // test that creating a uuid from an zero'd array
         // gives us a null UUID (definition of a null UUID)
-        UUID uuid = new UUID(new byte[UUID_BYTE_ARRAY_LENGTH]);
+        UUID uuid = UUIDUtil.uuid(new byte[UUID_BYTE_ARRAY_LENGTH]);
         assertEquals("constructor did not create expected null UUID",
                     NULL_UUID_STRING,
                     uuid.toString());
         assertTrue("Expected array did not equal actual array",
-            Arrays.equals(NULL_UUID_BYTE_ARRAY, uuid.toByteArray()));
+            Arrays.equals(NULL_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
         
         // test creating an array from a good byte array
-        uuid = new UUID(VALID_UUID_BYTE_ARRAY);
+        uuid = UUIDUtil.uuid(VALID_UUID_BYTE_ARRAY);
         assertEquals("constructor did not create expected UUID",
                     MIXED_CASE_VALID_UUID_STRING.toLowerCase(),
                     uuid.toString().toLowerCase());
 
         // test creating an array from a good byte array with extra data on end
-        uuid = new UUID(VALID_UUID_BYTE_ARRAY_WITH_EXTRA_END);
+        uuid = UUIDUtil.uuid(VALID_UUID_BYTE_ARRAY_WITH_EXTRA_END);
         assertEquals("constructor did not create expected UUID",
-                    MIXED_CASE_VALID_UUID_STRING.toLowerCase(),
-                    uuid.toString().toLowerCase());
-    }
-    
-    /**
-     * Test of UUID(byte[], int) constructor, of class com.fasterxml.uuid.UUID.
-     */
-    public void testByteArrayFromOffsetUUIDConstructor()
-    {
-        // constant for use in this test
-        final int EXTRA_DATA_LENGTH = 9;
-        
-        // passing null and 0
-        try
-        {
-            /*UUID uuid =*/ new UUID((byte[])null, 0);
-            fail("Expected exception not caught");
-        }
-        catch (NullPointerException ex)
-        {
-            // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("Caught unexpected exception: " + ex);
-        }
-        
-        // passing an array that is too small
-        try
-        {
-            /*UUID uuid =*/ new UUID(new byte[UUID_BYTE_ARRAY_LENGTH - 1], 0);
-            fail("Expected exception not caught");
-        }
-        catch (ArrayIndexOutOfBoundsException ex)
-        {
-            // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("Caught unexpected exception: " + ex);
-        }
-
-        // passing an index that is negative
-        try
-        {
-            /*UUID uuid =*/ new UUID(new byte[UUID_BYTE_ARRAY_LENGTH], -1);
-            fail("Expected exception not caught");
-        }
-        catch (ArrayIndexOutOfBoundsException ex)
-        {
-            // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("Caught unexpected exception: " + ex);
-        }
-        
-        // passing an index that is too big
-        try
-        {
-            /*UUID uuid =*/
-                new UUID(
-                    new byte[UUID_BYTE_ARRAY_LENGTH], UUID_BYTE_ARRAY_LENGTH);
-            fail("Expected exception not caught");
-        }
-        catch (ArrayIndexOutOfBoundsException ex)
-        {
-            // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("Caught unexpected exception: " + ex);
-        }
-        
-        // passing an index that is in the array,
-        // but without enough bytes to read UUID_BYTE_ARRAY_LENGTH
-        try
-        {
-            /*UUID uuid =*/ new UUID(new byte[UUID_BYTE_ARRAY_LENGTH], 1);
-            fail("Expected exception not caught");
-        }
-        catch (ArrayIndexOutOfBoundsException ex)
-        {
-            // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("Caught unexpected exception: " + ex);
-        }
-        
-        // test that creating a uuid from an zero'd array
-        // gives us a null UUID (definition of a null UUID)
-        UUID uuid = new UUID(new byte[UUID_BYTE_ARRAY_LENGTH], 0);
-        assertEquals("constructor did not create expected null UUID",
-                    NULL_UUID_STRING,
-                    uuid.toString());
-        assertTrue("Expected array did not equal actual array",
-            Arrays.equals(NULL_UUID_BYTE_ARRAY, uuid.toByteArray()));
-        
-        // test that creating a uuid from an zero'd array with extra stuff
-        // on the front gives us a null UUID (definition of a null UUID)
-        byte[] null_uuid_array =
-            new byte[UUID_BYTE_ARRAY_LENGTH + EXTRA_DATA_LENGTH];
-        Arrays.fill(null_uuid_array, 0, EXTRA_DATA_LENGTH, (byte)'x');
-        uuid = new UUID(null_uuid_array, EXTRA_DATA_LENGTH);
-        assertEquals("constructor did not create expected null UUID",
-                    NULL_UUID_STRING,
-                    uuid.toString());
-        assertTrue("Expected array did not equal actual array",
-            Arrays.equals(NULL_UUID_BYTE_ARRAY, uuid.toByteArray()));
-        
-        // test creating an array from a good byte array
-        uuid = new UUID(VALID_UUID_BYTE_ARRAY, 0);
-        assertEquals("constructor did not create expected null UUID",
-                    MIXED_CASE_VALID_UUID_STRING.toLowerCase(),
-                    uuid.toString().toLowerCase());
-
-        // test creating an array from a good byte array with extra data on end
-        uuid = new UUID(VALID_UUID_BYTE_ARRAY_WITH_EXTRA_END, 0);
-        assertEquals("constructor did not create expected null UUID",
-                    MIXED_CASE_VALID_UUID_STRING.toLowerCase(),
-                    uuid.toString().toLowerCase());
-        
-        // test creating uuid from a byte array with extra junk on start
-        uuid = new UUID(VALID_UUID_BYTE_ARRAY_WITH_EXTRA_START, 10);
-        assertEquals("constructor did not create expected null UUID",
-                    MIXED_CASE_VALID_UUID_STRING.toLowerCase(),
-                    uuid.toString().toLowerCase());
-
-        // test creating an uuid from a byte array with extra junk on both ends
-        uuid = new UUID(VALID_UUID_BYTE_ARRAY_WITH_EXTRA_BOTH, 10);
-        assertEquals("constructor did not create expected null UUID",
                     MIXED_CASE_VALID_UUID_STRING.toLowerCase(),
                     uuid.toString().toLowerCase());
     }
@@ -270,7 +121,7 @@ public class UUIDTest extends TestCase
         // test a null string case
         try
         {
-            /*UUID uuid =*/ new UUID((String)null);
+            /*UUID uuid =*/ UUIDUtil.uuid((String)null);
             fail("Expected exception not caught");
         }
         catch (NullPointerException ex)
@@ -311,68 +162,40 @@ public class UUIDTest extends TestCase
         // gives back the same value in byte form that we used to create it
         
         // first we'll test the null uuid
-        UUID uuid = new UUID();
+        UUID uuid = UUIDUtil.nullUUID();
         assertEquals("Expected length of returned array wrong",
                     UUID_BYTE_ARRAY_LENGTH,
-                    uuid.asByteArray().length);
+                    UUIDUtil.asByteArray(uuid).length);
         assertTrue("Expected array did not equal actual array",
-            Arrays.equals(NULL_UUID_BYTE_ARRAY, uuid.asByteArray()));
+            Arrays.equals(NULL_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
         
         // now test a non-null uuid
-        uuid = new UUID(MIXED_CASE_VALID_UUID_STRING);
+        uuid = UUIDUtil.uuid(MIXED_CASE_VALID_UUID_STRING);
         assertEquals("Expected length of returned array wrong",
                     UUID_BYTE_ARRAY_LENGTH,
-                    uuid.asByteArray().length);
+                    UUIDUtil.asByteArray(uuid).length);
         assertTrue("Expected array did not equal actual array",
-            Arrays.equals(VALID_UUID_BYTE_ARRAY, uuid.asByteArray()));
+            Arrays.equals(VALID_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
         
         // let's make sure that changing the returned array doesn't mess with
         // the wrapped UUID's internals
-        uuid = new UUID(MIXED_CASE_VALID_UUID_STRING);
+        uuid = UUIDUtil.uuid(MIXED_CASE_VALID_UUID_STRING);
         assertEquals("Expected length of returned array wrong",
                     UUID_BYTE_ARRAY_LENGTH,
-                    uuid.asByteArray().length);
+                    UUIDUtil.asByteArray(uuid).length);
         assertTrue("Expected array did not equal actual array",
-            Arrays.equals(VALID_UUID_BYTE_ARRAY, uuid.asByteArray()));
+            Arrays.equals(VALID_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
 
-        byte[] test_uuid_array = uuid.asByteArray();
+        byte[] test_uuid_array = UUIDUtil.asByteArray(uuid);
         // now stir it up a bit and then check that the original UUID was
         // not changed in the process. The easiest stir is to sort it ;)
         Arrays.sort(test_uuid_array);
         assertFalse("Expected array was equal other array",
             Arrays.equals(VALID_UUID_BYTE_ARRAY, test_uuid_array));
         assertFalse("Expected array was equal other array",
-            Arrays.equals(uuid.asByteArray(), test_uuid_array));
+            Arrays.equals(UUIDUtil.asByteArray(uuid), test_uuid_array));
         assertTrue("Expected array did not equal actual array",
-            Arrays.equals(VALID_UUID_BYTE_ARRAY, uuid.asByteArray()));
-    }
-    
-    /**
-     * Test of clone method, of class com.fasterxml.uuid.UUID.
-     */
-    public void testClone()
-    {
-        // as lifted from the JDK Object JavaDoc for clone:
-        // x.clone() Creates and returns a copy of x.
-        // The precise meaning of "copy" may depend on
-        // the class of the object. The general intent
-        // is that, for any object x, the expression: 
-        // x.clone() != x 
-        // will be true, and that the expression: 
-        // x.clone().getClass() == x.getClass()
-        // will be true, but these are not absolute requirements.
-        // While it is typically the case that:
-        // x.clone().equals(x)
-        // will be true, this is not an absolute requirement.
-        // For UUID, this test will check that all the above ARE true
-        // in the case of UUID clone() because it is the desired behavior.
-        UUID x = new UUID(VALID_UUID_BYTE_ARRAY);
-        assertTrue("x.clone() != x did not return true",
-                    x.clone() != x);
-        assertTrue("x.clone().getClass() == x.getClass() did not return true",
-                    x.clone().getClass() == x.getClass());
-        assertTrue("x.clone().equals(x) did not return true",
-                    x.clone().equals(x));
+            Arrays.equals(VALID_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
     }
     
     /**
@@ -399,11 +222,11 @@ public class UUIDTest extends TestCase
         
         // now we'll test some simple base cases
         // 2 null uuids always compare to 0
-        assertUUIDEqualOrderHelper(NULL_UUID, new UUID());
+        assertUUIDEqualOrderHelper(NULL_UUID, UUIDUtil.nullUUID());
         
         // 2 of the same value UUIDs are always 0
         assertUUIDEqualOrderHelper(
-            TIME3_MAC1_UUID, new UUID(TIME3_MAC1_UUID.toString()));
+            TIME3_MAC1_UUID, UUIDUtil.uuid(TIME3_MAC1_UUID.toString()));
         
         // the 'null UUID' always comes first in the ordering
         assertUUIDGreaterOrderHelper(TIME3_MAC1_UUID, NULL_UUID);
@@ -520,58 +343,34 @@ public class UUIDTest extends TestCase
     {
         // test passing null to equals returns false
         // (as specified in the JDK docs for Object)
-        UUID x = new UUID(VALID_UUID_BYTE_ARRAY);
-        assertFalse("equals(null) didn't return false",
-                x.equals((Object)null));
+        UUID x = UUIDUtil.uuid(VALID_UUID_BYTE_ARRAY);
+        assertFalse("equals(null) didn't return false", x.equals((Object)null));
         
         // test that passing an object which is not a UUID returns false
-        assertFalse("x.equals(non_UUID_object) didn't return false",
-                    x.equals(new Object()));
+        assertFalse("x.equals(non_UUID_object) didn't return false", x.equals(new Object()));
         
         // test a case where two UUIDs are definitly not equal
-        UUID w = new UUID(ANOTHER_VALID_UUID_BYTE_ARRAY);
-        assertFalse("x == w didn't return false",
-                    x == w);
-        assertFalse("x.equals(w) didn't return false",
-                    x.equals(w));
+        UUID w = UUIDUtil.uuid(ANOTHER_VALID_UUID_BYTE_ARRAY);
+        assertFalse("x.equals(w) didn't return false", x.equals(w));
 
         // test refelexivity
-        assertTrue("x.equals(x) didn't return true",
-                    x.equals(x));
+        assertTrue("x.equals(x) didn't return true", x.equals(x));
         
         // test symmetry
-        UUID y = new UUID(VALID_UUID_BYTE_ARRAY);
-        assertFalse("x == y didn't return false",
-                    x == y);
-        assertTrue("y.equals(x) didn't return true",
-                    y.equals(x));
-        assertTrue("x.equals(y) didn't return true",
-                    x.equals(y));
+        UUID y = UUIDUtil.uuid(VALID_UUID_BYTE_ARRAY);
+        assertTrue("y.equals(x) didn't return true", y.equals(x));
+        assertTrue("x.equals(y) didn't return true", x.equals(y));
         
         // now we'll test transitivity
-        UUID z = new UUID(VALID_UUID_BYTE_ARRAY);
-        assertFalse("x == y didn't return false",
-                    x == y);
-        assertFalse("x == y didn't return false",
-                    y == z);
-        assertFalse("x == y didn't return false",
-                    x == z);
-        assertTrue("x.equals(y) didn't return true",
-                    x.equals(y));
-        assertTrue("y.equals(z) didn't return true",
-                    y.equals(z));
-        assertTrue("x.equals(z) didn't return true",
-                    x.equals(z));
+        UUID z = UUIDUtil.uuid(VALID_UUID_BYTE_ARRAY);
+        assertTrue("x.equals(y) didn't return true", x.equals(y));
+        assertTrue("y.equals(z) didn't return true", y.equals(z));
+        assertTrue("x.equals(z) didn't return true", x.equals(z));
         
         // test consistancy (this test is just calling equals multiple times)
-        assertFalse("x == y didn't return false",
-                    x == y);
-        assertTrue("x.equals(y) didn't return true",
-                    x.equals(y));
-        assertTrue("x.equals(y) didn't return true",
-                    x.equals(y));
-        assertTrue("x.equals(y) didn't return true",
-                    x.equals(y));
+        assertTrue("x.equals(y) didn't return true", x.equals(y));
+        assertTrue("x.equals(y) didn't return true", x.equals(y));
+        assertTrue("x.equals(y) didn't return true", x.equals(y));
     }
     
     /**
@@ -579,20 +378,20 @@ public class UUIDTest extends TestCase
      */
     public void testGetNullUUID()
     {
-        UUID uuid = UUID.getNullUUID();
+        UUID uuid = UUIDUtil.nullUUID();
         assertEquals("getNullUUID did not create expected null UUID",
                     NULL_UUID_STRING,
                     uuid.toString());
         assertTrue("Expected array did not equal actual array",
-            Arrays.equals(NULL_UUID_BYTE_ARRAY, uuid.toByteArray()));
+            Arrays.equals(NULL_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
         
         // also, validate that getNullUUID is getting the same null each time
-        UUID uuid2 = UUID.getNullUUID();
+        UUID uuid2 = UUIDUtil.nullUUID();
         assertEquals("getNullUUID did not create expected null UUID",
                     NULL_UUID_STRING,
                     uuid2.toString());
         assertTrue("Expected array did not equal actual array",
-            Arrays.equals(NULL_UUID_BYTE_ARRAY, uuid2.toByteArray()));
+            Arrays.equals(NULL_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid2)));
         assertTrue("two returned null UUIDs were not the sam object instance",
                     uuid == uuid2);
     }
@@ -606,45 +405,45 @@ public class UUIDTest extends TestCase
         // have the correct type returned from getType
         
         // test creating a null UUID
-        UUID uuid = new UUID();
+        UUID uuid = UUIDUtil.nullUUID();
         assertTrue("Expected array did not equal actual array",
-            Arrays.equals(NULL_UUID_BYTE_ARRAY, uuid.toByteArray()));
+            Arrays.equals(NULL_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
         assertEquals("Expected type was not returned",
-                    UUID.TYPE_NULL,
-                    uuid.getType());
+                    UUIDUtil.nullUUID(),
+            		UUIDUtil.typeOf(uuid));
         
         // test Random UUID in this case
-        uuid = new UUID(VALID_UUID_BYTE_ARRAY);
+        uuid = UUIDUtil.uuid(VALID_UUID_BYTE_ARRAY);
         assertTrue("Expected array did not equal actual array",
-            Arrays.equals(VALID_UUID_BYTE_ARRAY, uuid.toByteArray()));
+            Arrays.equals(VALID_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
         assertEquals("Expected type was not returned",
-                    UUID.TYPE_RANDOM_BASED,
-                    uuid.getType());
+        		UUIDType.RANDOM_BASED,
+        		UUIDUtil.typeOf(uuid));
         
         // test time based UUID in this case
-        uuid = new UUID(TIME1_MAC1_UUID.toByteArray());
+        uuid = UUIDUtil.uuid(UUIDUtil.asByteArray(TIME1_MAC1_UUID));
         assertEquals("constructor did not create expected UUID",
                     TIME1_MAC1_UUID.toString().toLowerCase(),
                     uuid.toString().toLowerCase());
         assertEquals("Expected type was not returned",
-                    UUID.TYPE_TIME_BASED,
-                    uuid.getType());
+        		UUIDType.TIME_BASED,
+            		UUIDUtil.typeOf(uuid));
         
         // test name based UUID in this case
-        uuid = new UUID(NAME_BASED_UUID_STRING);
+        uuid = UUIDUtil.uuid(NAME_BASED_UUID_STRING);
         assertTrue("Expected array did not equal actual array",
-            Arrays.equals(NAME_BASED_UUID_BYTE_ARRAY, uuid.toByteArray()));
+            Arrays.equals(NAME_BASED_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
         assertEquals("Expected type was not returned",
-                    UUID.TYPE_NAME_BASED,
-                    uuid.getType());
+        		UUIDType.NAME_BASED,
+            		UUIDUtil.typeOf(uuid));
         
         // test DCE based UUID in this case
-        uuid = new UUID(DCE_BASED_UUID_BYTE_ARRAY);
+        uuid = UUIDUtil.uuid(DCE_BASED_UUID_BYTE_ARRAY);
         assertTrue("Expected array did not equal actual array",
-            Arrays.equals(DCE_BASED_UUID_BYTE_ARRAY, uuid.toByteArray()));
+            Arrays.equals(DCE_BASED_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
         assertEquals("Expected type was not returned",
-                    UUID.TYPE_DCE,
-                    uuid.getType());
+        		UUIDType.DCE,
+            		UUIDUtil.typeOf(uuid));
     }
     
     /**
@@ -660,7 +459,7 @@ public class UUIDTest extends TestCase
         // modified. This integer need not remain consistent from one
         // execution of an application to another execution of the
         // same application
-        UUID x = new UUID(VALID_UUID_BYTE_ARRAY);
+        UUID x = UUIDUtil.uuid(VALID_UUID_BYTE_ARRAY);
         assertTrue("x.equals(x) didn't return true",
                     x.equals(x));
         assertEquals("x.hashCode() didn't equal x.hashCode()",
@@ -674,7 +473,7 @@ public class UUIDTest extends TestCase
         // If two objects are equal according to the equals(Object) method,
         // then calling the hashCode method on each of the two objects
         // must produce the same integer result
-        UUID y = new UUID(VALID_UUID_BYTE_ARRAY);
+        UUID y = UUIDUtil.uuid(VALID_UUID_BYTE_ARRAY);
         assertFalse("x == y didn't return false",
                     x == y);
         assertTrue("x.equals(y) didn't return true",
@@ -695,86 +494,36 @@ public class UUIDTest extends TestCase
     {
         // this test will test isNullUUID using the five main ways you could
         // create a null UUID and test a case where it should NOT be true
-        UUID uuid = null;
         
         // test using default constructor
-        uuid = new UUID();
-        assertTrue("isNullUUID was not true",
-                    uuid.isNullUUID());
-        
-        uuid = null;
-        
-        // test using static getNullUUID
-        uuid = UUID.getNullUUID();
-        assertTrue("isNullUUID was not true",
-                    uuid.isNullUUID());
-        
-        uuid = null;
+        UUID uuid = UUIDUtil.nullUUID();
+        assertIsNullUUID(uuid);
         
         // test by string creation using null uuid represented in string form
-        uuid = new UUID(NULL_UUID_STRING);
-        assertTrue("isNullUUID was not true",
-                    uuid.isNullUUID());
-        
-        uuid = null;
+        uuid = UUIDUtil.uuid(NULL_UUID_STRING);
+        assertIsNullUUID(uuid);
         
         // test by byte[] creation using null uuid represented in byte[] form
-        uuid = new UUID(NULL_UUID_BYTE_ARRAY);
-        assertTrue("isNullUUID was not true",
-                    uuid.isNullUUID());
-
-        uuid = null;
+        uuid = UUIDUtil.uuid(NULL_UUID_BYTE_ARRAY);
+        assertIsNullUUID(uuid);
         
         // test by byte[] creation using null uuid represented in byte[] form
         // starting at an offset
         byte[] null_uuid_array = new byte[20];
         Arrays.fill(null_uuid_array, 0, 3, (byte)'x');
-        uuid = new UUID(null_uuid_array, 4);
-        assertTrue("isNullUUID was not true",
-                    uuid.isNullUUID());
-
-        uuid = null;
+        uuid = UUIDUtil.uuid(null_uuid_array, 4);
+        assertIsNullUUID(uuid);
         
         // test a not null case
-        uuid = new UUID(VALID_UUID_BYTE_ARRAY);
-        assertFalse("isNullUUID was true",
-                    uuid.isNullUUID());
+        uuid = UUIDUtil.uuid(VALID_UUID_BYTE_ARRAY);
+        assertIsNullUUID(uuid);
     }
-    
-    /**
-     * Test of setDescCaching method, of class com.fasterxml.uuid.UUID.
-     */
-    public void testSetDescCaching()
-    {
-        // there is no really good way to 'test' this feature other then
-        // to check that if a UUID is created and desc caching is set false
-        // then two different calls to toString give 2 strings which are !=
-        UUID uuid = new UUID(VALID_UUID_BYTE_ARRAY);
-        UUID.setDescCaching(false);
-        
-        String x = uuid.toString();
-        String y = uuid.toString();
-        assertFalse("x == y was not false",
-                    x == y);
-        assertEquals("x.equals(y) was not true",
-                    x,
-                    y);
-        
-        UUID.setDescCaching(true);
-        String a = uuid.toString();
-        String b = uuid.toString();
-        assertTrue("a == b was not true",
-                    a == b);
-        assertEquals("a.equals(b) was not true",
-                    a,
-                    b);
-        assertFalse("y == a was not false",
-                    y == a);
-        assertEquals("y.equals(a) was not true",
-                    y,
-                    a);
+
+    private void assertIsNullUUID(UUID uuid) {
+    	assertEquals(0L, uuid.getMostSignificantBits());
+    	assertEquals(0L, uuid.getLeastSignificantBits());
     }
-    
+
     /**
      * Test of toByteArray() method, of class com.fasterxml.uuid.UUID.
      */
@@ -784,39 +533,39 @@ public class UUIDTest extends TestCase
         // gives back the same value in byte form that we used to create it
         
         // first we'll test the null uuid
-        UUID uuid = new UUID();
+        UUID uuid = UUIDUtil.nullUUID();
         assertEquals("Expected length of returned array wrong",
                     UUID_BYTE_ARRAY_LENGTH,
-                    uuid.toByteArray().length);
+                    UUIDUtil.asByteArray(uuid).length);
         assertTrue("Expected array did not equal actual array",
-            Arrays.equals(NULL_UUID_BYTE_ARRAY, uuid.toByteArray()));
+            Arrays.equals(NULL_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
         
         // now test a non-null uuid
-        uuid = new UUID(MIXED_CASE_VALID_UUID_STRING);
+        uuid = UUIDUtil.uuid(MIXED_CASE_VALID_UUID_STRING);
         assertEquals("Expected length of returned array wrong",
                     UUID_BYTE_ARRAY_LENGTH,
-                    uuid.toByteArray().length);
+                    UUIDUtil.asByteArray(uuid).length);
         assertTrue("Expected array did not equal actual array",
-            Arrays.equals(VALID_UUID_BYTE_ARRAY, uuid.toByteArray()));
+            Arrays.equals(VALID_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
         
         // let's make sure that changing the returned array doesn't mess with
         // the wrapped UUID's internals
-        uuid = new UUID(MIXED_CASE_VALID_UUID_STRING);
+        uuid = UUIDUtil.uuid(MIXED_CASE_VALID_UUID_STRING);
         assertEquals("Expected length of returned array wrong",
                     UUID_BYTE_ARRAY_LENGTH,
-                    uuid.toByteArray().length);
+                    UUIDUtil.asByteArray(uuid).length);
         assertTrue("Expected array did not equal actual array",
-            Arrays.equals(VALID_UUID_BYTE_ARRAY, uuid.toByteArray()));
-        byte[] test_uuid_array = uuid.toByteArray();
+            Arrays.equals(VALID_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
+        byte[] test_uuid_array = UUIDUtil.asByteArray(uuid);
         // now stir it up a bit and then check that the original UUID was
         // not changed in the process. The easiest stir is to sort it ;)
         Arrays.sort(test_uuid_array);
         assertFalse("Expected array was equal other array",
             Arrays.equals(VALID_UUID_BYTE_ARRAY, test_uuid_array));
         assertFalse("Expected array was equal other array",
-            Arrays.equals(uuid.toByteArray(), test_uuid_array));
+            Arrays.equals(UUIDUtil.asByteArray(uuid), test_uuid_array));
         assertTrue("Expected array did not equal actual array",
-            Arrays.equals(VALID_UUID_BYTE_ARRAY, uuid.toByteArray()));
+            Arrays.equals(VALID_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
     }
 
     /**
@@ -831,8 +580,8 @@ public class UUIDTest extends TestCase
         // first, passing null
         try
         {
-            UUID test_uuid = new UUID();
-            test_uuid.toByteArray((byte[])null);
+            UUID test_uuid = UUIDUtil.nullUUID();
+            UUIDUtil.toByteArray(test_uuid, (byte[])null);
             
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
@@ -849,9 +598,9 @@ public class UUIDTest extends TestCase
         // now an array that is too small
         try
         {
-            UUID test_uuid = new UUID();
+            UUID test_uuid = UUIDUtil.nullUUID();
             byte[] uuid_array = new byte[UUID_BYTE_ARRAY_LENGTH - 1];
-            test_uuid.toByteArray(uuid_array);
+            UUIDUtil.toByteArray(test_uuid, uuid_array);
             
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
@@ -869,23 +618,23 @@ public class UUIDTest extends TestCase
         // gives back the same value in byte form that we used to create it
         
         // here we'll test the null uuid
-        UUID test_uuid = new UUID();
+        UUID test_uuid = UUIDUtil.nullUUID();
         byte[] test_array = new byte[UUID_BYTE_ARRAY_LENGTH];
-        test_uuid.toByteArray(test_array);
+        UUIDUtil.toByteArray(test_uuid, test_array);
         assertTrue("Expected array did not equal actual array",
             Arrays.equals(NULL_UUID_BYTE_ARRAY, test_array));
         
         // now test a non-null uuid
-        test_uuid = new UUID(MIXED_CASE_VALID_UUID_STRING);
-        test_uuid.toByteArray(test_array);
+        test_uuid = UUIDUtil.uuid(MIXED_CASE_VALID_UUID_STRING);
+        UUIDUtil.toByteArray(test_uuid, test_array);
         assertTrue("Expected array did not equal actual array",
             Arrays.equals(VALID_UUID_BYTE_ARRAY, test_array));
         
         // now test a null uuid case with extra data in the array
-        test_uuid = new UUID();
+        test_uuid = UUIDUtil.nullUUID();
         test_array = new byte[UUID_BYTE_ARRAY_LENGTH + EXTRA_DATA_LENGTH];
         Arrays.fill(test_array, (byte)'x');
-        test_uuid.toByteArray(test_array);
+        UUIDUtil.toByteArray(test_uuid, test_array);
         for (int i = 0; i < UUID_BYTE_ARRAY_LENGTH; ++i)
         {
             assertEquals("Expected array values did not match",
@@ -900,10 +649,10 @@ public class UUIDTest extends TestCase
         }
         
         // now test a good uuid case with extra data in the array
-        test_uuid = new UUID(MIXED_CASE_VALID_UUID_STRING);
+        test_uuid = UUIDUtil.uuid(MIXED_CASE_VALID_UUID_STRING);
         test_array = new byte[UUID_BYTE_ARRAY_LENGTH + EXTRA_DATA_LENGTH];
         Arrays.fill(test_array, (byte)'x');
-        test_uuid.toByteArray(test_array);
+        UUIDUtil.toByteArray(test_uuid, test_array);
         for (int i = 0; i < UUID_BYTE_ARRAY_LENGTH; ++i)
         {
             assertEquals("Expected array values did not match",
@@ -927,34 +676,12 @@ public class UUIDTest extends TestCase
         // constant value for use in this test
         final int EXTRA_DATA_LENGTH = 9;
         
-        // lets test some error cases
-        // first, passing null and 0
-        try
-        {
-            UUID test_uuid = new UUID();
-            test_uuid.toByteArray((byte[])null, 0);
-            
-            /*UUID uuid = */UUID.valueOf((byte[])null, 0);
-            
-            // if we reached here we failed because we didn't get an exception
-            fail("Expected exception not caught");
-        }
-        catch (NullPointerException ex)
-        {
-            // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("Caught unexpected exception: " + ex);
-        }
-        
         // now an array that is too small
         try
         {
-            UUID test_uuid = new UUID();
+            UUID test_uuid = UUIDUtil.nullUUID();
             byte[] uuid_array = new byte[UUID_BYTE_ARRAY_LENGTH - 1];
-            test_uuid.toByteArray(uuid_array, 0);
-            
+            UUIDUtil.toByteArray(test_uuid, uuid_array, 0);            
             
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
@@ -971,9 +698,9 @@ public class UUIDTest extends TestCase
         // now an index that is negative
         try
         {
-            UUID test_uuid = new UUID();
+            UUID test_uuid = UUIDUtil.nullUUID();
             byte[] uuid_array = new byte[UUID_BYTE_ARRAY_LENGTH];
-            test_uuid.toByteArray(uuid_array, -1);
+            UUIDUtil.toByteArray(test_uuid, uuid_array, -1);
             
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
@@ -990,9 +717,9 @@ public class UUIDTest extends TestCase
         // now an index that is too big
         try
         {
-            UUID test_uuid = new UUID();
+            UUID test_uuid = UUIDUtil.nullUUID();
             byte[] uuid_array = new byte[UUID_BYTE_ARRAY_LENGTH];
-            test_uuid.toByteArray(uuid_array, UUID_BYTE_ARRAY_LENGTH);
+            UUIDUtil.toByteArray(test_uuid, uuid_array, UUID_BYTE_ARRAY_LENGTH);
             
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
@@ -1010,9 +737,9 @@ public class UUIDTest extends TestCase
         // but without enough bytes to read UUID_BYTE_ARRAY_LENGTH
         try
         {
-            UUID test_uuid = new UUID();
+            UUID test_uuid = UUIDUtil.nullUUID();
             byte[] uuid_array = new byte[UUID_BYTE_ARRAY_LENGTH];
-            test_uuid.toByteArray(uuid_array, 1);
+            UUIDUtil.toByteArray(test_uuid, uuid_array, 1);
             
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
@@ -1030,23 +757,23 @@ public class UUIDTest extends TestCase
         // gives back the same value in byte form that we used to create it
         
         // here we'll test the null uuid at offset 0
-        UUID test_uuid = new UUID();
+        UUID test_uuid = UUIDUtil.nullUUID();
         byte[] test_array = new byte[UUID_BYTE_ARRAY_LENGTH];
-        test_uuid.toByteArray(test_array, 0);
+        UUIDUtil.toByteArray(test_uuid, test_array, 0);
         assertTrue("Expected array did not equal actual array",
             Arrays.equals(NULL_UUID_BYTE_ARRAY, test_array));
         
         // now test a non-null uuid
-        test_uuid = new UUID(MIXED_CASE_VALID_UUID_STRING);
-        test_uuid.toByteArray(test_array);
+        test_uuid = UUIDUtil.uuid(MIXED_CASE_VALID_UUID_STRING);
+        UUIDUtil.toByteArray(test_uuid, test_array);
         assertTrue("Expected array did not equal actual array",
             Arrays.equals(VALID_UUID_BYTE_ARRAY, test_array));
         
         // now test a null uuid case with extra data in the array
-        test_uuid = new UUID();
+        test_uuid = UUIDUtil.nullUUID();
         test_array = new byte[UUID_BYTE_ARRAY_LENGTH + EXTRA_DATA_LENGTH];
         Arrays.fill(test_array, (byte)'x');
-        test_uuid.toByteArray(test_array, 0);
+        UUIDUtil.toByteArray(test_uuid, test_array, 0);
         for (int i = 0; i < UUID_BYTE_ARRAY_LENGTH; ++i)
         {
             assertEquals("Expected array values did not match",
@@ -1061,10 +788,10 @@ public class UUIDTest extends TestCase
         }
         
         // now test a null uuid case with extra data in the array
-        test_uuid = new UUID();
+        test_uuid = UUIDUtil.nullUUID();
         test_array = new byte[UUID_BYTE_ARRAY_LENGTH + EXTRA_DATA_LENGTH];
         Arrays.fill(test_array, (byte)'x');
-        test_uuid.toByteArray(test_array, EXTRA_DATA_LENGTH/2);
+        UUIDUtil.toByteArray(test_uuid, test_array, EXTRA_DATA_LENGTH/2);
         // first check the data (in the middle of the array)
         for (int i = 0; i < UUID_BYTE_ARRAY_LENGTH; ++i)
         {
@@ -1084,10 +811,10 @@ public class UUIDTest extends TestCase
         }
         
         // now test a good uuid case with extra data in the array
-        test_uuid = new UUID(MIXED_CASE_VALID_UUID_STRING);
+        test_uuid = UUIDUtil.uuid(MIXED_CASE_VALID_UUID_STRING);
         test_array = new byte[UUID_BYTE_ARRAY_LENGTH + EXTRA_DATA_LENGTH];
         Arrays.fill(test_array, (byte)'x');
-        test_uuid.toByteArray(test_array, 0);
+        UUIDUtil.toByteArray(test_uuid, test_array, 0);
         for (int i = 0; i < UUID_BYTE_ARRAY_LENGTH; ++i)
         {
             assertEquals("Expected array values did not match",
@@ -1103,10 +830,10 @@ public class UUIDTest extends TestCase
 
         // now test a good uuid case with extra data in the array
         // to make sure we aren't blowing the bounds of the buffer
-        test_uuid = new UUID(MIXED_CASE_VALID_UUID_STRING);
+        test_uuid = UUIDUtil.uuid(MIXED_CASE_VALID_UUID_STRING);
         test_array = new byte[UUID_BYTE_ARRAY_LENGTH + EXTRA_DATA_LENGTH];
         Arrays.fill(test_array, (byte)'x');
-        test_uuid.toByteArray(test_array, EXTRA_DATA_LENGTH/2);
+        UUIDUtil.toByteArray(test_uuid, test_array, EXTRA_DATA_LENGTH/2);
         // first check the data (in the middle of the array)
         for (int i = 0; i < UUID_BYTE_ARRAY_LENGTH; ++i)
         {
@@ -1135,13 +862,13 @@ public class UUIDTest extends TestCase
         // gives back the same value in string form that was used to create it
         
         // test the null uuid
-        UUID uuid = new UUID();
+        UUID uuid = UUIDUtil.nullUUID();
         assertEquals("null uuid string and toString did not match",
                     NULL_UUID_STRING.toLowerCase(),
                     uuid.toString().toLowerCase());
         
         // test a non-null uuid
-        uuid = new UUID(VALID_UUID_BYTE_ARRAY);
+        uuid = UUIDUtil.uuid(VALID_UUID_BYTE_ARRAY);
         assertEquals("uuid string and toString results did not match",
                     MIXED_CASE_VALID_UUID_STRING.toLowerCase(),
                     uuid.toString().toLowerCase());
@@ -1151,7 +878,7 @@ public class UUIDTest extends TestCase
         // here is a unit test which will break if this assumption
         // becomes bad. This will act as an early warning to anyone
         // who relies on this particular behavior.
-        uuid = new UUID(VALID_UUID_BYTE_ARRAY);
+        uuid = UUIDUtil.uuid(VALID_UUID_BYTE_ARRAY);
         assertFalse("mixed case uuid string and toString " +
                 "matched (expected toString to be all lower case)",
             MIXED_CASE_VALID_UUID_STRING.equals(uuid.toString()));
@@ -1161,225 +888,12 @@ public class UUIDTest extends TestCase
             MIXED_CASE_VALID_UUID_STRING.toLowerCase(),
             uuid.toString());
     }
-    
-    /**
-     * Test of valueOf(byte[]) method, of class com.fasterxml.uuid.UUID.
-     */
-    public void testValueOfByteArray()
-    {
-        // lets test some error cases
-        // first, passing null
-        try
-        {
-            /*UUID uuid =*/ UUID.valueOf((byte[])null);
-            
-            // if we reached here we failed because we didn't get an exception
-            fail("Expected exception not caught");
-        }
-        catch (NullPointerException ex)
-        {
-            // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("Caught unexpected exception: " + ex);
-        }
-        
-        // now an array that is too small
-        try
-        {
-            /*UUID uuid =*/ UUID.valueOf(new byte[UUID_BYTE_ARRAY_LENGTH - 1]);
-            
-            // if we reached here we failed because we didn't get an exception
-            fail("Expected exception not caught");
-        }
-        catch (ArrayIndexOutOfBoundsException ex)
-        {
-            // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("Caught unexpected exception: " + ex);
-        }
-
-        // let's test that creating a uuid from an zero'd array
-        // gives us a null UUID (definition of a null UUID)
-        UUID test_uuid = UUID.valueOf(new byte[UUID_BYTE_ARRAY_LENGTH]);
-        assertEquals("UUID.valueOf did not create expected null UUID",
-                    NULL_UUID_STRING.toLowerCase(),
-                    test_uuid.toString().toLowerCase());
-        
-        // let's test creating an array from a good byte array
-        test_uuid = UUID.valueOf(VALID_UUID_BYTE_ARRAY);
-        assertEquals("UUID.valueOf did not create expected null UUID",
-                    MIXED_CASE_VALID_UUID_STRING.toLowerCase(),
-                    test_uuid.toString().toLowerCase());
-
-        // test creating an array from a good byte array with extra junk on end
-        test_uuid = UUID.valueOf(VALID_UUID_BYTE_ARRAY_WITH_EXTRA_END);
-        assertEquals("UUID.valueOf did not create expected null UUID",
-                    MIXED_CASE_VALID_UUID_STRING.toLowerCase(),
-                    test_uuid.toString().toLowerCase());
-    }
-    
-    /**
-     * Test of valueOf(byte[], int) method, of class com.fasterxml.uuid.UUID.
-     */
-    public void testValueOfByteArrayFromOffset()
-    {
-        // constant data for use in this test
-        final int EXTRA_DATA_LENGTH = 9;
-        
-        // lets test some error cases
-        // first, passing null and 0
-        try
-        {
-            /*UUID uuid =*/ UUID.valueOf((byte[])null, 0);
-            // if we reached here we failed because we didn't get an exception
-            fail("Expected exception not caught");
-        }
-        catch (NullPointerException ex)
-        {
-            // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("Caught unexpected exception: " + ex);
-        }
-        
-        // now an array that is too small
-        try
-        {
-            /*UUID uuid =*/ UUID.valueOf(new byte[UUID_BYTE_ARRAY_LENGTH - 1], 0);
-            
-            // if we reached here we failed because we didn't get an exception
-            fail("Expected exception not caught");
-        }
-        catch (ArrayIndexOutOfBoundsException ex)
-        {
-            // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("Caught unexpected exception: " + ex);
-        }
-
-        // now an index that is negative
-        try
-        {
-            /*UUID uuid =*/ UUID.valueOf(new byte[UUID_BYTE_ARRAY_LENGTH], -1);
-            
-            // if we reached here we failed because we didn't get an exception
-            fail("Expected exception not caught");
-        }
-        catch (ArrayIndexOutOfBoundsException ex)
-        {
-            // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("Caught unexpected exception: " + ex);
-        }
-        
-        // now an index that is too big
-        try
-        {
-            /*UUID uuid =*/
-                UUID.valueOf(
-                    new byte[UUID_BYTE_ARRAY_LENGTH], UUID_BYTE_ARRAY_LENGTH);
-            
-            // if we reached here we failed because we didn't get an exception
-            fail("Expected exception not caught");
-        }
-        catch (ArrayIndexOutOfBoundsException ex)
-        {
-            // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("Caught unexpected exception: " + ex);
-        }
-        
-        // now an index that is in the array,
-        // but without enough bytes to read UUID_BYTE_ARRAY_LENGTH
-        try
-        {
-            /*UUID uuid =*/ UUID.valueOf(new byte[UUID_BYTE_ARRAY_LENGTH], 1);
-            
-            // if we reached here we failed because we didn't get an exception
-            fail("Expected exception not caught");
-        }
-        catch (ArrayIndexOutOfBoundsException ex)
-        {
-            // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("Caught unexpected exception: " + ex);
-        }
-        
-        // let's test that creating a uuid from an zero'd array
-        // gives us a null UUID (definition of a null UUID)
-        UUID test_uuid = UUID.valueOf(new byte[UUID_BYTE_ARRAY_LENGTH], 0);
-        assertEquals("UUID.valueOf did not create expected null UUID",
-                    NULL_UUID_STRING.toLowerCase(),
-                    test_uuid.toString().toLowerCase());
-        
-        // test that creating a uuid from an zero'd array with extra stuff
-        // on the front gives us a null UUID (definition of a null UUID)
-        byte[] null_uuid_array =
-            new byte[UUID_BYTE_ARRAY_LENGTH + EXTRA_DATA_LENGTH];
-        Arrays.fill(null_uuid_array, 0, EXTRA_DATA_LENGTH, (byte)'x');
-        test_uuid = UUID.valueOf(null_uuid_array, EXTRA_DATA_LENGTH);
-        assertEquals("UUID.valueOf did not create expected null UUID",
-                    NULL_UUID_STRING.toLowerCase(),
-                    test_uuid.toString().toLowerCase());
-        
-        // let's test creating an array from a good byte array
-        test_uuid = UUID.valueOf(VALID_UUID_BYTE_ARRAY, 0);
-        assertEquals("UUID.valueOf did not create expected null UUID",
-                    MIXED_CASE_VALID_UUID_STRING.toLowerCase(),
-                    test_uuid.toString().toLowerCase());
-
-        // test creating an array from a byte array with extra junk on end
-        test_uuid = UUID.valueOf(VALID_UUID_BYTE_ARRAY_WITH_EXTRA_END, 0);
-        assertEquals("UUID.valueOf did not create expected null UUID",
-                    MIXED_CASE_VALID_UUID_STRING.toLowerCase(),
-                    test_uuid.toString().toLowerCase());
-        
-        // test creating an array from a byte array with extra junk on start
-        test_uuid = UUID.valueOf(VALID_UUID_BYTE_ARRAY_WITH_EXTRA_START, 10);
-        assertEquals("UUID.valueOf did not create expected null UUID",
-                    MIXED_CASE_VALID_UUID_STRING.toLowerCase(),
-                    test_uuid.toString().toLowerCase());
-
-        // test creating an array from byte array with extra junk on both ends
-        test_uuid = UUID.valueOf(VALID_UUID_BYTE_ARRAY_WITH_EXTRA_BOTH, 10);
-        assertEquals("UUID.valueOf did not create expected null UUID",
-                    MIXED_CASE_VALID_UUID_STRING.toLowerCase(),
-                    test_uuid.toString().toLowerCase());
-    }
 
     /**
      * Test of valueOf(String) method, of class com.fasterxml.uuid.UUID.
      */
     public void testValueOfString()
     {
-        // test a null string case
-        try
-        {
-           /* UUID uuid =*/ UUID.valueOf((String)null);
-            fail("Expected exception not caught");
-        }
-        catch (NullPointerException ex)
-        {
-            // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("Caught unexpected exception: " + ex);
-        }            
-        
         // test some failure cases for the string constructor
         badStringValueOfHelper(IMPROPER_NUM_DASHES_UUID_STRING_1);
         badStringValueOfHelper(IMPROPER_NUM_DASHES_UUID_STRING_2);
@@ -1404,7 +918,7 @@ public class UUIDTest extends TestCase
     {
         try
         {
-            /*UUID uuid =*/ new UUID(uuidString);
+            /*UUID uuid =*/ UUIDUtil.uuid(uuidString);
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
         }
@@ -1423,7 +937,7 @@ public class UUIDTest extends TestCase
         UUID temp_uuid = null;
         try
         {
-            temp_uuid = new UUID(uuidString);
+            temp_uuid = UUIDUtil.uuid(uuidString);
         }
         catch (Exception ex)
         {
@@ -1439,7 +953,7 @@ public class UUIDTest extends TestCase
     {
         try
         {
-            /*UUID uuid =*/ UUID.valueOf(uuidString);
+            /*UUID uuid =*/ UUIDUtil.uuid(uuidString);
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
         }
@@ -1458,7 +972,7 @@ public class UUIDTest extends TestCase
         UUID temp_uuid = null;
         try
         {
-            temp_uuid = UUID.valueOf(uuidString);
+            temp_uuid = UUIDUtil.uuid(uuidString);
         }
         catch (Exception ex)
         {
@@ -1605,27 +1119,27 @@ public class UUIDTest extends TestCase
     // notice that these uuid cases vary in the time portion and for each
     // "exact time" there is a case for two different MAC addresses
     // to insure the ordering test between different MAC addresses
-    private static final UUID NULL_UUID = UUID.getNullUUID();
+    private static final UUID NULL_UUID = UUIDUtil.nullUUID();
     private static final UUID TIME1_MAC1_UUID =
-        new UUID("ebb8e8fe-b1b1-11d7-8adb-00b0d078fa18");
+        UUIDUtil.uuid("ebb8e8fe-b1b1-11d7-8adb-00b0d078fa18");
     private static final UUID TIME1_MAC2_UUID =
-        new UUID("ebb8e8fe-b1b1-11d7-8adb-baa07db6d227");
+        UUIDUtil.uuid("ebb8e8fe-b1b1-11d7-8adb-baa07db6d227");
     private static final UUID TIME2_MAC1_UUID =
-        new UUID("ec3ffdda-b1b1-11d7-8adb-00b0d078fa18");
+        UUIDUtil.uuid("ec3ffdda-b1b1-11d7-8adb-00b0d078fa18");
     private static final UUID TIME2_MAC2_UUID =
-        new UUID("ec3ffdda-b1b1-11d7-8adb-baa07db6d227");
+        UUIDUtil.uuid("ec3ffdda-b1b1-11d7-8adb-baa07db6d227");
     private static final UUID TIME3_MAC1_UUID =
-        new UUID("eca4c616-b1b1-11d7-8adb-00b0d078fa18");
+        UUIDUtil.uuid("eca4c616-b1b1-11d7-8adb-00b0d078fa18");
     private static final UUID TIME3_MAC2_UUID =
-        new UUID("eca4c616-b1b1-11d7-8adb-baa07db6d227");
+        UUIDUtil.uuid("eca4c616-b1b1-11d7-8adb-baa07db6d227");
     private static final UUID TIME4_MAC1_UUID =
-        new UUID("ed17de08-b1b1-11d7-8adb-00b0d078fa18");
+        UUIDUtil.uuid("ed17de08-b1b1-11d7-8adb-00b0d078fa18");
     private static final UUID TIME4_MAC2_UUID =
-        new UUID("ed17de08-b1b1-11d7-8adb-baa07db6d227");
+        UUIDUtil.uuid("ed17de08-b1b1-11d7-8adb-baa07db6d227");
     private static final UUID TIME5_MAC1_UUID =
-        new UUID("ed94244a-b1b1-11d7-8adb-00b0d078fa18");
+        UUIDUtil.uuid("ed94244a-b1b1-11d7-8adb-00b0d078fa18");
     private static final UUID TIME5_MAC2_UUID =
-        new UUID("ed94244a-b1b1-11d7-8adb-baa07db6d227");
+        UUIDUtil.uuid("ed94244a-b1b1-11d7-8adb-baa07db6d227");
     /**************************************************************************
      * End private constants for use in tests above
      *************************************************************************/

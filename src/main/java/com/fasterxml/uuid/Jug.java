@@ -265,9 +265,9 @@ public class Jug
                 String orig = nameSpace;
                 nameSpace = nameSpace.toLowerCase();
                 if (nameSpace.equals("url")) {
-                    nameSpace = UUID.NAMESPACE_URL;
+                    nameSpace = UUIDUtil.NAMESPACE_URL;
                 } else  if (nameSpace.equals("dns")) {
-                    nameSpace = UUID.NAMESPACE_DNS;
+                    nameSpace = UUIDUtil.NAMESPACE_DNS;
                 } else {
                     System.err.println("Unrecognized namespace '"+orig
                                        +"'; only DNS and URL allowed for name-based generation.");
@@ -275,7 +275,7 @@ public class Jug
                 }
 		
                 try {
-                    nsUUID = new UUID(nameSpace);
+                    nsUUID = UUIDUtil.uuid(nameSpace);
                 } catch (NumberFormatException nex) {
                     System.err.println("Internal error: "+nex.toString());
                     System.err.println("Exiting.");

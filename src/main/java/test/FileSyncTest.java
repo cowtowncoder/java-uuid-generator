@@ -1,5 +1,6 @@
 package test;
 
+import java.util.UUID;
 
 import com.fasterxml.uuid.*;
 import com.fasterxml.uuid.ext.*;

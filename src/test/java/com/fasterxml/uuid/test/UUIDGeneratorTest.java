@@ -25,16 +25,13 @@ import junit.textui.TestRunner;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Random;
+import java.util.*;
 
 import com.fasterxml.uuid.EthernetAddress;
 import com.fasterxml.uuid.TagURI;
-import com.fasterxml.uuid.UUID;
 import com.fasterxml.uuid.UUIDGenerator;
+import com.fasterxml.uuid.UUIDType;
+import com.fasterxml.uuid.UUIDUtil;
 
 /**
  * JUnit Test class for the com.fasterxml.uuid.UUIDGenerator class.
@@ -960,7 +957,7 @@ public class UUIDGeneratorTest extends TestCase
     }
     
     private void checkUUIDArrayForCorrectVariantAndVersion(UUID[] uuidArray,
-                                                           int expectedType)
+                                                           UUIDType expectedType)
     {
         // let's check that all the UUIDs are valid type-1 UUIDs with the
         // correct variant according to the specification.
@@ -968,10 +965,10 @@ public class UUIDGeneratorTest extends TestCase
         {
             assertEquals("Expected version (type) did not match",
                         expectedType,
-                        uuidArray[i].getType());
+                        UUIDUtil.typeOf(uuidArray[i]));
 
             // now. let's double check the variant and type from the array
-            byte[] temp_uuid = uuidArray[i].toByteArray();
+            byte[] temp_uuid = UUIDUtil.asByteArray(uuidArray[i]);
             
             // extract type from the UUID and check for correct type
             int type = (temp_uuid[UUID.INDEX_TYPE] & 0xFF) >> 4;
@@ -1005,7 +1002,7 @@ public class UUIDGeneratorTest extends TestCase
         // between the start and end time
         for (int i = 0; i < uuidArray.length; i++)
         {
-            byte[] temp_uuid = uuidArray[i].toByteArray();
+            byte[] temp_uuid = UUIDUtil.asByteArray(uuidArray[i]);
             
             // first we'll collect the UUID time stamp which is
             // the number of 100-nanosecond intervals since
@@ -1044,8 +1041,7 @@ public class UUIDGeneratorTest extends TestCase
         for (int i = 0; i < uuidArray.length; i++)
         {
             byte[] uuid_ethernet_address = new byte[6];
-            System.arraycopy(
-                uuidArray[i].toByteArray(), 10, uuid_ethernet_address, 0, 6);
+            System.arraycopy(UUIDUtil.asByteArray(uuidArray[i]), 10, uuid_ethernet_address, 0, 6);
             byte[] ethernet_address = ethernetAddress.asByteArray();
             
             assertTrue(
@@ -1056,10 +1052,10 @@ public class UUIDGeneratorTest extends TestCase
     
     private void checkUUIDArrayForNonNullUUIDs(UUID[] uuidArray)
     {
-        for (int i = 0; i < uuidArray.length; i++)
-        {
-            assertFalse("UUID was null",
-                       uuidArray[i].isNullUUID());
+        for (int i = 0; i < uuidArray.length; i++) {
+        	if (UUIDUtil.typeOf(uuidArray[i]) == UUIDType.NULL) {
+        		fail("Entry #"+i+" was NULL UUID, shouldn't be");
+        	}
         }
     }
     /**************************************************************************

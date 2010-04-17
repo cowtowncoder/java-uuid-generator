@@ -399,10 +399,10 @@ public final class UUIDGenerator
     {
         digest.reset();
         if (nameSpaceUUID != null) {
-            digest.update(nameSpaceUUID.asByteArray());
+            digest.update(UUIDUtil.asByteArray(nameSpaceUUID));
         }
         digest.update(name.getBytes());
-        return new UUID(UUID.TYPE_NAME_BASED, digest.digest());
+        return new UUID(UUIDType.NAME_BASED, digest.digest());
     }
 
     /**
