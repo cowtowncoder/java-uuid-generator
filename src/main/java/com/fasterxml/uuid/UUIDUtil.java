@@ -137,7 +137,7 @@ public class UUIDUtil
     public static UUID uuid(byte[] bytes, int offset)
     {
         _checkUUIDByteArray(bytes, offset);
-        return new UUID(_gatherLong(bytes, 0), _gatherLong(bytes, 8));
+        return new UUID(_gatherLong(bytes, offset), _gatherLong(bytes, offset+8));
     }
 	
     public static UUID nullUUID() {

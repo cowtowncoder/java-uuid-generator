@@ -85,7 +85,7 @@ public class UUIDTest extends TestCase
             /*UUID uuid =*/ UUIDUtil.uuid(new byte[UUID_BYTE_ARRAY_LENGTH - 1]);
             fail("Expected exception not caught");
         }
-        catch (ArrayIndexOutOfBoundsException ex) {
+        catch (IllegalArgumentException ex) {
             // this is the success case so do nothing
         } catch (Exception ex) {
             fail("Caught unexpected exception: " + ex);
@@ -409,7 +409,7 @@ public class UUIDTest extends TestCase
         assertTrue("Expected array did not equal actual array",
             Arrays.equals(NULL_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
         assertEquals("Expected type was not returned",
-                    UUIDUtil.nullUUID(),
+                    UUIDUtil.typeOf(UUIDUtil.nullUUID()),
             		UUIDUtil.typeOf(uuid));
         
         // test Random UUID in this case
@@ -586,7 +586,7 @@ public class UUIDTest extends TestCase
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
         }
-        catch (NullPointerException ex)
+        catch (IllegalArgumentException ex)
         {
             // this is the success case so do nothing
         }
@@ -605,7 +605,7 @@ public class UUIDTest extends TestCase
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
         }
-        catch (ArrayIndexOutOfBoundsException ex)
+        catch (IllegalArgumentException ex)
         {
             // this is the success case so do nothing
         }
@@ -686,7 +686,7 @@ public class UUIDTest extends TestCase
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
         }
-        catch (ArrayIndexOutOfBoundsException ex)
+        catch (IllegalArgumentException ex)
         {
             // this is the success case so do nothing
         }
@@ -1007,10 +1007,12 @@ public class UUIDTest extends TestCase
     
     private void assertUUIDGreaterOrderHelper(UUID uuid1, UUID uuid2)
     {
-        assertTrue(uuid1 + " did not test as larger then " + uuid2,
-                    0 < uuid1.compareTo(uuid2));
-        assertTrue(uuid2 + " did not test as smaller then " + uuid1,
-                    0 > uuid2.compareTo(uuid1));
+        int diff = uuid1.compareTo(uuid2);
+        assertTrue(uuid1 + " did not test as larger then (diff: "+diff+") " + uuid2,
+                    0 < diff);
+        diff = uuid2.compareTo(uuid1);
+        assertTrue(uuid2 + " did not test as smaller than " + uuid1+" (diff "+diff+")",
+                    0 > diff);
     }
     /**************************************************************************
      * End private helper functions for use in tests
