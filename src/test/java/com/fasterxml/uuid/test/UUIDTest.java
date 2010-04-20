@@ -1058,6 +1058,7 @@ public class UUIDTest extends TestCase
         (byte)0xac, (byte)0xc1, (byte)0x87, (byte)0xf5,
         (byte)0x93, (byte)0x06, (byte)0xd3, (byte)0x0c
     };
+    /*
     private static final byte[] VALID_UUID_BYTE_ARRAY_WITH_EXTRA_START =
     {
         'e', 'x', 't', 'r', 'a', ' ', 'j', 'u', 'n', 'k',
@@ -1066,6 +1067,7 @@ public class UUIDTest extends TestCase
         (byte)0xac, (byte)0xc1, (byte)0x87, (byte)0xf5,
         (byte)0x93, (byte)0x06, (byte)0xd3, (byte)0x0c
     };
+    */
     private static final byte[] VALID_UUID_BYTE_ARRAY_WITH_EXTRA_END =
     {
         (byte)0x4d, (byte)0x68, (byte)0x76, (byte)0x64,
@@ -1075,6 +1077,7 @@ public class UUIDTest extends TestCase
         'o', 'n', ' ', 't', 'h', 'e', ' ', 'e', 'n', 'd',
         ' ', 'a', 's', ' ', 'w', 'e', 'l', 'l'
     };
+    /*
     private static final byte[] VALID_UUID_BYTE_ARRAY_WITH_EXTRA_BOTH =
     {
         'e', 'x', 't', 'r', 'a', ' ', 'j', 'u', 'n', 'k',
@@ -1085,6 +1088,7 @@ public class UUIDTest extends TestCase
         'o', 'n', ' ', 't', 'h', 'e', ' ', 'e', 'n', 'd',
         ' ', 'a', 's', ' ', 'w', 'e', 'l', 'l'
     };
+    */
     //private static final String ANOTHER_VALID_UUID_STRING = "4aba2d17-08c9-4376-92fe-4cdefbba5a1c";
     private static final byte[] ANOTHER_VALID_UUID_BYTE_ARRAY =
     {

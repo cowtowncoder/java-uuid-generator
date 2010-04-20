@@ -8,7 +8,7 @@
   <artifactId>jug</artifactId>
   <packaging>bundle</packaging>
   <name>Java UUID Generator</name>
-  <version>2.0.2</version>
+  <version>2.9.0</version>
   <description>
 JUG is a pure java UUID generator, that can be used either as a component in a bigger application, or as a standalone command line tool.
 JUG generates UUIDs according to the IETF UUID draft specification.

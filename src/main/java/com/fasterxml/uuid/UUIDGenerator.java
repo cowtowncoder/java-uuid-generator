@@ -77,7 +77,7 @@ public final class UUIDGenerator
     private final static UUIDGenerator sSingleton = new UUIDGenerator();
 
     /**
-     * Random-generator, used by various UUID-generation methods:
+     * Random number generator, used by various UUID-generation methods:
      */
     private Random mRnd = null;
 
@@ -94,9 +94,9 @@ public final class UUIDGenerator
     private MessageDigest mHasher = null;
 
     /*
-    /////////////////////////////////////////////////////
-    // Life-cycle
-    /////////////////////////////////////////////////////
+    /**********************************************************
+    /* Life-cycle
+    /**********************************************************
      */
 
     /**
@@ -148,9 +148,9 @@ public final class UUIDGenerator
     }
 
     /*
-    /////////////////////////////////////////////////////
-    // Configuration
-    /////////////////////////////////////////////////////
+    /**********************************************************
+    /* Configuration
+    /**********************************************************
      */
 
     /**
@@ -250,9 +250,9 @@ public final class UUIDGenerator
     }
 
     /*
-    /////////////////////////////////////////////////////
-    // UUID generation methods
-    /////////////////////////////////////////////////////
+    /**********************************************************
+    /* UUID generation methods
+    /**********************************************************
      */
 
     /**
@@ -293,7 +293,7 @@ public final class UUIDGenerator
         
         randomGenerator.nextBytes(rnd);
         
-        return new UUID(UUID.TYPE_RANDOM_BASED, rnd);
+        return constructUUID(UUIDType.RANDOM_BASED, rnd);
     }
 
     /**
@@ -344,17 +344,17 @@ public final class UUIDGenerator
         int clockHi = (int) (timestamp >>> 32);
         int clockLo = (int) timestamp;
 
-        uuidBytes[UUID.INDEX_CLOCK_HI] = (byte) (clockHi >>> 24);
-        uuidBytes[UUID.INDEX_CLOCK_HI+1] = (byte) (clockHi >>> 16);
-        uuidBytes[UUID.INDEX_CLOCK_MID] = (byte) (clockHi >>> 8);
-        uuidBytes[UUID.INDEX_CLOCK_MID+1] = (byte) clockHi;
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_HI] = (byte) (clockHi >>> 24);
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_HI+1] = (byte) (clockHi >>> 16);
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_MID] = (byte) (clockHi >>> 8);
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_MID+1] = (byte) clockHi;
 
-        uuidBytes[UUID.INDEX_CLOCK_LO] = (byte) (clockLo >>> 24);
-        uuidBytes[UUID.INDEX_CLOCK_LO+1] = (byte) (clockLo >>> 16);
-        uuidBytes[UUID.INDEX_CLOCK_LO+2] = (byte) (clockLo >>> 8);
-        uuidBytes[UUID.INDEX_CLOCK_LO+3] = (byte) clockLo;
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_LO] = (byte) (clockLo >>> 24);
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_LO+1] = (byte) (clockLo >>> 16);
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_LO+2] = (byte) (clockLo >>> 8);
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_LO+3] = (byte) clockLo;
 
-        return new UUID(UUID.TYPE_TIME_BASED, uuidBytes);
+        return constructUUID(UUIDType.TIME_BASED, uuidBytes);
     }
 
     /**
@@ -402,7 +402,7 @@ public final class UUIDGenerator
             digest.update(UUIDUtil.asByteArray(nameSpaceUUID));
         }
         digest.update(name.getBytes());
-        return new UUID(UUIDType.NAME_BASED, digest.digest());
+        return constructUUID(UUIDType.NAME_BASED, digest.digest());
     }
 
     /**
@@ -456,5 +456,22 @@ public final class UUIDGenerator
     public UUID generateTagURIBasedUUID(TagURI name, MessageDigest hasher)
     {
         return generateNameBasedUUID(null, name.toString(), hasher);
+    }
+
+    /*
+    /**********************************************************
+    /* Internal helper methods
+    /**********************************************************
+     */
+    
+    /**
+     * Helper method for constructing UUID instances with appropriate type
+     */
+    private UUID constructUUID(UUIDType type, byte[] uuidBytes)
+    {
+        int b = uuidBytes[UUIDUtil.BYTE_OFFSET_TYPE] & 0xF; // leave out lower nibble
+        b |= type.raw() << 4;
+        uuidBytes[UUIDUtil.BYTE_OFFSET_TYPE] = (byte) b;
+        return UUIDUtil.uuid(uuidBytes);
     }
 }

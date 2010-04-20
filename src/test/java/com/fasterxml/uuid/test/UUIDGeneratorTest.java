@@ -956,6 +956,7 @@ public class UUIDGeneratorTest extends TestCase
         }
     }
     
+    /*
     private void checkUUIDArrayForCorrectVariantAndVersion(UUID[] uuidArray,
                                                            UUIDType expectedType)
     {
@@ -971,17 +972,18 @@ public class UUIDGeneratorTest extends TestCase
             byte[] temp_uuid = UUIDUtil.asByteArray(uuidArray[i]);
             
             // extract type from the UUID and check for correct type
-            int type = (temp_uuid[UUID.INDEX_TYPE] & 0xFF) >> 4;
+            int type = (temp_uuid[UUIDUtil.BYTE_OFFSET_TYPE] & 0xFF) >> 4;
             assertEquals("Expected type did not match",
                         expectedType,
                         type);            
             // extract variant from the UUID and check for correct variant
-            int variant = (temp_uuid[UUID.INDEX_VARIATION] & 0xFF) >> 6;
+            int variant = (temp_uuid[UUIDUtil.BYTE_OFFSET_VARIATION] & 0xFF) >> 6;
             assertEquals("Expected variant did not match",
                         2,
                         variant);            
         }
     }
+    */
 
     private void checkUUIDArrayForCorrectCreationTime(
         UUID[] uuidArray, long startTime, long endTime)

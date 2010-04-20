@@ -184,8 +184,8 @@ public final class UUIDTimer
     public final long getTimestamp(byte[] uuidBytes)
     {
         // First the clock sequence:
-        uuidBytes[UUID.INDEX_CLOCK_SEQUENCE] = mClockSequence[0];
-        uuidBytes[UUID.INDEX_CLOCK_SEQUENCE+1] = mClockSequence[1];
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_SEQUENCE] = mClockSequence[0];
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_SEQUENCE+1] = mClockSequence[1];
 
         long systime = System.currentTimeMillis();
 
@@ -277,15 +277,15 @@ public final class UUIDTimer
         int clockHi = (int) (timestamp >>> 32);
         int clockLo = (int) timestamp;
 
-        uuidBytes[UUID.INDEX_CLOCK_HI] = (byte) (clockHi >>> 24);
-        uuidBytes[UUID.INDEX_CLOCK_HI+1] = (byte) (clockHi >>> 16);
-        uuidBytes[UUID.INDEX_CLOCK_MID] = (byte) (clockHi >>> 8);
-        uuidBytes[UUID.INDEX_CLOCK_MID+1] = (byte) clockHi;
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_HI] = (byte) (clockHi >>> 24);
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_HI+1] = (byte) (clockHi >>> 16);
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_MID] = (byte) (clockHi >>> 8);
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_MID+1] = (byte) clockHi;
 
-        uuidBytes[UUID.INDEX_CLOCK_LO] = (byte) (clockLo >>> 24);
-        uuidBytes[UUID.INDEX_CLOCK_LO+1] = (byte) (clockLo >>> 16);
-        uuidBytes[UUID.INDEX_CLOCK_LO+2] = (byte) (clockLo >>> 8);
-        uuidBytes[UUID.INDEX_CLOCK_LO+3] = (byte) clockLo;
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_LO] = (byte) (clockLo >>> 24);
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_LO+1] = (byte) (clockLo >>> 16);
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_LO+2] = (byte) (clockLo >>> 8);
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_LO+3] = (byte) clockLo;
     }
 
     public void setSynchronizer(TimestampSynchronizer sync)

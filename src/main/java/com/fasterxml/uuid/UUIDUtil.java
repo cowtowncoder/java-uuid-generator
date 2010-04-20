@@ -4,16 +4,20 @@ import java.util.UUID;
 
 public class UUIDUtil
 {
-	private final static UUID NULL_UUID = new UUID(0L, 0L);
+    private final static UUID NULL_UUID = new UUID(0L, 0L);
 
-	private final static long MASK_LOW_INT = 0xFFFFFFFF;
+    private final static long MASK_LOW_INT = 0xFFFFFFFF;
 
-	private final static int BYTE_OFFSET_CLOCK_LO = 0;
-	private final static int BYTE_OFFSET_CLOCK_MID = 4;
-	private final static int BYTE_OFFSET_CLOCK_HI = 6;
+    protected final static int BYTE_OFFSET_CLOCK_LO = 0;
+    protected final static int BYTE_OFFSET_CLOCK_MID = 4;
+    protected final static int BYTE_OFFSET_CLOCK_HI = 6;
 
-	// note: clock-hi and type occupy same byte (different bits)
-	private final static int BYTE_OFFSET_TYPE = 6;
+    // note: clock-hi and type occupy same byte (different bits)
+    public final static int BYTE_OFFSET_TYPE = 6;
+
+    // similarly, clock sequence and variant are multiplexed
+    public final static int BYTE_OFFSET_CLOCK_SEQUENCE = 8;
+    public final static int BYTE_OFFSET_VARIATION = 8;
 	
     /*
     /****************************************************************
@@ -21,11 +25,12 @@ public class UUIDUtil
     /****************************************************************
      */
 
-	/**
-	 * Namespace for name-based URLs
-	 */
-	public final static String NAMESPACE_DNS = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
-	/**
+    /**
+     * Namespace for name-based URLs
+     */
+    public final static String NAMESPACE_DNS = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
+
+    /**
 	 * Namespace for name-based URLs
 	 */
     public final static String NAMESPACE_URL = "6ba7b811-9dad-11d1-80b4-00c04fd430c8";
