@@ -5,11 +5,9 @@
     <!-- Source directories -->
     <property name="SrcDir" location="${basedir}/src" />
     <property name="LibDir" location="${basedir}/lib" />
-    <property name="JavaSrcDir" location="${SrcDir}/java" />
+    <property name="JavaSrcDir" location="${SrcDir}/main/java" />
     <property name="TestSrcDir" location="${SrcDir}/test" />
     <property name="RelNotesDir" location="${basedir}/release-notes" />
-    <!-- Pre-compiled native code -->
-    <property name="NativeLibDir" location="${basedir}/jug-native" />
     <!-- Build-related -->
     <property name="BuildDir" location="${basedir}/build" />
     <property name="BuildClassesDir" location="${BuildDir}/classes" />

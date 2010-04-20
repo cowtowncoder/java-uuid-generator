@@ -43,13 +43,13 @@ public class UUIDUtil
 	 */
     public final static String NAMESPACE_X500 = "6ba7b814-9dad-11d1-80b4-00c04fd430c8";
 
-	private UUIDUtil() { }
+    private UUIDUtil() { }
 
-	/*
-	/***********************************************************************
-	/* Factory methods
-	/***********************************************************************
-	 */
+    /*
+    /***********************************************************************
+    /* Factory methods
+    /***********************************************************************
+     */
 	
 	/**
      * Factory method for creating UUIDs from the canonical string
@@ -60,8 +60,8 @@ public class UUIDUtil
      *   Hex-chars may be in upper-case too; UUID class will always output
      *   them in lowercase.
      */
-	public static UUID uuid(String id)
-	{
+    public static UUID uuid(String id)
+    {
         if (id == null) {
             throw new NullPointerException();
         }
@@ -118,34 +118,31 @@ public class UUIDUtil
             ++i;
         }		
         return new UUID(hi, lo);
-	}
+    }
 
-	/**
-	 * Factory method for constructing {@link java.util.UUID} instance from given
-	 * 16 bytes.
-	 * NOTE: since absolutely no validation is done for contents, this method should
-	 * usually not be used, unless contents are known to be valid.
-	 * 
-	 * @param bytes
-	 * @return
-	 */
-	public static UUID uuid(byte[] bytes)
-	{
-		if (bytes == null || bytes.length != 16) {
+    /**
+     * Factory method for constructing {@link java.util.UUID} instance from given
+     * 16 bytes.
+     * NOTE: since absolutely no validation is done for contents, this method should
+     * usually not be used, unless contents are known to be valid.
+     */
+    public static UUID uuid(byte[] bytes)
+    {
+        if (bytes == null || bytes.length != 16) {
             throw new IllegalArgumentException("Invalid byte[] passed: can not be null, must be 16 bytes in length");
         }
-		return new UUID(_gatherLong(bytes, 0), _gatherLong(bytes, 8));
-	}
+	return new UUID(_gatherLong(bytes, 0), _gatherLong(bytes, 8));
+    }
 
-	public static UUID uuid(byte[] bytes, int offset)
-	{
-		_checkUUIDByteArray(bytes, offset);
-		return new UUID(_gatherLong(bytes, 0), _gatherLong(bytes, 8));
-	}
+    public static UUID uuid(byte[] bytes, int offset)
+    {
+        _checkUUIDByteArray(bytes, offset);
+        return new UUID(_gatherLong(bytes, 0), _gatherLong(bytes, 8));
+    }
 	
-	public static UUID nullUUID() {
-		return NULL_UUID;
-	}
+    public static UUID nullUUID() {
+        return NULL_UUID;
+    }
 
 	/*
 	/***********************************************************************
