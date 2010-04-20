@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.fasterxml.uuid.test;
+package com.fasterxml.uuid;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -1486,7 +1486,4 @@ public class EthernetAddressTest extends TestCase
         }
         fail("Array1 and Array2 matched");
     }
-    /**************************************************************************
-     * End private helper functions for use in tests
-     *************************************************************************/
 }

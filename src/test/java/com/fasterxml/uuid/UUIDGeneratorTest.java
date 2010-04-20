@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.fasterxml.uuid.test;
+package com.fasterxml.uuid;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
