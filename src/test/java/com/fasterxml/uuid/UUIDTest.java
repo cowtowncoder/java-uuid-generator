@@ -516,7 +516,8 @@ public class UUIDTest extends TestCase
         
         // test a not null case
         uuid = UUIDUtil.uuid(VALID_UUID_BYTE_ARRAY);
-        assertIsNullUUID(uuid);
+        assertFalse(0L == uuid.getMostSignificantBits());
+        assertFalse(0L == uuid.getLeastSignificantBits());
     }
 
     private void assertIsNullUUID(UUID uuid) {
@@ -685,71 +686,52 @@ public class UUIDTest extends TestCase
             
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
-        }
-        catch (IllegalArgumentException ex)
-        {
+        } catch (IllegalArgumentException ex) {
             // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             fail("Caught unexpected exception: " + ex);
         }
 
         // now an index that is negative
-        try
-        {
+        try {
             UUID test_uuid = UUIDUtil.nullUUID();
             byte[] uuid_array = new byte[UUID_BYTE_ARRAY_LENGTH];
             UUIDUtil.toByteArray(test_uuid, uuid_array, -1);
             
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
-        }
-        catch (ArrayIndexOutOfBoundsException ex)
-        {
+        } catch (IllegalArgumentException ex) {
             // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             fail("Caught unexpected exception: " + ex);
         }
         
         // now an index that is too big
-        try
-        {
+        try {
             UUID test_uuid = UUIDUtil.nullUUID();
             byte[] uuid_array = new byte[UUID_BYTE_ARRAY_LENGTH];
             UUIDUtil.toByteArray(test_uuid, uuid_array, UUID_BYTE_ARRAY_LENGTH);
             
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
-        }
-        catch (ArrayIndexOutOfBoundsException ex)
-        {
+        } catch (IllegalArgumentException ex) {
             // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             fail("Caught unexpected exception: " + ex);
         }
         
         // now an index that is in the array,
         // but without enough bytes to read UUID_BYTE_ARRAY_LENGTH
-        try
-        {
+        try {
             UUID test_uuid = UUIDUtil.nullUUID();
             byte[] uuid_array = new byte[UUID_BYTE_ARRAY_LENGTH];
             UUIDUtil.toByteArray(test_uuid, uuid_array, 1);
             
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
-        }
-        catch (ArrayIndexOutOfBoundsException ex)
-        {
+        } catch (IllegalArgumentException ex) {
             // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             fail("Caught unexpected exception: " + ex);
         }
         
@@ -774,14 +756,12 @@ public class UUIDTest extends TestCase
         test_array = new byte[UUID_BYTE_ARRAY_LENGTH + EXTRA_DATA_LENGTH];
         Arrays.fill(test_array, (byte)'x');
         UUIDUtil.toByteArray(test_uuid, test_array, 0);
-        for (int i = 0; i < UUID_BYTE_ARRAY_LENGTH; ++i)
-        {
+        for (int i = 0; i < UUID_BYTE_ARRAY_LENGTH; ++i) {
             assertEquals("Expected array values did not match",
                 NULL_UUID_BYTE_ARRAY[i],
                 test_array[i]);
         }
-        for (int i = 0; i < EXTRA_DATA_LENGTH; i++)
-        {
+        for (int i = 0; i < EXTRA_DATA_LENGTH; i++) {
             assertEquals("Expected array fill value changed",
                         (byte)'x',
                         test_array[i + UUID_BYTE_ARRAY_LENGTH]);
@@ -793,15 +773,13 @@ public class UUIDTest extends TestCase
         Arrays.fill(test_array, (byte)'x');
         UUIDUtil.toByteArray(test_uuid, test_array, EXTRA_DATA_LENGTH/2);
         // first check the data (in the middle of the array)
-        for (int i = 0; i < UUID_BYTE_ARRAY_LENGTH; ++i)
-        {
-            assertEquals("Expected array values did not match",
+        for (int i = 0; i < UUID_BYTE_ARRAY_LENGTH; ++i) {
+            assertEquals("Expected array values did not match (offset "+i+")",
                 NULL_UUID_BYTE_ARRAY[i],
                 test_array[i + EXTRA_DATA_LENGTH/2]);
         }
         // and now check that the surrounding bytes were not changed
-        for (int i = 0; i < EXTRA_DATA_LENGTH/2; ++i)
-        {
+        for (int i = 0; i < EXTRA_DATA_LENGTH/2; ++i) {
             assertEquals("Expected array fill value changed",
                 (byte)'x',
                 test_array[i]);
@@ -815,14 +793,12 @@ public class UUIDTest extends TestCase
         test_array = new byte[UUID_BYTE_ARRAY_LENGTH + EXTRA_DATA_LENGTH];
         Arrays.fill(test_array, (byte)'x');
         UUIDUtil.toByteArray(test_uuid, test_array, 0);
-        for (int i = 0; i < UUID_BYTE_ARRAY_LENGTH; ++i)
-        {
+        for (int i = 0; i < UUID_BYTE_ARRAY_LENGTH; ++i) {
             assertEquals("Expected array values did not match",
                 VALID_UUID_BYTE_ARRAY[i],
                 test_array[i]);
         }
-        for (int i = 0; i < EXTRA_DATA_LENGTH; i++)
-        {
+        for (int i = 0; i < EXTRA_DATA_LENGTH; i++) {
             assertEquals("Expected array fill value changed",
                 (byte)'x',
                 test_array[i + UUID_BYTE_ARRAY_LENGTH]);
@@ -835,15 +811,13 @@ public class UUIDTest extends TestCase
         Arrays.fill(test_array, (byte)'x');
         UUIDUtil.toByteArray(test_uuid, test_array, EXTRA_DATA_LENGTH/2);
         // first check the data (in the middle of the array)
-        for (int i = 0; i < UUID_BYTE_ARRAY_LENGTH; ++i)
-        {
+        for (int i = 0; i < UUID_BYTE_ARRAY_LENGTH; ++i) {
             assertEquals("Expected array values did not match",
                 VALID_UUID_BYTE_ARRAY[i],
                 test_array[i + EXTRA_DATA_LENGTH/2]);
         }
         // and now check that the surrounding bytes were not changed
-        for (int i = 0; i < EXTRA_DATA_LENGTH/2; ++i)
-        {
+        for (int i = 0; i < EXTRA_DATA_LENGTH/2; ++i) {
             assertEquals("Expected array fill value changed",
                 (byte)'x',
                 test_array[i]);
@@ -1008,10 +982,10 @@ public class UUIDTest extends TestCase
     private void assertUUIDGreaterOrderHelper(UUID uuid1, UUID uuid2)
     {
         int diff = uuid1.compareTo(uuid2);
-        assertTrue(uuid1 + " did not test as larger then (diff: "+diff+") " + uuid2,
+        assertTrue(uuid1 + " did not test as larger then (diff: "+diff+") " + uuid2+": "+diff,
                     0 < diff);
         diff = uuid2.compareTo(uuid1);
-        assertTrue(uuid2 + " did not test as smaller than " + uuid1+" (diff "+diff+")",
+        assertTrue(uuid2 + " did not test as smaller than " + uuid1+" (diff "+diff+"): "+diff,
                     0 > diff);
     }
     /**************************************************************************

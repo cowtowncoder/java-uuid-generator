@@ -818,13 +818,9 @@ public class UUIDGeneratorTest extends TestCase
         UUID uuid_array[] = new UUID[SIZE_OF_TEST_ARRAY];
         
         // now create the array of uuids
-        for (int i = 0; i < uuid_array.length; i++)
-        {
-            TagURI test_tag =
-                new TagURI(TEST_AUTHORITY, "test id" + i,
-                    Calendar.getInstance());
-            uuid_array[i] =
-                uuid_gen.generateTagURIBasedUUID(test_tag, MESSAGE_DIGEST);
+        for (int i = 0; i < uuid_array.length; i++) {
+            TagURI test_tag = new TagURI(TEST_AUTHORITY, "test id" + i, Calendar.getInstance());
+            uuid_array[i] = uuid_gen.generateTagURIBasedUUID(test_tag, MESSAGE_DIGEST);
         }
         
         // check that none of the UUIDs are null
@@ -842,8 +838,7 @@ public class UUIDGeneratorTest extends TestCase
         UUID uuid_array2[] = new UUID[SIZE_OF_TEST_ARRAY];
         
         // now create the array of uuids
-        for (int i = 0; i < uuid_array.length; i++)
-        {
+        for (int i = 0; i < uuid_array.length; i++) {
             TagURI test_tag =
                 new TagURI(TEST_AUTHORITY, "test id" + i,
                     Calendar.getInstance());
@@ -965,8 +960,7 @@ public class UUIDGeneratorTest extends TestCase
         }
     }
 
-    private void checkUUIDArrayForCorrectCreationTime(
-        UUID[] uuidArray, long startTime, long endTime)
+    private void checkUUIDArrayForCorrectCreationTime(UUID[] uuidArray, long startTime, long endTime)
     {
         // we need to convert from 100-naonsecond units (as used in UUIDs)
         // to millisecond units as used in UTC based time
@@ -977,13 +971,11 @@ public class UUIDGeneratorTest extends TestCase
         final long GREGORIAN_CALENDAR_START_TO_UTC_START_OFFSET =
             122192928000000000L;
 
-        assertTrue("start time was not before the end time",
-                startTime < endTime);
+        assertTrue("start time was not before the end time", startTime < endTime);
         
         // let's check that all uuids in the array have a timestamp which lands
         // between the start and end time
-        for (int i = 0; i < uuidArray.length; i++)
-        {
+        for (int i = 0; i < uuidArray.length; i++){
             byte[] temp_uuid = UUIDUtil.asByteArray(uuidArray[i]);
             
             // first we'll collect the UUID time stamp which is
