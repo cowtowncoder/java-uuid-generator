@@ -456,7 +456,7 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForNonNullUUIDs(uuid_array);
         
         // check that all the uuids were correct variant and version
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_MD5);
         
         // check that all uuids were unique
         checkUUIDArrayForUniqueness(uuid_array);
@@ -472,7 +472,7 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForNonNullUUIDs(uuid_array);
         
         // check that all the uuids were correct variant and version
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_MD5);
         
         // check that all uuids were unique
         checkUUIDArrayForUniqueness(uuid_array);
@@ -504,8 +504,8 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForNonNullUUIDs(uuid_array2);
         
         // check that all the uuids were correct variant and version
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED);
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array2, UUIDType.NAME_BASED);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_MD5);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array2, UUIDType.NAME_BASED_MD5);
         
         // check that all uuids were unique
         checkUUIDArrayForUniqueness(uuid_array);
@@ -602,7 +602,7 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForNonNullUUIDs(uuid_array);
         
         // check that all the uuids were correct variant and version
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_MD5);
         
         // check that all uuids were unique
         checkUUIDArrayForUniqueness(uuid_array);
@@ -619,7 +619,7 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForNonNullUUIDs(uuid_array);
         
         // check that all the uuids were correct variant and version
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_MD5);
         
         // check that all uuids were unique
         checkUUIDArrayForUniqueness(uuid_array);
@@ -651,8 +651,8 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForNonNullUUIDs(uuid_array2);
         
         // check that all the uuids were correct variant and version
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED);
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array2, UUIDType.NAME_BASED);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_MD5);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array2, UUIDType.NAME_BASED_MD5);
         
         // check that all uuids were unique
         checkUUIDArrayForUniqueness(uuid_array);
@@ -708,7 +708,7 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForNonNullUUIDs(uuid_array);
         
         // check that all the uuids were correct variant and version
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_MD5);
         
         // check that all uuids were unique
         checkUUIDArrayForUniqueness(uuid_array);
@@ -735,8 +735,8 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForNonNullUUIDs(uuid_array2);
         
         // check that all the uuids were correct variant and version
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED);
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array2, UUIDType.NAME_BASED);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_MD5);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array2, UUIDType.NAME_BASED_MD5);
         
         // check that all uuids were unique
         checkUUIDArrayForUniqueness(uuid_array);
@@ -827,7 +827,7 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForNonNullUUIDs(uuid_array);
         
         // check that all the uuids were correct variant and version
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_MD5);
         
         // check that all uuids were unique
         checkUUIDArrayForUniqueness(uuid_array);
@@ -853,8 +853,8 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForNonNullUUIDs(uuid_array2);
         
         // check that all the uuids were correct variant and version
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED);
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array2, UUIDType.NAME_BASED);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_MD5);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array2, UUIDType.NAME_BASED_MD5);
         
         // check that all uuids were unique
         checkUUIDArrayForUniqueness(uuid_array);
@@ -936,10 +936,9 @@ public class UUIDGeneratorTest extends TestCase
     private void checkUUIDArrayForCorrectVariantAndVersion(UUID[] uuidArray,
                                                            UUIDType expectedType)
     {
-        // let's check that all the UUIDs are valid type-1 UUIDs with the
+        // let's check that all the UUIDs are valid type-X UUIDs with the
         // correct variant according to the specification.
-        for (int i = 0; i < uuidArray.length; i++)
-        {
+        for (int i = 0; i < uuidArray.length; i++) {
             assertEquals("Expected version (type) did not match",
                         expectedType,
                         UUIDUtil.typeOf(uuidArray[i]));
@@ -962,7 +961,7 @@ public class UUIDGeneratorTest extends TestCase
 
     private void checkUUIDArrayForCorrectCreationTime(UUID[] uuidArray, long startTime, long endTime)
     {
-        // we need to convert from 100-naonsecond units (as used in UUIDs)
+        // we need to convert from 100-nanosecond units (as used in UUIDs)
         // to millisecond units as used in UTC based time
         final long MILLI_CONVERSION_FACTOR = 10000L;
         // Since System.currentTimeMillis() returns time epoc time
@@ -1027,8 +1026,8 @@ public class UUIDGeneratorTest extends TestCase
     private void checkUUIDArrayForNonNullUUIDs(UUID[] uuidArray)
     {
         for (int i = 0; i < uuidArray.length; i++) {
-        	if (UUIDUtil.typeOf(uuidArray[i]) == UUIDType.NULL) {
-        		fail("Entry #"+i+" was NULL UUID, shouldn't be");
+        	if (UUIDUtil.typeOf(uuidArray[i]) == UUIDType.UNKNOWN) {
+        		fail("Entry #"+i+" was UNKNOWN UUID, shouldn't be");
         	}
         }
     }

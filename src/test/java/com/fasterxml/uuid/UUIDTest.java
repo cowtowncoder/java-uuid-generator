@@ -205,18 +205,12 @@ public class UUIDTest extends TestCase
     {
         // first, let's make sure calling compareTo with null
         // throws the appropriate NullPointerException 
-        try
-        {
-            // the 'null UUID' will be fine
+        try {
             NULL_UUID.compareTo(null);
             fail("Expected exception not thrown");
-        }
-        catch (NullPointerException ex)
-        {
+        } catch (NullPointerException ex) {
             // good, we caught the expected exception, so we passed
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             fail("Caught an unexpected exception: " + ex);
         }
         
@@ -225,8 +219,7 @@ public class UUIDTest extends TestCase
         assertUUIDEqualOrderHelper(NULL_UUID, UUIDUtil.nullUUID());
         
         // 2 of the same value UUIDs are always 0
-        assertUUIDEqualOrderHelper(
-            TIME3_MAC1_UUID, UUIDUtil.uuid(TIME3_MAC1_UUID.toString()));
+        assertUUIDEqualOrderHelper(TIME3_MAC1_UUID, UUIDUtil.uuid(TIME3_MAC1_UUID.toString()));
         
         // the 'null UUID' always comes first in the ordering
         assertUUIDGreaterOrderHelper(TIME3_MAC1_UUID, NULL_UUID);
@@ -434,7 +427,7 @@ public class UUIDTest extends TestCase
         assertTrue("Expected array did not equal actual array",
             Arrays.equals(NAME_BASED_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
         assertEquals("Expected type was not returned",
-        		UUIDType.NAME_BASED,
+        		UUIDType.NAME_BASED_MD5,
             		UUIDUtil.typeOf(uuid));
         
         // test DCE based UUID in this case

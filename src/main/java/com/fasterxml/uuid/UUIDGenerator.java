@@ -289,11 +289,9 @@ public final class UUIDGenerator
      */
     public UUID generateRandomBasedUUID(Random randomGenerator)
     {
-        byte[] rnd = new byte[16];
-        
-        randomGenerator.nextBytes(rnd);
-        
-        return constructUUID(UUIDType.RANDOM_BASED, rnd);
+        long r1 = randomGenerator.nextLong();
+        long r2 = randomGenerator.nextLong();
+        return constructUUID(UUIDType.RANDOM_BASED, r1, r2);
     }
 
     /**
@@ -402,7 +400,7 @@ public final class UUIDGenerator
             digest.update(UUIDUtil.asByteArray(nameSpaceUUID));
         }
         digest.update(name.getBytes());
-        return constructUUID(UUIDType.NAME_BASED, digest.digest());
+        return constructUUID(UUIDType.NAME_BASED_MD5, digest.digest());
     }
 
     /**
@@ -469,9 +467,26 @@ public final class UUIDGenerator
      */
     private UUID constructUUID(UUIDType type, byte[] uuidBytes)
     {
-        int b = uuidBytes[UUIDUtil.BYTE_OFFSET_TYPE] & 0xF; // leave out lower nibble
+        // first, ensure type is ok
+        int b = uuidBytes[UUIDUtil.BYTE_OFFSET_TYPE] & 0xF; // clear out high nibble
         b |= type.raw() << 4;
         uuidBytes[UUIDUtil.BYTE_OFFSET_TYPE] = (byte) b;
+        // second, ensure variant is properly set too
+        b = uuidBytes[UUIDUtil.BYTE_OFFSET_VARIATION] & 0x3F; // remove 2 MSB
+        b |= 0x80; // set as '10'
+        uuidBytes[UUIDUtil.BYTE_OFFSET_VARIATION] = (byte) b;
         return UUIDUtil.uuid(uuidBytes);
     }
+
+    private UUID constructUUID(UUIDType type, long l1, long l2)
+    {
+        // first, ensure type is ok
+        l1 &= ~0xF000L; // remove high nibble of 6th byte
+        l1 |= (long) (type.raw() << 12);
+        // second, ensure variant is properly set too (8th byte; most-sig byte of second long)
+        l2 = ((l2 << 2) >>> 2); // remove 2 MSB
+        l2 |= (2L << 62); // set 2 MSB to '10'
+        return new UUID(l1, l2);
+    }
+
 }

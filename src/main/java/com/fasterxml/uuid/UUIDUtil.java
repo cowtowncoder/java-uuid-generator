@@ -169,7 +169,7 @@ public class UUIDUtil
         case 0:
             // possibly null?
             if (l == 0L && uuid.getLeastSignificantBits() == l) {
-                return UUIDType.NULL;
+                return UUIDType.UNKNOWN;
             }
             break;
 	case 1:
@@ -177,7 +177,7 @@ public class UUIDUtil
 	case 2:
 	    return UUIDType.DCE;
 	case 3:
-	    return UUIDType.NAME_BASED;
+	    return UUIDType.NAME_BASED_MD5;
 	case 4:
 	    return UUIDType.RANDOM_BASED;
 	}

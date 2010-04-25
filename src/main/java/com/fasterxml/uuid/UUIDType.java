@@ -1,16 +1,19 @@
 package com.fasterxml.uuid;
 
 /**
- * Enumeration of different flavors of UUIDs: 4 specified by specs; and
- * virtual fifth one ("null") to represent invalid one that consists of
+ * Enumeration of different flavors of UUIDs: 5 specified by specs
+ * (<a href="http://tools.ietf.org/html/rfc4122">RFC-4122</a>)
+ * and one
+ * virtual entry ("UNKNOWN") to represent invalid one that consists of
  * all zero bites
  */
 public enum UUIDType {
     TIME_BASED(1),
     DCE(2),
-    NAME_BASED(3),
+    NAME_BASED_MD5(3),
     RANDOM_BASED(4),
-    NULL(0)
+    NAME_BASED_SHA1(5),
+    UNKNOWN(0)
     ;
 
     private final int _raw;
