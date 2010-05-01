@@ -1,7 +1,9 @@
 <body>
-Package that contains core (non-optional) Jug classes. These classes
-should be usable on JDK 1.1 and up, and have no external dependencies
-(with the exception of {@link org.safehaus.uuid.NativeInterfaces}
-that depends on JNI modules during runtime).
-
+Package that contains core (non-optional) Java Uuid Generator classes.
+These classes should be usable on JDK 1.4 and up, and have no external dependencies;
+except that any functionality that uses Ethernet-address discovery requires JDK 1.6.
+<p>
+Note: earlier JUG versions (up to 2.0) supported older JDKs (1.1); 1.4 is now needed
+since {@link java.util.UUID} is used as a core abstraction.
+</p>
 </body>

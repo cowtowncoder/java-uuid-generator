@@ -186,14 +186,14 @@ public class UUIDTest extends TestCase
         assertTrue("Expected array did not equal actual array",
             Arrays.equals(VALID_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
 
-        byte[] test_uuid_array = UUIDUtil.asByteArray(uuid);
+        byte[] test_byte_array = UUIDUtil.asByteArray(uuid);
         // now stir it up a bit and then check that the original UUID was
         // not changed in the process. The easiest stir is to sort it ;)
-        Arrays.sort(test_uuid_array);
+        Arrays.sort(test_byte_array);
         assertFalse("Expected array was equal other array",
-            Arrays.equals(VALID_UUID_BYTE_ARRAY, test_uuid_array));
+            Arrays.equals(VALID_UUID_BYTE_ARRAY, test_byte_array));
         assertFalse("Expected array was equal other array",
-            Arrays.equals(UUIDUtil.asByteArray(uuid), test_uuid_array));
+            Arrays.equals(UUIDUtil.asByteArray(uuid), test_byte_array));
         assertTrue("Expected array did not equal actual array",
             Arrays.equals(VALID_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
     }
@@ -262,7 +262,7 @@ public class UUIDTest extends TestCase
         test_uuid_array[8] = NULL_UUID;
         test_uuid_array[9] = TIME4_MAC1_UUID;
         
-        Arrays.sort(test_uuid_array);
+        Arrays.sort(test_uuid_array, new UUIDComparator());
         // now we should be able to see that the array is in order
         assertUUIDsMatchHelper(NULL_UUID, test_uuid_array[0]);
         assertUUIDsMatchHelper(NULL_UUID, test_uuid_array[1]);
@@ -310,7 +310,7 @@ public class UUIDTest extends TestCase
         test_uuid_array[13] = TIME5_MAC2_UUID;
         test_uuid_array[14] = TIME2_MAC1_UUID;
         
-        Arrays.sort(test_uuid_array);
+        Arrays.sort(test_uuid_array, new UUIDComparator());
         // now we should be able to see that the array is in order
         assertUUIDsMatchHelper(NULL_UUID, test_uuid_array[0]);
         assertUUIDsMatchHelper(TIME1_MAC1_UUID, test_uuid_array[1]);
@@ -550,14 +550,14 @@ public class UUIDTest extends TestCase
                     UUIDUtil.asByteArray(uuid).length);
         assertTrue("Expected array did not equal actual array",
             Arrays.equals(VALID_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
-        byte[] test_uuid_array = UUIDUtil.asByteArray(uuid);
+        byte[] test_byte_array = UUIDUtil.asByteArray(uuid);
         // now stir it up a bit and then check that the original UUID was
         // not changed in the process. The easiest stir is to sort it ;)
-        Arrays.sort(test_uuid_array);
+        Arrays.sort(test_byte_array);
         assertFalse("Expected array was equal other array",
-            Arrays.equals(VALID_UUID_BYTE_ARRAY, test_uuid_array));
+            Arrays.equals(VALID_UUID_BYTE_ARRAY, test_byte_array));
         assertFalse("Expected array was equal other array",
-            Arrays.equals(UUIDUtil.asByteArray(uuid), test_uuid_array));
+            Arrays.equals(UUIDUtil.asByteArray(uuid), test_byte_array));
         assertTrue("Expected array did not equal actual array",
             Arrays.equals(VALID_UUID_BYTE_ARRAY, UUIDUtil.asByteArray(uuid)));
     }
@@ -967,19 +967,17 @@ public class UUIDTest extends TestCase
     private void assertUUIDEqualOrderHelper(UUID uuid1, UUID uuid2)
     {
         assertTrue(uuid1 + " did not test as equal to " + uuid2,
-                    0 == uuid1.compareTo(uuid2));
+                    0 == UUIDComparator.staticCompare(uuid1, uuid2));
         assertTrue(uuid2 + " did not test as equal to " + uuid1,
-                    0 == uuid2.compareTo(uuid1));
+                    0 == UUIDComparator.staticCompare(uuid2, uuid1));
     }
     
     private void assertUUIDGreaterOrderHelper(UUID uuid1, UUID uuid2)
     {
-        int diff = uuid1.compareTo(uuid2);
-        assertTrue(uuid1 + " did not test as larger then (diff: "+diff+") " + uuid2+": "+diff,
-                    0 < diff);
-        diff = uuid2.compareTo(uuid1);
-        assertTrue(uuid2 + " did not test as smaller than " + uuid1+" (diff "+diff+"): "+diff,
-                    0 > diff);
+        int diff = UUIDComparator.staticCompare(uuid1, uuid2);
+        assertTrue(uuid1 + " did not test as larger than " + uuid2+", diff: "+diff, diff > 0);
+        diff = UUIDComparator.staticCompare(uuid2, uuid1);
+        assertTrue(uuid2 + " did not test as smaller than " + uuid1+", diff: "+diff, diff < 0);
     }
     /**************************************************************************
      * End private helper functions for use in tests

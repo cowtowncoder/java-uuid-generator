@@ -1,4 +1,4 @@
-/* JUG Java Uuid Generator
+/* JUG Java UUID Generator
  * TagURITest.java
  * Created on October 8, 2003, 12:22 AM
  *
