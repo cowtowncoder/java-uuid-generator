@@ -731,21 +731,16 @@ public class EthernetAddressTest extends TestCase
         }
         
         // now an array that is too small
-        try
-        {
+        try {
             EthernetAddress ethernet_address = new EthernetAddress(0L);
             byte[] ethernet_address_byte_array =
                 new byte[ETHERNET_ADDRESS_ARRAY_LENGTH - 1];
             ethernet_address.toByteArray(ethernet_address_byte_array);
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
-        }
-        catch (ArrayIndexOutOfBoundsException ex)
-        {
+        } catch (IllegalArgumentException ex) {
             // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             fail("Caught unexpected exception: " + ex);
         }
 
@@ -761,8 +756,7 @@ public class EthernetAddressTest extends TestCase
             NULL_ETHERNET_ADDRESS_BYTE_ARRAY, 0, test_array, 0);
         
         // now test a non-null EthernetAddress
-        ethernet_address =
-            new EthernetAddress(MIXED_CASE_VALID_ETHERNET_ADDRESS_STRING);
+        ethernet_address = new EthernetAddress(MIXED_CASE_VALID_ETHERNET_ADDRESS_STRING);
         Arrays.fill(test_array, (byte)'x');
         ethernet_address.toByteArray(test_array);
         assertEthernetAddressArraysAreEqual(
@@ -770,12 +764,10 @@ public class EthernetAddressTest extends TestCase
         
         // now test a null EthernetAddress case with extra data in the array
         ethernet_address = new EthernetAddress(0L);
-        test_array =
-            new byte[ETHERNET_ADDRESS_ARRAY_LENGTH + EXTRA_DATA_LENGTH];
+        test_array = new byte[ETHERNET_ADDRESS_ARRAY_LENGTH + EXTRA_DATA_LENGTH];
         Arrays.fill(test_array, (byte)'x');
         ethernet_address.toByteArray(test_array);
-        assertEthernetAddressArraysAreEqual(
-            NULL_ETHERNET_ADDRESS_BYTE_ARRAY, 0, test_array, 0);
+        assertEthernetAddressArraysAreEqual(NULL_ETHERNET_ADDRESS_BYTE_ARRAY, 0, test_array, 0);
         for (int i = 0; i < EXTRA_DATA_LENGTH; i++)
         {
             assertEquals("Expected array fill value changed",
@@ -836,32 +828,23 @@ public class EthernetAddressTest extends TestCase
             ethernet_address.toByteArray(ethernet_address_byte_array, 0);
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
-        }
-        catch (ArrayIndexOutOfBoundsException ex)
-        {
+        } catch (IllegalArgumentException ex) {
             // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             fail("Caught unexpected exception: " + ex);
         }
 
         // now an index that is negative
-        try
-        {
+        try {
             EthernetAddress ethernet_address = new EthernetAddress(0L);
             byte[] ethernet_address_byte_array =
                 new byte[ETHERNET_ADDRESS_ARRAY_LENGTH];
             ethernet_address.toByteArray(ethernet_address_byte_array, -1);
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
-        }
-        catch (ArrayIndexOutOfBoundsException ex)
-        {
+        } catch (IllegalArgumentException ex) {
             // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             fail("Caught unexpected exception: " + ex);
         }
         
@@ -875,33 +858,24 @@ public class EthernetAddressTest extends TestCase
                 ethernet_address_byte_array, ETHERNET_ADDRESS_ARRAY_LENGTH);
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
-        }
-        catch (ArrayIndexOutOfBoundsException ex)
-        {
+        } catch (IllegalArgumentException ex) {
             // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             fail("Caught unexpected exception: " + ex);
         }
         
         // now an index that is in the array,
         // but without enough bytes to read ETHERNET_ADDRESS_ARRAY_LENGTH
-        try
-        {
+        try {
             EthernetAddress ethernet_address = new EthernetAddress(0L);
             byte[] ethernet_address_byte_array =
                 new byte[ETHERNET_ADDRESS_ARRAY_LENGTH];
             ethernet_address.toByteArray(ethernet_address_byte_array, 1);
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
-        }
-        catch (ArrayIndexOutOfBoundsException ex)
-        {
+        } catch (IllegalArgumentException ex) {
             // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             fail("Caught unexpected exception: " + ex);
         }
         
@@ -933,8 +907,7 @@ public class EthernetAddressTest extends TestCase
         ethernet_address.toByteArray(test_array, 0);
         assertEthernetAddressArraysAreEqual(
             NULL_ETHERNET_ADDRESS_BYTE_ARRAY, 0, test_array, 0);
-        for (int i = 0; i < EXTRA_DATA_LENGTH; i++)
-        {
+        for (int i = 0; i < EXTRA_DATA_LENGTH; i++) {
             assertEquals("Expected array fill value changed",
                         (byte)'x',
                         test_array[i + ETHERNET_ADDRESS_ARRAY_LENGTH]);
@@ -942,8 +915,7 @@ public class EthernetAddressTest extends TestCase
         
         // now test a null EthernetAddress case with extra data in the array
         ethernet_address = new EthernetAddress(0L);
-        test_array =
-            new byte[ETHERNET_ADDRESS_ARRAY_LENGTH + EXTRA_DATA_LENGTH];
+        test_array = new byte[ETHERNET_ADDRESS_ARRAY_LENGTH + EXTRA_DATA_LENGTH];
         Arrays.fill(test_array, (byte)'x');
         ethernet_address.toByteArray(test_array, EXTRA_DATA_LENGTH/2);
         assertEthernetAddressArraysAreEqual(
@@ -1456,7 +1428,7 @@ public class EthernetAddressTest extends TestCase
             array2.length >= ETHERNET_ADDRESS_ARRAY_LENGTH + array2_start);
         for (int i = 0; i < ETHERNET_ADDRESS_ARRAY_LENGTH; i++)
         {
-            assertEquals("Array1 and Array2 did not match",
+            assertEquals("Array1 and Array2 did not match (index #"+i+")",
                     array1[i + array1_start],
                     array2[i + array2_start]);
         }        

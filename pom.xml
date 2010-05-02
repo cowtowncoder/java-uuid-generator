@@ -6,6 +6,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.fasterxml.uuid</groupId>
   <artifactId>java-uuid-generator</artifactId>
+<!--
+  <artifactId>jug</artifactId>
+-->
   <name>Java UUID Generator</name>
   <version>2.9.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
@@ -112,10 +115,9 @@ JUG supports all 3 official UUID generation methods.
 org.apache.log4j
 </DynamicImport-Package>
               <Private-Package>
-com.fasterxml.uuid.ext, com.ccg.net.ethernet
 </Private-Package>
               <Export-Package>
-com.fasterxml.uuid
+com.fasterxml.uuid, com.fasterxml.uuid.ext
 </Export-Package>
             </instructions>
           </configuration>

@@ -18,19 +18,28 @@ package com.fasterxml.uuid;
 import java.io.Serializable;
 
 /**
- * EthernetAddress encapsulates the 6-byte Mac address defined in
+ * EthernetAddress encapsulates the 6-byte MAC address defined in
  * IEEE 802.1 standard.
  * 
  */
 public class EthernetAddress
     implements Serializable, Cloneable, Comparable<EthernetAddress>
 {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private final static String kHexChars = "0123456789abcdefABCDEF";
+    private final static char[] HEX_CHARS = "0123456789abcdefABCDEF".toCharArray();
 
-    private final byte[] mAddress = new byte[6];
+    /**
+     * 48-bit MAC address, stored in 6 lowest-significant bytes (in
+     * big endian notation)
+     */
+    private final long _address;
 
+    /**
+     * Lazily-constructed String serialization
+     */
+    private volatile String _asString;
+    
     /* *** Creation methods *** */
 
     /**
@@ -47,8 +56,8 @@ public class EthernetAddress
     public EthernetAddress(String addrStr)
         throws NumberFormatException
     {
-        byte[] addr = mAddress;
         int len = addrStr.length();
+        long addr = 0L;
         
         /* Ugh. Although the most logical format would be the 17-char one
          * (12 hex digits separated by colons), apparently leading zeroes
@@ -58,7 +67,7 @@ public class EthernetAddress
             if (i >= len) {
                 // Is valid if this would have been the last byte:
                 if (j == 5) {
-                    addr[5] = (byte) 0;
+                    addr <<= 8;
                     break;
                 }
                 throw new NumberFormatException("Incomplete ethernet address (missing one or more digits");
@@ -101,15 +110,13 @@ public class EthernetAddress
                     }
                 }
             }
-            
-            addr[j] = (byte) value;
+
+            addr = (addr << 8) | value;
             
             if (c != ':') {
                 if (i < len) {
                     if (addrStr.charAt(i) != ':') {
-                        throw new NumberFormatException("Expected ':', got ('"
-                                                        + addrStr.charAt(i)
-                                                        +"')");
+                        throw new NumberFormatException("Expected ':', got ('"+ addrStr.charAt(i)+"')");
                     }
                     ++i;
                 } else if (j < 5) {
@@ -117,6 +124,7 @@ public class EthernetAddress
                 }
             }
         }
+        _address = addr;
     }
     
     /**
@@ -130,9 +138,11 @@ public class EthernetAddress
         if (addr.length != 6) {
             throw new NumberFormatException("Ethernet address has to consist of 6 bytes");
         }
-        for (int i = 0; i < 6; ++i) {
-            mAddress[i] = addr[i];
+        long l = addr[0] & 0xFF;
+        for (int i = 1; i < 6; ++i) {
+            l = (l << 8) | (addr[i] & 0xFF); 
         }
+        _address = l;
     }
     
     /**
@@ -142,23 +152,15 @@ public class EthernetAddress
      * @param addr long that contains the MAC address in 6 least significant
      *    bytes.
      */
-    public EthernetAddress(long addr)
-    {
-        for (int i = 0; i < 6; ++i) {
-            mAddress[5 - i] = (byte) addr;
-            addr >>>= 8;
-        }
+    public EthernetAddress(long addr) {
+        _address = addr;
     }
     
     /**
      * Package internal constructor for creating an 'empty' ethernet address
      */
-    EthernetAddress()
-    {
-        byte z = (byte) 0;
-        for (int i = 0; i < 6; ++i) {
-            mAddress[i] = z;
-        }
+    EthernetAddress() {
+        _address = 0L;
     }
     
     /**
@@ -166,29 +168,17 @@ public class EthernetAddress
      */
     public Object clone()
     {
-        try {
-            return super.clone();
-        } catch (CloneNotSupportedException e) {
-        	// shouldn't happen
-        	return null;
-        }
+        return new EthernetAddress(_address);
     }
     
     /* *** Comparison methods *** */
     
     public boolean equals(Object o)
     {
-        if (!(o instanceof EthernetAddress)) {
-            return false;
-        }
-        byte[] otherAddress = ((EthernetAddress) o).mAddress;
-        byte[] thisAddress = mAddress;
-        for (int i = 0; i < 6; ++i) {
-            if (otherAddress[i] != thisAddress[i]) {
-                return false;
-            }
-        }
-        return true;
+        if (o == this) return true;
+        if (o == null) return false;
+        if (o.getClass() != getClass()) return false;
+        return ((EthernetAddress) o)._address == _address;
     }
 
     /**
@@ -202,17 +192,9 @@ public class EthernetAddress
      */
     public int compareTo(EthernetAddress other)
     {
-        byte[] thatA = other.mAddress;
-        byte[] thisA = mAddress;
-        
-        for (int i = 0; i < 6; ++i) {
-            int cmp = (0xFF & thisA[i]) - (0xFF & thatA[i]);
-            if (cmp != 0) {
-                return cmp;
-            }
-        }
-        
-        return 0;
+        long l = _address - other._address;
+        if (l < 0L) return -1;
+        return (l == 0L) ? 0 : 1;
     }
     
     /* *** Type conversion *** */
@@ -226,21 +208,37 @@ public class EthernetAddress
      */
     public String toString()
     {
+        String str = _asString;
+        if (str != null) {
+            return str;
+        }
+        
         /* Let's not cache the output here (unlike with UUID), assuming
          * this won't be called as often:
          */
         StringBuffer b = new StringBuffer(17);
-        byte[] addr = mAddress;
-	    
-        for (int i = 0; i < 6; ++i) {
-            if (i > 0) {
-                b.append(":");
-            }
-            int hex = addr[i] & 0xFF;
-            b.append(kHexChars.charAt(hex >> 4));
-            b.append(kHexChars.charAt(hex & 0x0f));
-        }
-        return b.toString();
+        int i1 = (int) (_address >> 32);
+        int i2 = (int) _address;
+
+        _appendHex(b, i1 >> 8);
+        b.append(':');
+        _appendHex(b, i1);
+        b.append(':');
+        _appendHex(b, i2 >> 24);
+        b.append(':');
+        _appendHex(b, i2 >> 16);
+        b.append(':');
+        _appendHex(b, i2 >> 8);
+        b.append(':');
+        _appendHex(b, i2);
+        _asString = str = b.toString();
+        return str;
+    }
+    
+    private final void _appendHex(StringBuffer sb, int hex)
+    {
+        sb.append(HEX_CHARS[(hex >> 4) & 0xF]);
+        sb.append(HEX_CHARS[(hex & 0x0f)]);
     }
 
     /**
@@ -253,9 +251,7 @@ public class EthernetAddress
     public byte[] asByteArray()
     {
         byte[] result = new byte[6];
-
         toByteArray(result);
-
         return result;
     }
 
@@ -266,29 +262,31 @@ public class EthernetAddress
      */
     public byte[] toByteArray() { return asByteArray(); }
 
-    public void toByteArray(byte[] array) { toByteArray(array, 0); }
+    public void toByteArray(byte[] array) {
+        if (array.length < 6) {
+            throw new IllegalArgumentException("Too small array, need to have space for 6 bytes");
+        }
+        toByteArray(array, 0);
+    }
 
     public void toByteArray(byte[] array, int pos)
     {
-        for (int i = 0; i < 6; ++i) {
-            array[pos+i] = mAddress[i];
+        if (pos < 0 || (pos + 6) > array.length) {
+            throw new IllegalArgumentException("Illegal offset ("+pos+"), need room for 6 bytes");
         }
+        int i = (int) (_address >> 32);
+        array[pos++] = (byte) (i >> 8);
+        array[pos++] = (byte) i;
+        i = (int) _address;
+        array[pos++] = (byte) (i >> 24);
+        array[pos++] = (byte) (i >> 16);
+        array[pos++] = (byte) (i >> 8);
+        array[pos] = (byte) i;
     }
 
     public long toLong()
     {
-        /* Damn Java's having signed bytes sucks... they are NEVER what
-         * anyone needs; and sign extension work-arounds are slow.
-         */
-        byte[] addr = mAddress;
-        int hi = (((int) addr[0]) & 0xFF) << 8
-            | (((int) addr[1]) & 0xFF);
-        int lo = ((int) addr[2]) & 0xFF;
-        for (int i = 3; i < 6; ++i) {
-            lo = (lo << 8) | (((int) addr[i]) & 0xFF);
-        }
-
-        return ((long) hi) << 32 | (((long) lo) & 0xFFFFFFFFL);
+        return _address;
     }
 
     /**
