@@ -193,8 +193,6 @@ com.fasterxml.uuid, com.fasterxml.uuid.ext
   </repositories>
 
   <!-- Let's also try to automate deployments?
-       18-Mar-2010, tatu: For now let's actually import via StaxMate
-           section... see if that works ok.
     -->
   <distributionManagement>
     <snapshotRepository>
