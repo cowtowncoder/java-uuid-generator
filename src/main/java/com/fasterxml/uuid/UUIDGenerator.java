@@ -158,7 +158,7 @@ public final class UUIDGenerator
      * To prevent collision with real addresses, the returned address has
      * the broadcast bit set, ie. it doesn't represent address of any existing
      * NIC.
-     *
+     *<p>
      * Note that this dummy address will be shared for the lifetime of
      * this UUIDGenerator, ie. only one is ever generated independent of
      * how many times this methods is called.
@@ -169,26 +169,9 @@ public final class UUIDGenerator
     {
         synchronized (mDummyAddressLock) {
             if (mDummyAddress == null) {
-                Random rnd = getRandomNumberGenerator();
-                byte[] dummy = new byte[6];
-                rnd.nextBytes(dummy);
-                /* Need to set the broadcast bit to indicate it's not a real
-                 * address.
-                 */
-                /* 08-Feb-2004, TSa: Note: it's the least bit, not highest;
-                 *   thanks to Ralf S. Engelschall for fix:
-                 */
-                dummy[0] |= (byte) 0x01;
-                try {
-                    mDummyAddress = new EthernetAddress(dummy);
-                } catch (NumberFormatException nex) {
-                    /* Let's just let this cause a null-pointer exception
-                     * later on...
-                     */
-                }
+                mDummyAddress = EthernetAddress.constructDummyAddress();
             }
         }
-
         return mDummyAddress;
     }
 

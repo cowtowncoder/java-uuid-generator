@@ -16,6 +16,8 @@
 package com.fasterxml.uuid;
 
 import java.io.Serializable;
+import java.security.SecureRandom;
+import java.util.Random;
 
 /**
  * EthernetAddress encapsulates the 6-byte MAC address defined in
@@ -30,6 +32,12 @@ public class EthernetAddress
     private final static char[] HEX_CHARS = "0123456789abcdefABCDEF".toCharArray();
 
     /**
+     * We may need a random number generator, for creating dummy ethernet
+     * address if no real interface is found.
+     */
+    protected static Random _rnd;
+    
+    /**
      * 48-bit MAC address, stored in 6 lowest-significant bytes (in
      * big endian notation)
      */
@@ -40,7 +48,11 @@ public class EthernetAddress
      */
     private volatile String _asString;
     
-    /* *** Creation methods *** */
+    /*
+    /**********************************************************
+    /* Instance construction
+    /**********************************************************
+     */
 
     /**
      * String constructor; given a 'standard' ethernet MAC address string
@@ -159,9 +171,11 @@ public class EthernetAddress
     /**
      * Package internal constructor for creating an 'empty' ethernet address
      */
+    /*
     EthernetAddress() {
         _address = 0L;
     }
+    */
     
     /**
      * Default cloning behaviour (bitwise copy) is just fine...
@@ -169,124 +183,6 @@ public class EthernetAddress
     public Object clone()
     {
         return new EthernetAddress(_address);
-    }
-    
-    /* *** Comparison methods *** */
-    
-    public boolean equals(Object o)
-    {
-        if (o == this) return true;
-        if (o == null) return false;
-        if (o.getClass() != getClass()) return false;
-        return ((EthernetAddress) o)._address == _address;
-    }
-
-    /**
-     * Method that compares this EthernetAddress to one passed in as
-     * argument. Comparison is done simply by comparing individual
-     * address bytes in the order.
-     *
-     * @return negative number if this EthernetAddress should be sorted before the
-     *   parameter address if they are equal, os positive non-zero number if this address
-     *  should be sorted after parameter
-     */
-    public int compareTo(EthernetAddress other)
-    {
-        long l = _address - other._address;
-        if (l < 0L) return -1;
-        return (l == 0L) ? 0 : 1;
-    }
-    
-    /* *** Type conversion *** */
-    
-    /**
-     * Returns the canonical string representation of this ethernet address.
-     * Canonical means that all characters are lower-case and string length
-     * is always 17 characters (ie. leading zeroes are not omitted).
-     *
-     * @return Canonical string representation of this ethernet address.
-     */
-    public String toString()
-    {
-        String str = _asString;
-        if (str != null) {
-            return str;
-        }
-        
-        /* Let's not cache the output here (unlike with UUID), assuming
-         * this won't be called as often:
-         */
-        StringBuffer b = new StringBuffer(17);
-        int i1 = (int) (_address >> 32);
-        int i2 = (int) _address;
-
-        _appendHex(b, i1 >> 8);
-        b.append(':');
-        _appendHex(b, i1);
-        b.append(':');
-        _appendHex(b, i2 >> 24);
-        b.append(':');
-        _appendHex(b, i2 >> 16);
-        b.append(':');
-        _appendHex(b, i2 >> 8);
-        b.append(':');
-        _appendHex(b, i2);
-        _asString = str = b.toString();
-        return str;
-    }
-    
-    private final void _appendHex(StringBuffer sb, int hex)
-    {
-        sb.append(HEX_CHARS[(hex >> 4) & 0xF]);
-        sb.append(HEX_CHARS[(hex & 0x0f)]);
-    }
-
-    /**
-     * Returns 6 byte byte array that contains the binary representation
-     * of this ethernet address; byte 0 is the most significant byte
-     * (and so forth)
-     *
-     * @return 6 byte byte array that contains the binary representation
-     */
-    public byte[] asByteArray()
-    {
-        byte[] result = new byte[6];
-        toByteArray(result);
-        return result;
-    }
-
-    /**
-     * Synonym to 'asByteArray()'
-     *
-     * @return 6 byte byte array that contains the binary representation
-     */
-    public byte[] toByteArray() { return asByteArray(); }
-
-    public void toByteArray(byte[] array) {
-        if (array.length < 6) {
-            throw new IllegalArgumentException("Too small array, need to have space for 6 bytes");
-        }
-        toByteArray(array, 0);
-    }
-
-    public void toByteArray(byte[] array, int pos)
-    {
-        if (pos < 0 || (pos + 6) > array.length) {
-            throw new IllegalArgumentException("Illegal offset ("+pos+"), need room for 6 bytes");
-        }
-        int i = (int) (_address >> 32);
-        array[pos++] = (byte) (i >> 8);
-        array[pos++] = (byte) i;
-        i = (int) _address;
-        array[pos++] = (byte) (i >> 24);
-        array[pos++] = (byte) (i >> 16);
-        array[pos++] = (byte) (i >> 8);
-        array[pos] = (byte) i;
-    }
-
-    public long toLong()
-    {
-        return _address;
     }
 
     /**
@@ -360,5 +256,201 @@ public class EthernetAddress
     public static EthernetAddress valueOf(long addr)
     {
         return new EthernetAddress(addr);
+    }
+
+    /**
+     * Factory method for constructing EthernetAddress instance
+     * using address of one of existing interfaces (local and
+     * loopback interface excluded); usually the primary network
+     * interface.
+     * 
+     * @return Ethernet address of one of interfaces system has;
+     *    not including local or loopback addresses; if one exists,
+     *    null if no such interfaces are found.
+     */
+    public static EthernetAddress primaryInterface()
+    {
+        // !!! TBI
+        return null;
+    }
+    
+    /**
+     * Factory method that can be used to construct a bogus address
+     * that can not collide with real addresses (although it can
+     * collide with other bogus adresses) since it specifically
+     * specifies a bit that production ethernet addresses do not use.
+     * Internally a {@link SecureRandom} instance is used for generating
+     * random number to base address on.
+     */
+    public static EthernetAddress constructDummyAddress()
+    {
+        return constructDummyAddress(_randomNumberGenerator());
+    }
+
+    /**
+     * Factory method that can be used to construct a bogus address
+     * that can not collide with real addresses (although it can
+     * collide with other bogus adresses) since it specifically
+     * specifies a bit that production ethernet addresses do not use.
+     * Address is created using specified random number generator.
+     */
+    public static EthernetAddress constructDummyAddress(Random rnd)
+    {
+        byte[] dummy = new byte[6];
+        synchronized (rnd) {
+            rnd.nextBytes(dummy);
+        }
+        /* Need to set the broadcast bit to indicate it's not a real
+         * address.
+         */
+        /* 08-Feb-2004, TSa: Note: it's the least bit, not highest;
+         *   thanks to Ralf S. Engelschall for fix:
+         */
+        dummy[0] |= (byte) 0x01;
+        return new EthernetAddress(dummy);
+    }
+    
+    /*
+    /**********************************************************
+    /* Conversions to raw types
+    /**********************************************************
+     */
+
+    /**
+     * Returns 6 byte byte array that contains the binary representation
+     * of this ethernet address; byte 0 is the most significant byte
+     * (and so forth)
+     *
+     * @return 6 byte byte array that contains the binary representation
+     */
+    public byte[] asByteArray()
+    {
+        byte[] result = new byte[6];
+        toByteArray(result);
+        return result;
+    }
+
+    /**
+     * Synonym to 'asByteArray()'
+     *
+     * @return 6 byte byte array that contains the binary representation
+     */
+    public byte[] toByteArray() { return asByteArray(); }
+
+    public void toByteArray(byte[] array) {
+        if (array.length < 6) {
+            throw new IllegalArgumentException("Too small array, need to have space for 6 bytes");
+        }
+        toByteArray(array, 0);
+    }
+
+    public void toByteArray(byte[] array, int pos)
+    {
+        if (pos < 0 || (pos + 6) > array.length) {
+            throw new IllegalArgumentException("Illegal offset ("+pos+"), need room for 6 bytes");
+        }
+        int i = (int) (_address >> 32);
+        array[pos++] = (byte) (i >> 8);
+        array[pos++] = (byte) i;
+        i = (int) _address;
+        array[pos++] = (byte) (i >> 24);
+        array[pos++] = (byte) (i >> 16);
+        array[pos++] = (byte) (i >> 8);
+        array[pos] = (byte) i;
+    }
+
+    public long toLong() {
+        return _address;
+    }
+    
+    /*
+    /**********************************************************
+    /* Standard methods
+    /**********************************************************
+     */
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (o == this) return true;
+        if (o == null) return false;
+        if (o.getClass() != getClass()) return false;
+        return ((EthernetAddress) o)._address == _address;
+    }
+
+    /**
+     * Method that compares this EthernetAddress to one passed in as
+     * argument. Comparison is done simply by comparing individual
+     * address bytes in the order.
+     *
+     * @return negative number if this EthernetAddress should be sorted before the
+     *   parameter address if they are equal, os positive non-zero number if this address
+     *  should be sorted after parameter
+     */
+    public int compareTo(EthernetAddress other)
+    {
+        long l = _address - other._address;
+        if (l < 0L) return -1;
+        return (l == 0L) ? 0 : 1;
+    }
+    
+    /**
+     * Returns the canonical string representation of this ethernet address.
+     * Canonical means that all characters are lower-case and string length
+     * is always 17 characters (ie. leading zeroes are not omitted).
+     *
+     * @return Canonical string representation of this ethernet address.
+     */
+    @Override
+    public String toString()
+    {
+        String str = _asString;
+        if (str != null) {
+            return str;
+        }
+        
+        /* Let's not cache the output here (unlike with UUID), assuming
+         * this won't be called as often:
+         */
+        StringBuffer b = new StringBuffer(17);
+        int i1 = (int) (_address >> 32);
+        int i2 = (int) _address;
+
+        _appendHex(b, i1 >> 8);
+        b.append(':');
+        _appendHex(b, i1);
+        b.append(':');
+        _appendHex(b, i2 >> 24);
+        b.append(':');
+        _appendHex(b, i2 >> 16);
+        b.append(':');
+        _appendHex(b, i2 >> 8);
+        b.append(':');
+        _appendHex(b, i2);
+        _asString = str = b.toString();
+        return str;
+    }
+
+    /*
+    /**********************************************************
+    /* Internal methods
+    /**********************************************************
+     */
+    
+    /**
+     * Helper method for accessing configured random number generator
+     */
+    protected synchronized static Random _randomNumberGenerator()
+    {
+        if (_rnd == null) {
+            _rnd = new SecureRandom();
+        }
+        return _rnd;
+    }
+
+    private final void _appendHex(StringBuffer sb, int hex)
+    {
+        sb.append(HEX_CHARS[(hex >> 4) & 0xF]);
+        sb.append(HEX_CHARS[(hex & 0x0f)]);
     }
 }
