@@ -4,8 +4,6 @@ import java.util.UUID;
 
 public class UUIDUtil
 {
-    private final static UUID NULL_UUID = new UUID(0L, 0L);
-
     protected final static int BYTE_OFFSET_CLOCK_LO = 0;
     protected final static int BYTE_OFFSET_CLOCK_MID = 4;
     protected final static int BYTE_OFFSET_CLOCK_HI = 6;
@@ -136,10 +134,6 @@ public class UUIDUtil
     {
         _checkUUIDByteArray(bytes, offset);
         return new UUID(_gatherLong(bytes, offset), _gatherLong(bytes, offset+8));
-    }
-	
-    public static UUID nullUUID() {
-        return NULL_UUID;
     }
 
     /*

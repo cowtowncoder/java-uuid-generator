@@ -109,21 +109,21 @@ public class Log4jLogger
 
     protected void doLogInfo(String msg)
     {
-        if (mLogLevel  <= LOG_INFO_AND_ABOVE) {
+        if (_logLevel  <= LOG_INFO_AND_ABOVE) {
             mPeer.info(msg);
         }
     }
 
     protected void doLogWarning(String msg)
     {
-        if (mLogLevel  <= LOG_WARNING_AND_ABOVE) {
+        if (_logLevel  <= LOG_WARNING_AND_ABOVE) {
             mPeer.warn(msg);
         }
     }
 
     protected void doLogError(String msg)
     {
-        if (mLogLevel  <= LOG_ERROR_AND_ABOVE) {
+        if (_logLevel  <= LOG_ERROR_AND_ABOVE) {
             mPeer.error(msg);
         }
     }

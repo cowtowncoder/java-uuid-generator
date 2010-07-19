@@ -108,14 +108,14 @@ public class JavaUtilLogger
 
     protected void doLogInfo(String msg)
     {
-        if (mLogLevel  <= LOG_INFO_AND_ABOVE) {
+        if (_logLevel  <= LOG_INFO_AND_ABOVE) {
             mPeer.info(msg);
         }
     }
 
     protected void doLogWarning(String msg)
     {
-        if (mLogLevel  <= LOG_WARNING_AND_ABOVE) {
+        if (_logLevel  <= LOG_WARNING_AND_ABOVE) {
             mPeer.warning(msg);
         }
     }
@@ -125,7 +125,7 @@ public class JavaUtilLogger
         /* Hmmh. JUL doesn't have error... and SEVERE is bit drastic. But,
          * well, let's use that for ERRORs for now.
          */
-        if (mLogLevel <= LOG_ERROR_AND_ABOVE) {
+        if (_logLevel <= LOG_ERROR_AND_ABOVE) {
             mPeer.severe(msg);
         }
     }

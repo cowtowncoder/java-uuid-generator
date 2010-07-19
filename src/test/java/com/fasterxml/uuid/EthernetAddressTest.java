@@ -23,6 +23,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import java.util.Arrays;
+import java.util.Random;
 
 import com.fasterxml.uuid.EthernetAddress;
 
@@ -30,6 +31,7 @@ import com.fasterxml.uuid.EthernetAddress;
  * JUnit Test class for the com.fasterxml.uuid.EthernetAddress class.
  *
  * @author Eric Bie
+ * @author Tatu Saloranta (changes for version 3.0)
  */
 public class EthernetAddressTest extends TestCase
 {
@@ -227,20 +229,15 @@ public class EthernetAddressTest extends TestCase
         }
 
         // now an array that is too big
-        try
-        {
+        try {
             /*EthernetAddress ethernet_address =*/
                 new EthernetAddress(
                     new byte[ETHERNET_ADDRESS_ARRAY_LENGTH + 1]);
             // if we reached here we failed because we didn't get an exception
             fail("Expected exception not caught");
-        }
-        catch (NumberFormatException ex)
-        {
+        } catch (NumberFormatException ex) {
             // this is the success case so do nothing
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             fail("Caught unexpected exception: " + ex);
         }
 
@@ -1297,6 +1294,39 @@ public class EthernetAddressTest extends TestCase
                         LOWER_CASE_VALID_ETHERNET_ADDRESS_STRING);
         goodStringValueOfHelper(MIXED_CASE_VALID_ETHERNET_ADDRESS_STRING,
                         MIXED_CASE_VALID_ETHERNET_ADDRESS_STRING);
+    }
+    
+    /**
+     * Ok; this test is bit non-kosher, as it assumes existence of a valid
+     * interface
+     * 
+     * @since 3.0
+     */
+    public void testFromInterface() throws Exception
+    {
+        EthernetAddress addr = EthernetAddress.fromInterface();
+        assertNotNull(addr);
+        assertNotNull(addr.toString());
+    }
+
+    public void testBogus() throws Exception
+    {
+        // First, two using pseudo-random; verify they are different
+        Random r = new Random(123);
+        EthernetAddress a1 = EthernetAddress.constructMulticastAddress(r);
+        assertNotNull(a1);
+        assertEquals(a1, a1);
+        assertTrue(a1.isMulticastAddress());
+        EthernetAddress a2 = EthernetAddress.constructMulticastAddress(r);
+        assertNotNull(a2);
+        assertTrue(a2.isMulticastAddress());
+        assertEquals(a2, a2);
+        assertFalse(a1.equals(a2));
+
+        // and then default, which uses SecureRandom
+        EthernetAddress a3 = EthernetAddress.constructMulticastAddress();
+        assertNotNull(a3);
+        assertNotNull(a3.toString());
     }
     
     /**************************************************************************

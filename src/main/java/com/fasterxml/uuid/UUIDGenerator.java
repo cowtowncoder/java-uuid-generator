@@ -1,5 +1,5 @@
 
-/* JUG Java Uuid Generator
+/* JUG Java UUID Generator
  *
  * Copyright (c) 2002- Tatu Saloranta, tatu.saloranta@iki.fi
  *
@@ -73,25 +73,26 @@ import java.util.*;
  * </ul>
  */
 public final class UUIDGenerator
+    extends com.fasterxml.uuid.impl.GeneratorImplBase
 {
-    private final static UUIDGenerator sSingleton = new UUIDGenerator();
+    private final static UUIDGenerator instance = new UUIDGenerator();
 
     /**
      * Random number generator, used by various UUID-generation methods:
      */
-    private Random mRnd = null;
+    private Random _rnd = null;
 
     // Ethernet address for time-based UUIDs:
 
-    private final Object mDummyAddressLock = new Object();
-    private EthernetAddress mDummyAddress = null;
-    private final Object mTimerLock = new Object();
-    private UUIDTimer mTimer = null;
+    private final Object _dummyAddressLock = new Object();
+    private EthernetAddress _dummyAddress = null;
+    private final Object _timerLock = new Object();
+    private UUIDTimer _timer = null;
 
     /**
      * MD5 hasher for name-based digests:
      */
-    private MessageDigest mHasher = null;
+    private MessageDigest _hasher = null;
 
     /*
     /**********************************************************
@@ -109,7 +110,7 @@ public final class UUIDGenerator
      */
     public static UUIDGenerator getInstance()
     {
-        return sSingleton;
+        return instance;
     }
 
     /**
@@ -139,11 +140,11 @@ public final class UUIDGenerator
     public void synchronizeExternally(TimestampSynchronizer sync)
         throws IOException
     {
-        synchronized (mTimerLock) {
-            if (mTimer == null) {
-                mTimer = new UUIDTimer(getRandomNumberGenerator());
+        synchronized (_timerLock) {
+            if (_timer == null) {
+                _timer = new UUIDTimer(getRandomNumberGenerator());
             }
-            mTimer.setSynchronizer(sync);
+            _timer.setSynchronizer(sync);
         }
     }
 
@@ -167,12 +168,12 @@ public final class UUIDGenerator
      */
     public EthernetAddress getDummyAddress()
     {
-        synchronized (mDummyAddressLock) {
-            if (mDummyAddress == null) {
-                mDummyAddress = EthernetAddress.constructDummyAddress();
+        synchronized (_dummyAddressLock) {
+            if (_dummyAddress == null) {
+                _dummyAddress = EthernetAddress.constructMulticastAddress();
             }
         }
-        return mDummyAddress;
+        return _dummyAddress;
     }
 
     /**
@@ -189,10 +190,10 @@ public final class UUIDGenerator
          * of which all but one are dumped) let's not add synchronization
          * overhead:
          */
-        if (mRnd == null) {
-            mRnd = new SecureRandom();
+        if (_rnd == null) {
+            _rnd = new SecureRandom();
         }
-        return mRnd;
+        return _rnd;
     }
 
     /**
@@ -207,7 +208,7 @@ public final class UUIDGenerator
      */
     public void setRandomNumberGenerator(Random r)
     {
-        mRnd = r;
+        _rnd = r;
     }
 
     /* Method for getting the shared message digest (hash) algorithm.
@@ -222,14 +223,14 @@ public final class UUIDGenerator
          * HAS to be synchronized by the caller to prevent problems with
          * multiple threads updating digest etc.
          */
-        if (mHasher == null) {
+        if (_hasher == null) {
             try {
-                mHasher = MessageDigest.getInstance("MD5");
+                _hasher = MessageDigest.getInstance("MD5");
             } catch (NoSuchAlgorithmException nex) {
                 throw new Error("Couldn't instantiate an MD5 MessageDigest instance: "+nex.toString());
             }
         }
-        return mHasher;
+        return _hasher;
     }
 
     /*
@@ -313,11 +314,11 @@ public final class UUIDGenerator
 
         long timestamp;
 
-        synchronized (mTimerLock) {
-            if (mTimer == null) {
-                mTimer = new UUIDTimer(getRandomNumberGenerator());
+        synchronized (_timerLock) {
+            if (_timer == null) {
+                _timer = new UUIDTimer(getRandomNumberGenerator());
             }
-            timestamp = mTimer.getTimestamp(uuidBytes);
+            timestamp = _timer.getTimestamp(uuidBytes);
         }
         /* Time fields aren't nicely split across the UUID, so can't just
          * linearly dump the stamp:
@@ -438,38 +439,4 @@ public final class UUIDGenerator
     {
         return generateNameBasedUUID(null, name.toString(), hasher);
     }
-
-    /*
-    /**********************************************************
-    /* Internal helper methods
-    /**********************************************************
-     */
-    
-    /**
-     * Helper method for constructing UUID instances with appropriate type
-     */
-    private UUID constructUUID(UUIDType type, byte[] uuidBytes)
-    {
-        // first, ensure type is ok
-        int b = uuidBytes[UUIDUtil.BYTE_OFFSET_TYPE] & 0xF; // clear out high nibble
-        b |= type.raw() << 4;
-        uuidBytes[UUIDUtil.BYTE_OFFSET_TYPE] = (byte) b;
-        // second, ensure variant is properly set too
-        b = uuidBytes[UUIDUtil.BYTE_OFFSET_VARIATION] & 0x3F; // remove 2 MSB
-        b |= 0x80; // set as '10'
-        uuidBytes[UUIDUtil.BYTE_OFFSET_VARIATION] = (byte) b;
-        return UUIDUtil.uuid(uuidBytes);
-    }
-
-    private UUID constructUUID(UUIDType type, long l1, long l2)
-    {
-        // first, ensure type is ok
-        l1 &= ~0xF000L; // remove high nibble of 6th byte
-        l1 |= (long) (type.raw() << 12);
-        // second, ensure variant is properly set too (8th byte; most-sig byte of second long)
-        l2 = ((l2 << 2) >>> 2); // remove 2 MSB
-        l2 |= (2L << 62); // set 2 MSB to '10'
-        return new UUID(l1, l2);
-    }
-
 }

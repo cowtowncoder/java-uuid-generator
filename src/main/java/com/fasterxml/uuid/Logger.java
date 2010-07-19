@@ -25,13 +25,13 @@ import java.io.*;
  * overhead of a real
  * full-featured logging sub-system (like log4j or java.util.logging).
  * By being customizable, it is still possible to connect JUG logging into
- * such a real logging framework (log4j, java.util.logging) when being
- * used in a system that already uses such a framework.
+ * real logging framework (log4j, java.util.logging) used by application
+ * or system that uses JUG.
  *<p>
  * To keep things as light-weight as possible, we won't bother defining
  * separate interface or abstract class -- this class defines both API
  * and the default implementation. It can thus be extended to override
- * functionality to provide thigs like bridging to "real" logging systems.
+ * functionality to provide things like bridging to "real" logging systems.
  * For simple configuration (suppress all, redirect to another stream)
  * default implementation should be sufficient, however.
  *<p>
@@ -65,7 +65,7 @@ public class Logger
      * By default we'll use this default implementation; however,
      * it can be easily changed.
      */
-    private static Logger sInstance = new Logger();
+    private static Logger instance = new Logger();
 
     /*
     //////////////////////////////////////////////////
@@ -78,20 +78,20 @@ public class Logger
      *<p>
      * Default is to low only warnings and errors
      */
-    protected int mLogLevel = LOG_ALL;
+    protected int _logLevel = LOG_ALL;
 
     /**
      * Output object to use, if defined; initialized to
      * <code>System.err</code>.
      */
-    protected PrintStream mOutput1 = System.err;
+    protected PrintStream _output1 = System.err;
 
     /**
      * Override output used to explicitly specify where to pass diagnostic
-     * output, instead of System.err. Used if <code>mOutput1</code>
+     * output, instead of System.err. Used if <code>_output1</code>
      * is null;
      */
-    protected PrintWriter mOutput2 = null;
+    protected PrintWriter _output2 = null;
 
     /*
     /////////////////////////////////////////////////////////////
@@ -99,8 +99,7 @@ public class Logger
     /////////////////////////////////////////////////////////////
     */
     
-    protected Logger() {
-    }
+    protected Logger() { }
 
     /**
      * Method that can be used to completely re-define the logging
@@ -113,7 +112,7 @@ public class Logger
      */
     public synchronized static void setLogger(Logger inst)
     {
-        sInstance = inst;
+        instance = inst;
     }
 
     /*
@@ -140,7 +139,7 @@ public class Logger
      */
     public static void setLogLevel(int level)
     {
-        Logger l = sInstance;
+        Logger l = instance;
         if (l != null) {
             l.doSetLogLevel(level);
         }
@@ -155,7 +154,7 @@ public class Logger
      */
     public static void setOutput(PrintStream str)
     {
-        Logger l = sInstance;
+        Logger l = instance;
         if (l != null) {
             l.doSetOutput(str);
         }
@@ -168,7 +167,7 @@ public class Logger
      */
     public static void setOutput(Writer w)
     {
-        Logger l = sInstance;
+        Logger l = instance;
         if (l != null) {
             l.doSetOutput(w);
         }
@@ -178,7 +177,7 @@ public class Logger
 
     public static void logInfo(String msg)
     {
-        Logger l = sInstance;
+        Logger l = instance;
         if (l != null) {
             l.doLogInfo(msg);
         }
@@ -186,7 +185,7 @@ public class Logger
 
     public static void logWarning(String msg)
     {
-        Logger l = sInstance;
+        Logger l = instance;
         if (l != null) {
             l.doLogWarning(msg);
         }
@@ -194,7 +193,7 @@ public class Logger
 
     public static void logError(String msg)
     {
-        Logger l = sInstance;
+        Logger l = instance;
         if (l != null) {
             l.doLogError(msg);
         }
@@ -213,22 +212,22 @@ public class Logger
         /* No need to sync for atomic value that's not used
          * for synced or critical things
          */
-        mLogLevel = ll;
+        _logLevel = ll;
     }
 
     protected void doSetOutput(PrintStream str)
     {
         synchronized (this) {
-            mOutput1 = str;
-            mOutput2 = null;
+            _output1 = str;
+            _output2 = null;
         }
     }
 
     protected void doSetOutput(Writer w)
     {
         synchronized (this) {
-            mOutput1 = null;
-            mOutput2 = (w instanceof PrintWriter) ?
+            _output1 = null;
+            _output2 = (w instanceof PrintWriter) ?
                 (PrintWriter) w : new PrintWriter(w);
         }
     }
@@ -237,7 +236,7 @@ public class Logger
 
     protected void doLogInfo(String msg)
     {
-        if (mLogLevel  <= LOG_INFO_AND_ABOVE && isEnabled()) {
+        if (_logLevel  <= LOG_INFO_AND_ABOVE && isEnabled()) {
             synchronized (this) {
                 doWrite("INFO: "+msg);
             }
@@ -246,7 +245,7 @@ public class Logger
 
     protected void doLogWarning(String msg)
     {
-        if (mLogLevel  <= LOG_WARNING_AND_ABOVE && isEnabled()) {
+        if (_logLevel  <= LOG_WARNING_AND_ABOVE && isEnabled()) {
             synchronized (this) {
                 doWrite("WARNING: "+msg);
             }
@@ -255,7 +254,7 @@ public class Logger
 
     protected void doLogError(String msg)
     {
-        if (mLogLevel  <= LOG_ERROR_AND_ABOVE && isEnabled()) {
+        if (_logLevel  <= LOG_ERROR_AND_ABOVE && isEnabled()) {
             synchronized (this) {
                 doWrite("ERROR: "+msg);
             }
@@ -270,10 +269,10 @@ public class Logger
 
     protected void doWrite(String msg)
     {
-        if (mOutput1 != null) {
-            mOutput1.println(msg);
-        } else if (mOutput2 != null) {
-            mOutput2.println(msg);
+        if (_output1 != null) {
+            _output1.println(msg);
+        } else if (_output2 != null) {
+            _output2.println(msg);
         }
     }
 
@@ -285,7 +284,7 @@ public class Logger
      * value can not be used for reliable syncing.
      */
     protected boolean isEnabled() {
-        return (mOutput1 != null) || (mOutput2 != null);
+        return (_output1 != null) || (_output2 != null);
     }
 }
 

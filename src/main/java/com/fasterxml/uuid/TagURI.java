@@ -27,7 +27,7 @@ import java.util.*;
  */
 public class TagURI
 {
-    private final String mDesc;
+    private final String _desc;
 
     /**
      * Constructor for creating tagURI instances.
@@ -51,7 +51,7 @@ public class TagURI
      */
     public TagURI(String authority, String identifier, Calendar date)
     {
-	StringBuffer b = new StringBuffer();
+	StringBuilder b = new StringBuilder();
 	b.append("tag:");
 	b.append(authority);
 	if (date != null) {
@@ -72,55 +72,16 @@ public class TagURI
 	b.append(':');
 	b.append(identifier);
 
-	mDesc = b.toString();
+	_desc = b.toString();
     }
 
-    public String toString() { return mDesc; }
+    public String toString() { return _desc; }
 
     public boolean equals(Object o)
     {
 	if (o instanceof TagURI) {
-	    return mDesc.equals(((TagURI) o).toString());
+	    return _desc.equals(((TagURI) o).toString());
 	}
 	return false;
-    }
-
-    /**
-     * A simple test harness is added to make (automated) testing of the
-     * class easier. 
-     */
-    public static void main(String[] args)
-    {
-	System.out.println("TagURI.main()");
-	System.out.println("--------------------");
-	System.out.println();
-
-	String[] auths = { "www.w3c.org", "www.google.com", "www.fi",
-	 "tatu.saloranta@iki.fi"
-	};
-	String[] ids = { "1234", "/home/billg/public_html/index.html",
-			"6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-			"foobar"
-	};
-
-	Calendar c = null;
-	for (int i = 0; i < 4; ++i) {
-	    // Let's just change the date & URL a bit:
-	    switch (i) {
-	    case 2:
-		c.add(Calendar.MONTH, 1);
-		break;
-	    case 3:
-		c.add(Calendar.DAY_OF_MONTH, -7);
-		break;
-	    }
-	    for (int j = 0; j < 4; ++j) {
-		TagURI t = new TagURI(auths[i], ids[j], c);
-		System.out.println("tagURI: "+t);
-	    }
-	    if (c == null) {
-		c = Calendar.getInstance();
-	    }
-	}
     }
 }

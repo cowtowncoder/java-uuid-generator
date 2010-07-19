@@ -20,32 +20,34 @@ import java.security.*;
 import java.util.*;
 
 /**
- * Class that implements command-line interface for accessing functionality
- * implemented by {@link UUIDGenerator}.
+ * Class that provides two things: methods for constructing
+ * generators ({@link UUIDGenerator} and {@link NameUUIDGenerator})
+ * and implements command-line interface for accessing functionality
+ * of generators.
  */
 public class Jug
 {
-    private final static HashMap<String,String> mTypes = new HashMap<String,String>();
+    protected final static HashMap<String,String> TYPES = new HashMap<String,String>();
     static {
-        mTypes.put("time-based", "t");
-        mTypes.put("random-based", "r");
-        mTypes.put("name-based", "n");
-        mTypes.put("tag-uri-no-timestamp", "u");
-        mTypes.put("tag-uri-with-timestamp", "U");
+        TYPES.put("time-based", "t");
+        TYPES.put("random-based", "r");
+        TYPES.put("name-based", "n");
+        TYPES.put("tag-uri-no-timestamp", "u");
+        TYPES.put("tag-uri-with-timestamp", "U");
     }
 
-    private final static HashMap<String,String> mOptions = new HashMap<String,String>();
+    protected final static HashMap<String,String> OPTIONS = new HashMap<String,String>();
     static {
-        mOptions.put("count", "c");
-        mOptions.put("ethernet-address", "e");
-        mOptions.put("help", "h");
-        mOptions.put("namespace", "s");
-        mOptions.put("name", "n");
-        mOptions.put("performance", "p");
-        mOptions.put("verbose", "v");
+        OPTIONS.put("count", "c");
+        OPTIONS.put("ethernet-address", "e");
+        OPTIONS.put("help", "h");
+        OPTIONS.put("namespace", "s");
+        OPTIONS.put("name", "n");
+        OPTIONS.put("performance", "p");
+        OPTIONS.put("verbose", "v");
     }
     
-    static void printUsage()
+    protected static void printUsage()
     {
         String clsName = Jug.class.getName();
         System.err.println("Usage: java "+clsName+" [options] type");
@@ -114,12 +116,12 @@ public class Jug
         --count;
 
         // Type we recognize?
-        String tmp = (String) mTypes.get(type);
+        String tmp = (String) TYPES.get(type);
         if (tmp == null) {
-            if (!mTypes.containsValue(type)) {
+            if (!TYPES.containsValue(type)) {
                 System.err.println("Unrecognized UUID generation type '"+
                                    type+"'; currently available ones are:");
-                printMap(mTypes, System.err, false);
+                printMap(TYPES, System.err, false);
                 System.err.println();
                 System.exit(1);
             }
@@ -138,13 +140,13 @@ public class Jug
 
             char option = (char)0;
             if (opt.startsWith("--")) {
-                String o = (String) mOptions.get(opt.substring(2));
+                String o = (String) OPTIONS.get(opt.substring(2));
                 // Let's translate longer names to simple names:
                 if (o != null) {
                     option = o.charAt(0);
                 }
             } else {
-                if (mOptions.containsValue(opt.substring(1))) {
+                if (OPTIONS.containsValue(opt.substring(1))) {
                     option = opt.charAt(1);
                 }
             }
@@ -152,7 +154,7 @@ public class Jug
             if (option == (char) 0) {
                 System.err.println("Unrecognized option '"+opt+"'; exiting.");
                 System.err.print("[options currently available are: ");
-                printMap(mOptions, System.err, true);
+                printMap(OPTIONS, System.err, true);
                 System.err.println("]");
                 System.exit(1);
             }

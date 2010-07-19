@@ -16,7 +16,9 @@
 package com.fasterxml.uuid;
 
 import java.io.Serializable;
+import java.net.NetworkInterface;
 import java.security.SecureRandom;
+import java.util.Enumeration;
 import java.util.Random;
 
 /**
@@ -169,15 +171,6 @@ public class EthernetAddress
     }
     
     /**
-     * Package internal constructor for creating an 'empty' ethernet address
-     */
-    /*
-    EthernetAddress() {
-        _address = 0L;
-    }
-    */
-    
-    /**
      * Default cloning behaviour (bitwise copy) is just fine...
      */
     public Object clone()
@@ -259,42 +252,62 @@ public class EthernetAddress
     }
 
     /**
-     * Factory method for constructing EthernetAddress instance
-     * using address of one of existing interfaces (local and
-     * loopback interface excluded); usually the primary network
-     * interface.
+     * Factory method that locates a network interface that has
+     * a suitable mac address (ethernet cards, and things that
+     * emulate one), and return that address. If there are multiple
+     * applicable interfaces, one of them is returned; which one
+     * is returned is not specified.
+     * Method is meant for accessing an address needed to construct
+     * generator for time+location based UUID generation method.
      * 
      * @return Ethernet address of one of interfaces system has;
      *    not including local or loopback addresses; if one exists,
      *    null if no such interfaces are found.
      */
-    public static EthernetAddress primaryInterface()
+    public static EthernetAddress fromInterface()
     {
-        // !!! TBI
+        try {
+            Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
+            while (en.hasMoreElements()) {
+                NetworkInterface nint = en.nextElement();
+                if (!nint.isLoopback()) {
+                    byte[] data = nint.getHardwareAddress();
+                    if (data != null && data.length == 6) {
+                        return new EthernetAddress(data);
+                    }
+                }
+            }
+        } catch (java.net.SocketException e) {
+            // fine, let's take is as signal of not having any interfaces
+        }
         return null;
     }
     
     /**
-     * Factory method that can be used to construct a bogus address
-     * that can not collide with real addresses (although it can
-     * collide with other bogus adresses) since it specifically
-     * specifies a bit that production ethernet addresses do not use.
+     * Factory method that can be used to construct a random multicast
+     * address; to be used in cases where there is no "real" ethernet
+     * address to use. Address to generate should be a multicase address
+     * to avoid accidental collision with real manufacturer-assigned
+     * MAC addresses.
+     *<p>
      * Internally a {@link SecureRandom} instance is used for generating
      * random number to base address on.
      */
-    public static EthernetAddress constructDummyAddress()
+    public static EthernetAddress constructMulticastAddress()
     {
-        return constructDummyAddress(_randomNumberGenerator());
+        return constructMulticastAddress(_randomNumberGenerator());
     }
 
     /**
-     * Factory method that can be used to construct a bogus address
-     * that can not collide with real addresses (although it can
-     * collide with other bogus adresses) since it specifically
-     * specifies a bit that production ethernet addresses do not use.
+     * Factory method that can be used to construct a random multicast
+     * address; to be used in cases where there is no "real" ethernet
+     * address to use. Address to generate should be a multicase address
+     * to avoid accidental collision with real manufacturer-assigned
+     * MAC addresses.
+     *<p>
      * Address is created using specified random number generator.
      */
-    public static EthernetAddress constructDummyAddress(Random rnd)
+    public static EthernetAddress constructMulticastAddress(Random rnd)
     {
         byte[] dummy = new byte[6];
         synchronized (rnd) {
@@ -303,8 +316,10 @@ public class EthernetAddress
         /* Need to set the broadcast bit to indicate it's not a real
          * address.
          */
-        /* 08-Feb-2004, TSa: Note: it's the least bit, not highest;
-         *   thanks to Ralf S. Engelschall for fix:
+        /* 20-May-2010, tatu: Actually, we could use both second least-sig-bit
+         *   ("locally administered") or the LSB (multicast), as neither is
+         *   ever set for 'real' addresses.
+         *   Since UUID specs recommends latter, use that.
          */
         dummy[0] |= (byte) 0x01;
         return new EthernetAddress(dummy);
@@ -362,6 +377,33 @@ public class EthernetAddress
     public long toLong() {
         return _address;
     }
+
+    /*
+    /**********************************************************
+    /* Accessors
+    /**********************************************************
+     */
+
+    /**
+     * Method that can be used to check if this address refers
+     * to a multicast address.
+     * Such addresses are never assigned to individual network
+     * cards.
+     */
+    public boolean isMulticastAddress() {
+        return (((int) (_address >> 40)) & 0x01) != 0;
+    }
+
+    /**
+     * Method that can be used to check if this address refers
+     * to a "locally administered address"
+     * (see [http://en.wikipedia.org/wiki/MAC_address] for details).
+     * Such addresses are not assigned to individual network
+     * cards.
+     */
+    public boolean isLocallyAdministeredAddress() {
+        return (((int) (_address >> 40)) & 0x02) != 0;
+    }
     
     /*
     /**********************************************************
@@ -412,7 +454,7 @@ public class EthernetAddress
         /* Let's not cache the output here (unlike with UUID), assuming
          * this won't be called as often:
          */
-        StringBuffer b = new StringBuffer(17);
+        StringBuilder b = new StringBuilder(17);
         int i1 = (int) (_address >> 32);
         int i2 = (int) _address;
 
@@ -448,7 +490,7 @@ public class EthernetAddress
         return _rnd;
     }
 
-    private final void _appendHex(StringBuffer sb, int hex)
+    private final void _appendHex(StringBuilder sb, int hex)
     {
         sb.append(HEX_CHARS[(hex >> 4) & 0xF]);
         sb.append(HEX_CHARS[(hex & 0x0f)]);
