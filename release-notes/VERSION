@@ -1,13 +1,25 @@
-Version: 2.0.0
+Version: 3.0.0
 
-Release date: 29-Oct-2005
+Release date: 12-Oct-2010
 
 Description:
+
+Rewrite of Java Uuid Generator, to bring it up to date. Changes include:
+
+* Converted to use java.util.UUID as the UUID value type
+* Change from using static UUIDGenerator into typed generator instances
+  accessed via com.fasterxml.uuid.Generators factory class
+* Allow using JDK 1.6 Ethernet address access code (exposed via
+  EthernetAddress class)
+
+============================================================================
+  
+History:
+  2.0.0 (29-Oct-2005):
+
   The official 2.0 release. No functional changes since rc6, just
   documentation updates.
 
-  
-History:
   2.0-rc6: (25-Sep-2005):
 
   Added simple logger wrappers for log4j and java.util.logging: now it
