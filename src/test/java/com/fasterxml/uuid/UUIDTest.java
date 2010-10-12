@@ -31,9 +31,6 @@ import com.fasterxml.uuid.impl.UUIDUtil;
 /**
  * This class tests UUID for correct functionality.
  *
- * The UUIDTest class is in a different sub-package to make sure
- * 'public' methods are correctly accessable.
- *
  * @author Eric Bie
  */
 public class UUIDTest extends TestCase

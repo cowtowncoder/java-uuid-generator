@@ -22,10 +22,7 @@ import java.util.*;
 import com.fasterxml.uuid.impl.NameBasedGenerator;
 
 /**
- * Class that provides two things: methods for constructing
- * generators ({@link UUIDGenerator} and {@link NameUUIDGenerator})
- * and implements command-line interface for accessing functionality
- * of generators.
+ * Simple command-line interface to UUID generation functionality.
  */
 public class Jug
 {

@@ -4,14 +4,16 @@
  <!-- General information -->
 
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>5</version>
+  </parent>
   <groupId>com.fasterxml.uuid</groupId>
   <artifactId>java-uuid-generator</artifactId>
-<!--
-  <artifactId>jug</artifactId>
--->
-  <name>Java UUID Generator</name>
-  <version>2.9.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
+  <name>Java UUID Generator</name>
+  <version>2.9.1-SNAPSHOT</version>
   <description>
 Java UUID Generator (JUG) is a Java library for generating
 Universally Unique IDentifiers, UUIDs (see http://en.wikipedia.org/wiki/UUID).
@@ -31,19 +33,28 @@ JUG supports all 3 official UUID generation methods.
       <email>tatu.saloranta@iki.fi</email>
     </developer>
   </developers>
-
-  <prerequisites>
-    <maven>2.0.9</maven>
-  </prerequisites>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-
- <!-- Contact information -->
   <url>http://wiki.fasterxml.com/JugHome</url>
   <issueManagement>
     <url>http://github.com/cowtowncoder/java-uuid-generator/issues</url>
   </issueManagement>
+
+  <prerequisites>
+    <maven>2.2.1</maven>
+  </prerequisites>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <organization>
+    <name>FasterXML.com</name>
+    <url>http://fasterxml.com</url>
+  </organization>
 
  <!-- Dependency information -->
  
@@ -91,22 +102,24 @@ JUG supports all 3 official UUID generation methods.
          <groupId>org.apache.maven.plugins</groupId>
          <artifactId>maven-javadoc-plugin</artifactId>
          <version>2.6.1</version>
-         <configuration>
-         </configuration>
+          <configuration>
+              <encoding>UTF-8</encoding>
+              <links>
+                  <link>http://java.sun.com/javase/6/docs/api/</link>
+              </links>
+          </configuration>
        </plugin>
 
        <!-- Plus, let's make jars OSGi bundles as well  -->
         <plugin>
           <groupId>org.apache.felix</groupId>
           <artifactId>maven-bundle-plugin</artifactId>
-<!--version>2.0.0</version-->
           <extensions>true</extensions>
           <configuration>
             <instructions>
-              <Bundle-Name>Jug</Bundle-Name>
-              <Bundle-SymbolicName>${pom.artifactId}</Bundle-SymbolicName>
-              <Bundle-Description>Java UUID Generator
-</Bundle-Description>
+              <Bundle-Name>${project.name}</Bundle-Name>
+              <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+              <Bundle-Description>${project.description}</Bundle-Description>
               <Bundle-Vendor>FasterXML.com</Bundle-Vendor>
               <Import-Package>
 </Import-Package>
@@ -116,7 +129,7 @@ org.apache.log4j
               <Private-Package>
 </Private-Package>
               <Export-Package>
-com.fasterxml.uuid, com.fasterxml.uuid.ext
+com.fasterxml.uuid, com.fasterxml.uuid.ext, com.fasterxml.uuid.impl
 </Export-Package>
             </instructions>
           </configuration>
@@ -129,92 +142,48 @@ com.fasterxml.uuid, com.fasterxml.uuid.ext
           <version>2.0</version>
         </plugin>
         <!-- And Sonatype also mandates GPG... oh brother -->
+        <!-- Need GPG signatures for releases -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-gpg-plugin</artifactId>
-          <executions>
-           <execution>
-            <id>sign-artifacts</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-           </execution>
-          </executions>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.0</version>
+          <configuration>
+            <mavenExecutorId>forked-path</mavenExecutorId>
+          </configuration>
         </plugin>
-
     </plugins>
   </build>
 
-  <!-- Licensing -->
-  <licenses>
-    <license>
-      <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
+    <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
-  <organization>
-    <name>FasterXML.com</name>
-    <url>http://fasterxml.com</url>
-  </organization>
-
-  <!-- 01-May-2010, tatu: Let's publish via Sonatype OS repo
-    -->
-  <repositories>
-    <repository>
-      <id>sonatype</id>
-      <name>Sonatype</name>
-      <layout>default</layout>
-<!--
-      <url>http://repository.codehaus.org</url>
--->
-      <url>http://oss.sonatype.org/content/repositories/releases</url>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </releases>
-    </repository>
-    <repository>
-      <id>maven</id>
-      <name>Maven</name>
-      <layout>default</layout>
-      <url>http://repo1.maven.org/maven2</url>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </releases>
-    </repository>
-
-  </repositories>
-
-  <!-- Let's also try to automate deployments?
-    -->
-  <distributionManagement>
-    <snapshotRepository>
-      <id>sonatype-nexus-snapshots</id>
-      <name>Sonatype Nexus Snapshots</name>
-      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-    <repository>
-      <id>sonatype-nexus-staging</id>
-      <name>Nexus Release Repository</name>
-      <url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-
-<!--
-    <repository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>sonatype-release</id>
-      <name>Sonatype Maven2 Repository</name>
-      <url>http://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-      <layout>default</layout>
-    </repository>
--->
-
-  </distributionManagement>
+    <!-- NOTE: repositories from parent POM -->
 
 </project>
