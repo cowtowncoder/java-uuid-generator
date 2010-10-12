@@ -17,21 +17,22 @@
 
 package com.fasterxml.uuid;
 
+import java.security.MessageDigest;
+import java.util.*;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import java.security.MessageDigest;
-import java.security.SecureRandom;
-
-import java.util.*;
 
 import com.fasterxml.uuid.EthernetAddress;
-import com.fasterxml.uuid.TagURI;
-import com.fasterxml.uuid.UUIDGenerator;
+import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.UUIDType;
-import com.fasterxml.uuid.UUIDUtil;
+import com.fasterxml.uuid.impl.UUIDUtil;
+import com.fasterxml.uuid.impl.NameBasedGenerator;
+import com.fasterxml.uuid.impl.RandomBasedGenerator;
+import com.fasterxml.uuid.impl.TimeBasedGenerator;
 
 /**
  * JUnit Test class for the com.fasterxml.uuid.UUIDGenerator class.
@@ -60,27 +61,6 @@ public class UUIDGeneratorTest extends TestCase
     }
     
     /**
-     * Test of getInstance method, of class com.fasterxml.uuid.UUIDGenerator.
-     */
-    public void testGetInstance()
-    {
-        // really, there isn't a lot to test here
-        // we'll make sure that getInstance returns the same
-        // reference when called twice since it is supposed to
-        // be a singleton class factory
-        UUIDGenerator uuid_gen1 = UUIDGenerator.getInstance();
-        UUIDGenerator uuid_gen2 = UUIDGenerator.getInstance();
-        UUIDGenerator uuid_gen3 = UUIDGenerator.getInstance();
-        
-        assertTrue("uuid_gen1 == uuid_gen2 was not true",
-                uuid_gen1 == uuid_gen2);
-        assertTrue("uuid_gen2 == uuid_gen3 was not true",
-                uuid_gen2 == uuid_gen3);
-        assertTrue("uuid_gen1 == uuid_gen3 was not true",
-                uuid_gen1 == uuid_gen3);
-    }
-    
-    /**
      * Test of getDummyAddress method,
      * of class com.fasterxml.uuid.UUIDGenerator.
      */
@@ -88,10 +68,7 @@ public class UUIDGeneratorTest extends TestCase
     {
         // this test will attempt to check for reasonable behavior of the
         // getDummyAddress method
-        
-        // we need a instance to use
-        UUIDGenerator uuid_gen = UUIDGenerator.getInstance();
-        
+
         // for the random UUID generator, we will generate a bunch of
         // dummy ethernet addresses
         // NOTE: although creating a bunch of dummy ethernet addresses
@@ -102,9 +79,9 @@ public class UUIDGeneratorTest extends TestCase
             new EthernetAddress[SIZE_OF_TEST_ARRAY];
         
         // now create the array of uuids
-        for (int i = 0; i < ethernet_address_array.length; i++)
-        {
-            ethernet_address_array[i] = uuid_gen.getDummyAddress();
+        Random rnd = new Random(123L);
+        for (int i = 0; i < ethernet_address_array.length; i++) {
+            ethernet_address_array[i] = EthernetAddress.constructMulticastAddress(rnd);
         }
         
         EthernetAddress null_ethernet_address = new EthernetAddress(0L);
@@ -127,90 +104,6 @@ public class UUIDGeneratorTest extends TestCase
     }
     
     /**
-     * Test of getRandomNumberGenerator method,
-     * of class com.fasterxml.uuid.UUIDGenerator.
-     */
-    public void testGetRandomNumberGenerator()
-    {
-        // really, there isn't a lot to test here
-        // we'll make sure that getRandomNumberGenerator returns the same
-        // reference when called more then once from more then one instance
-        // since it is supposed to be a shared generator
-        UUIDGenerator uuid_gen1 = UUIDGenerator.getInstance();
-        UUIDGenerator uuid_gen2 = UUIDGenerator.getInstance();
-        UUIDGenerator uuid_gen3 = UUIDGenerator.getInstance();
-        
-        assertTrue("uuid_gen1 == uuid_gen2 was not true",
-                uuid_gen1 == uuid_gen2);
-        assertTrue("uuid_gen2 == uuid_gen3 was not true",
-                uuid_gen2 == uuid_gen3);
-        assertTrue("uuid_gen1 == uuid_gen3 was not true",
-                uuid_gen1 == uuid_gen3);
-        
-        Random secure_rand1 = uuid_gen1.getRandomNumberGenerator();
-        Random secure_rand2 = uuid_gen1.getRandomNumberGenerator();
-        Random secure_rand3 = uuid_gen2.getRandomNumberGenerator();
-        Random secure_rand4 = uuid_gen2.getRandomNumberGenerator();
-        Random secure_rand5 = uuid_gen3.getRandomNumberGenerator();
-        Random secure_rand6 = uuid_gen3.getRandomNumberGenerator();
-
-        assertTrue("secure_rand1 == secure_rand2 was not true",
-                secure_rand1 == secure_rand2);
-        assertTrue("secure_rand2 == secure_rand3 was not true",
-                secure_rand2 == secure_rand3);
-        assertTrue("secure_rand3 == secure_rand4 was not true",
-                secure_rand3 == secure_rand4);
-        assertTrue("secure_rand4 == secure_rand5 was not true",
-                secure_rand4 == secure_rand5);
-        assertTrue("secure_rand5 == secure_rand6 was not true",
-                secure_rand5 == secure_rand6);
-        assertTrue("secure_rand6 == secure_rand1 was not true",
-                secure_rand6 == secure_rand1);
-    }
-    
-    /**
-     * Test of getHashAlgorithm method,
-     * of class com.fasterxml.uuid.UUIDGenerator.
-     */
-    public void testGetHashAlgorithm()
-    {
-        // really, there isn't a lot to test here
-        // we'll make sure that getHashAlgorithm returns the same
-        // reference when called more then once from more then one instance
-        // since it is supposed to be a shared MessageDigest
-        UUIDGenerator uuid_gen1 = UUIDGenerator.getInstance();
-        UUIDGenerator uuid_gen2 = UUIDGenerator.getInstance();
-        UUIDGenerator uuid_gen3 = UUIDGenerator.getInstance();
-        
-        assertTrue("uuid_gen1 == uuid_gen2 was not true",
-                uuid_gen1 == uuid_gen2);
-        assertTrue("uuid_gen2 == uuid_gen3 was not true",
-                uuid_gen2 == uuid_gen3);
-        assertTrue("uuid_gen1 == uuid_gen3 was not true",
-                uuid_gen1 == uuid_gen3);
-        
-        MessageDigest message_digest1 = uuid_gen1.getHashAlgorithm();
-        MessageDigest message_digest2 = uuid_gen1.getHashAlgorithm();
-        MessageDigest message_digest3 = uuid_gen2.getHashAlgorithm();
-        MessageDigest message_digest4 = uuid_gen2.getHashAlgorithm();
-        MessageDigest message_digest5 = uuid_gen3.getHashAlgorithm();
-        MessageDigest message_digest6 = uuid_gen3.getHashAlgorithm();
-
-        assertTrue("message_digest1 == message_digest2 was not true",
-                message_digest1 == message_digest2);
-        assertTrue("message_digest2 == message_digest3 was not true",
-                message_digest2 == message_digest3);
-        assertTrue("message_digest3 == message_digest4 was not true",
-                message_digest3 == message_digest4);
-        assertTrue("message_digest4 == message_digest5 was not true",
-                message_digest4 == message_digest5);
-        assertTrue("message_digest5 == message_digest6 was not true",
-                message_digest5 == message_digest6);
-        assertTrue("message_digest6 == message_digest1 was not true",
-                message_digest6 == message_digest1);
-    }
-    
-    /**
      * Test of generateRandomBasedUUID method,
      * of class com.fasterxml.uuid.UUIDGenerator.
      */
@@ -220,7 +113,7 @@ public class UUIDGeneratorTest extends TestCase
         // generateRandomBasedUUID method
         
         // we need a instance to use
-        UUIDGenerator uuid_gen = UUIDGenerator.getInstance();
+        RandomBasedGenerator uuid_gen = Generators.randomBasedGenerator();
         
         // for the random UUID generator, we will generate a bunch of
         // random UUIDs
@@ -229,7 +122,7 @@ public class UUIDGeneratorTest extends TestCase
         // now create the array of uuids
         for (int i = 0; i < uuid_array.length; i++)
         {
-            uuid_array[i] = uuid_gen.generateRandomBasedUUID();
+            uuid_array[i] = uuid_gen.generate();
         }
         
         // check that none of the UUIDs are null
@@ -246,57 +139,6 @@ public class UUIDGeneratorTest extends TestCase
     }
     
     /**
-     * Test of generateRandomBasedUUID(Random) method,
-     * of class com.fasterxml.uuid.UUIDGenerator.
-     */
-    public void testGenerateRandomBasedUUIDWithRandom()
-    {
-        // this test will attempt to check for reasonable behavior of the
-        // generateRandomBasedUUID method
-        
-        // we need a instance to use
-        UUIDGenerator uuid_gen = UUIDGenerator.getInstance();
-        
-        // first, check that a null passed in causes the appropriate exception
-        try
-        {
-            /*UUID uuid =*/ uuid_gen.generateRandomBasedUUID((Random)null);
-            fail("Expected exception not thrown");
-        }
-        catch (NullPointerException ex)
-        {
-            // expected exception caught, do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("unexpected exception caught: " + ex);
-        }
-        
-        // for the random UUID generator, we will generate a bunch of
-        // random UUIDs using a (Secure)Random instance we generated
-        SecureRandom secure_random = new SecureRandom();
-        UUID uuid_array[] = new UUID[SIZE_OF_TEST_ARRAY];
-        
-        // now create the array of uuids
-        for (int i = 0; i < uuid_array.length; i++)
-        {
-            uuid_array[i] = uuid_gen.generateRandomBasedUUID(secure_random);
-        }
-        
-        // check that none of the UUIDs are null
-        checkUUIDArrayForNonNullUUIDs(uuid_array);
-        
-        // check that all the uuids were correct variant and version (type-4)
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.RANDOM_BASED);
-
-        // check that all uuids were unique
-        // NOTE: technically, this test 'could' fail, but statistically
-        // speaking it should be extremely unlikely unless the
-        // implementation of SecureRandom is bad
-        checkUUIDArrayForUniqueness(uuid_array);
-    }
-    
-    /**
      * Test of generateTimeBasedUUID() method,
      * of class com.fasterxml.uuid.UUIDGenerator.
      */
@@ -306,7 +148,7 @@ public class UUIDGeneratorTest extends TestCase
         // generateTimeBasedUUID method
         
         // we need a instance to use
-        UUIDGenerator uuid_gen = UUIDGenerator.getInstance();
+        TimeBasedGenerator uuid_gen = Generators.timeBasedGenerator();
         
         // first check that given a number of calls to generateTimeBasedUUID,
         // all returned UUIDs order after the last returned UUID
@@ -322,7 +164,7 @@ public class UUIDGeneratorTest extends TestCase
         // now create the array of uuids
         for (int i = 0; i < uuid_array.length; i++)
         {
-            uuid_array[i] = uuid_gen.generateTimeBasedUUID();
+            uuid_array[i] = uuid_gen.generate();
         }
         
         // now capture the end time
@@ -356,22 +198,7 @@ public class UUIDGeneratorTest extends TestCase
             new EthernetAddress("87:F5:93:06:D3:0C");
         
         // we need a instance to use
-        UUIDGenerator uuid_gen = UUIDGenerator.getInstance();
-        
-        // first, check that a null passed in causes the appropriate exception
-        try
-        {
-            /*UUID uuid =*/ uuid_gen.generateTimeBasedUUID((EthernetAddress)null);
-            fail("Expected exception not thrown");
-        }
-        catch (NullPointerException ex)
-        {
-            // expected exception caught, do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("unexpected exception caught: " + ex);
-        }
+        TimeBasedGenerator uuid_gen = Generators.timeBasedGenerator(ethernet_address);
         
         // check that given a number of calls to generateTimeBasedUUID,
         // all returned UUIDs order after the last returned UUID
@@ -385,9 +212,8 @@ public class UUIDGeneratorTest extends TestCase
         long start_time = System.currentTimeMillis();
         
         // now create the array of uuids
-        for (int i = 0; i < uuid_array.length; i++)
-        {
-            uuid_array[i] = uuid_gen.generateTimeBasedUUID(ethernet_address);
+        for (int i = 0; i < uuid_array.length; i++) {
+            uuid_array[i] = uuid_gen.generate();
         }
         
         // now capture the end time
@@ -418,61 +244,38 @@ public class UUIDGeneratorTest extends TestCase
      */
     public void testGenerateNameBasedUUIDNameSpaceAndName()
     {
-        final UUID NAMESPACE_UUID = UUIDUtil.uuid(UUIDUtil.NAMESPACE_URL);
-        
         // this test will attempt to check for reasonable behavior of the
         // generateNameBasedUUID method
         
         // we need a instance to use
-        UUIDGenerator uuid_gen = UUIDGenerator.getInstance();
-        
-        // first, check that a null passed in causes the appropriate exception
-        try
-        {
-            /*UUID uuid =*/
-                uuid_gen.generateNameBasedUUID(NAMESPACE_UUID, (String)null);
-            fail("Expected exception not thrown");
-        }
-        catch (NullPointerException ex)
-        {
-            // expected exception caught, do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("unexpected exception caught: " + ex);
-        }
+        NameBasedGenerator uuid_gen = Generators.nameBasedGenerator(NameBasedGenerator.NAMESPACE_URL);
         
         UUID uuid_array[] = new UUID[SIZE_OF_TEST_ARRAY];
         
         // now create the array of uuids
-        for (int i = 0; i < uuid_array.length; i++)
-        {
-            uuid_array[i] =
-                uuid_gen.generateNameBasedUUID(
-                    NAMESPACE_UUID, "test name" + i);
+        for (int i = 0; i < uuid_array.length; i++) {
+            uuid_array[i] = uuid_gen.generate("test name" + i);
         }
         
         // check that none of the UUIDs are null
         checkUUIDArrayForNonNullUUIDs(uuid_array);
         
         // check that all the uuids were correct variant and version
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_MD5);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_SHA1);
         
         // check that all uuids were unique
         checkUUIDArrayForUniqueness(uuid_array);
         
         // now create the array of uuids
-        for (int i = 0; i < uuid_array.length; i++)
-        {
-            uuid_array[i] =
-                uuid_gen.generateNameBasedUUID(null, "test name" + i);
+        for (int i = 0; i < uuid_array.length; i++) {
+            uuid_array[i] = uuid_gen.generate("test name" + i);
         }
         
         // check that none of the UUIDs are null
         checkUUIDArrayForNonNullUUIDs(uuid_array);
         
         // check that all the uuids were correct variant and version
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_MD5);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_SHA1);
         
         // check that all uuids were unique
         checkUUIDArrayForUniqueness(uuid_array);
@@ -480,23 +283,19 @@ public class UUIDGeneratorTest extends TestCase
         // now, lets make sure generating two sets of name based uuid with the
         // same args always gives the same result
         uuid_array = new UUID[SIZE_OF_TEST_ARRAY];
-        
+
+        uuid_gen = Generators.nameBasedGenerator(NameBasedGenerator.NAMESPACE_URL);
         // now create the array of uuids
-        for (int i = 0; i < uuid_array.length; i++)
-        {
-            uuid_array[i] =
-                uuid_gen.generateNameBasedUUID(
-                    NAMESPACE_UUID, "test name" + i);
+        for (int i = 0; i < uuid_array.length; i++) {
+            uuid_array[i] = uuid_gen.generate("test name" + i);
         }
         
         UUID uuid_array2[] = new UUID[SIZE_OF_TEST_ARRAY];
+        uuid_gen = Generators.nameBasedGenerator(NameBasedGenerator.NAMESPACE_URL);
         
         // now create the array of uuids
-        for (int i = 0; i < uuid_array2.length; i++)
-        {
-            uuid_array2[i] =
-                uuid_gen.generateNameBasedUUID(
-                    NAMESPACE_UUID, "test name" + i);
+        for (int i = 0; i < uuid_array2.length; i++) {
+            uuid_array2[i] = uuid_gen.generate("test name" + i);
         }
         
         // check that none of the UUIDs are null
@@ -504,8 +303,8 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForNonNullUUIDs(uuid_array2);
         
         // check that all the uuids were correct variant and version
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_MD5);
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array2, UUIDType.NAME_BASED_MD5);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_SHA1);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array2, UUIDType.NAME_BASED_SHA1);
         
         // check that all uuids were unique
         checkUUIDArrayForUniqueness(uuid_array);
@@ -522,80 +321,24 @@ public class UUIDGeneratorTest extends TestCase
      */
     public void testGenerateNameBasedUUIDNameSpaceNameAndMessageDigest()
     {
-        final UUID NAMESPACE_UUID = UUIDUtil.uuid(UUIDUtil.NAMESPACE_URL);
         MessageDigest MESSAGE_DIGEST = null;
         try
         {
             MESSAGE_DIGEST = MessageDigest.getInstance("MD5");
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             fail("exception caught getting test digest : " + ex);
         }
         
         // this test will attempt to check for reasonable behavior of the
         // generateNameBasedUUID method
-        
-        // we need a instance to use
-        UUIDGenerator uuid_gen = UUIDGenerator.getInstance();
-        
-        // first, check that a null passed in causes the appropriate exception
-        try
-        {
-            /*UUID uuid =*/
-                uuid_gen.generateNameBasedUUID(
-                    NAMESPACE_UUID, (String)null, MESSAGE_DIGEST);
-            fail("Expected exception not thrown");
-        }
-        catch (NullPointerException ex)
-        {
-            // expected exception caught, do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("unexpected exception caught: " + ex);
-        }
-        
-        try
-        {
-            /*UUID uuid =*/
-                uuid_gen.generateNameBasedUUID(
-                    NAMESPACE_UUID, "test name", (MessageDigest)null);
-            fail("Expected exception not thrown");
-        }
-        catch (NullPointerException ex)
-        {
-            // expected exception caught, do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("unexpected exception caught: " + ex);
-        }
 
-        try
-        {
-            /*UUID uuid =*/
-                uuid_gen.generateNameBasedUUID(
-                    NAMESPACE_UUID, (String)null, (MessageDigest)null);
-            fail("Expected exception not thrown");
-        }
-        catch (NullPointerException ex)
-        {
-            // expected exception caught, do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("unexpected exception caught: " + ex);
-        }
-
+        NameBasedGenerator uuid_gen = Generators.nameBasedGenerator(NameBasedGenerator.NAMESPACE_URL, MESSAGE_DIGEST);
         UUID uuid_array[] = new UUID[SIZE_OF_TEST_ARRAY];
         
         // now create the array of uuids
         for (int i = 0; i < uuid_array.length; i++)
         {
-            uuid_array[i] =
-                uuid_gen.generateNameBasedUUID(
-                    NAMESPACE_UUID, "test name" + i, MESSAGE_DIGEST);
+            uuid_array[i] = uuid_gen.generate("test name"+i);
         }
         
         // check that none of the UUIDs are null
@@ -610,9 +353,7 @@ public class UUIDGeneratorTest extends TestCase
         // now create the array of uuids
         for (int i = 0; i < uuid_array.length; i++)
         {
-            uuid_array[i] =
-                uuid_gen.generateNameBasedUUID(
-                    null, "test name" + i, MESSAGE_DIGEST);
+            uuid_array[i] = uuid_gen.generate("test name" + i);
         }
         
         // check that none of the UUIDs are null
@@ -629,223 +370,15 @@ public class UUIDGeneratorTest extends TestCase
         uuid_array = new UUID[SIZE_OF_TEST_ARRAY];
         
         // now create the array of uuids
-        for (int i = 0; i < uuid_array.length; i++)
-        {
-            uuid_array[i] =
-                uuid_gen.generateNameBasedUUID(
-                    NAMESPACE_UUID, "test name" + i, MESSAGE_DIGEST);
-        }
-        
-        UUID uuid_array2[] = new UUID[SIZE_OF_TEST_ARRAY];
-        
-        // now create the array of uuids
-        for (int i = 0; i < uuid_array2.length; i++)
-        {
-            uuid_array2[i] =
-                uuid_gen.generateNameBasedUUID(
-                    NAMESPACE_UUID, "test name" + i, MESSAGE_DIGEST);
-        }
-        
-        // check that none of the UUIDs are null
-        checkUUIDArrayForNonNullUUIDs(uuid_array);
-        checkUUIDArrayForNonNullUUIDs(uuid_array2);
-        
-        // check that all the uuids were correct variant and version
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_MD5);
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array2, UUIDType.NAME_BASED_MD5);
-        
-        // check that all uuids were unique
-        checkUUIDArrayForUniqueness(uuid_array);
-        checkUUIDArrayForUniqueness(uuid_array2);
-        
-        // check that both arrays are equal to one another
-        assertTrue("expected both arrays to be equal, they were not!",
-            Arrays.equals(uuid_array, uuid_array2));
-    }
-    
-    /**
-     * Test of generateTagURIBasedUUID(TagURI) method,
-     * of class com.fasterxml.uuid.UUIDGenerator.
-     */
-    public void testGenerateTagURIBasedUUID()
-    {
-        final String TEST_AUTHORITY = "www.safehaus.org";
-
-        // this test will attempt to check for reasonable behavior of the
-        // generateTagURIBasedUUID method
-        
-        // we need a instance to use
-        UUIDGenerator uuid_gen = UUIDGenerator.getInstance();
-        
-        // first, check that a null passed in causes the appropriate exception
-        try
-        {
-            /*UUID uuid =*/ uuid_gen.generateTagURIBasedUUID(null);
-            fail("Expected exception not thrown");
-        }
-        catch (NullPointerException ex)
-        {
-            // expected exception caught, do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("unexpected exception caught: " + ex);
-        }
-        
-        UUID uuid_array[] = new UUID[SIZE_OF_TEST_ARRAY];
-        
-        // now create the array of uuids
-        for (int i = 0; i < uuid_array.length; i++)
-        {
-            TagURI test_tag =
-                new TagURI(TEST_AUTHORITY, "test id" + i,
-                    Calendar.getInstance());
-            uuid_array[i] =
-                uuid_gen.generateTagURIBasedUUID(test_tag);
-        }
-        
-        // check that none of the UUIDs are null
-        checkUUIDArrayForNonNullUUIDs(uuid_array);
-        
-        // check that all the uuids were correct variant and version
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_MD5);
-        
-        // check that all uuids were unique
-        checkUUIDArrayForUniqueness(uuid_array);
-        
-        // now, lets make sure generating two sets of tag based uuid with the
-        // same args always gives the same result
-        uuid_array = new UUID[SIZE_OF_TEST_ARRAY];
-        UUID uuid_array2[] = new UUID[SIZE_OF_TEST_ARRAY];
-        
-        // now create the array of uuids
-        for (int i = 0; i < uuid_array.length; i++)
-        {
-            TagURI test_tag =
-                new TagURI(TEST_AUTHORITY, "test id" + i,
-                    Calendar.getInstance());
-            uuid_array[i] =
-                uuid_gen.generateTagURIBasedUUID(test_tag);
-            uuid_array2[i] =
-                uuid_gen.generateTagURIBasedUUID(test_tag);
-        }
-        
-        // check that none of the UUIDs are null
-        checkUUIDArrayForNonNullUUIDs(uuid_array);
-        checkUUIDArrayForNonNullUUIDs(uuid_array2);
-        
-        // check that all the uuids were correct variant and version
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_MD5);
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array2, UUIDType.NAME_BASED_MD5);
-        
-        // check that all uuids were unique
-        checkUUIDArrayForUniqueness(uuid_array);
-        checkUUIDArrayForUniqueness(uuid_array2);
-        
-        // check that both arrays are equal to one another
-        assertTrue("expected both arrays to be equal, they were not!",
-            Arrays.equals(uuid_array, uuid_array2));
-    }
-    
-    /**
-     * Test of generateTagURIBasedUUID(TagURI, MessageDigest) method,
-     * of class com.fasterxml.uuid.UUIDGenerator.
-     */
-    public void testGenerateTagURIBasedUUIDWithMessageDigest()
-    {
-        final String TEST_AUTHORITY = "www.safehaus.org";
-        MessageDigest MESSAGE_DIGEST = null;
-        try
-        {
-            MESSAGE_DIGEST = MessageDigest.getInstance("MD5");
-        }
-        catch (Exception ex)
-        {
-            fail("exception caught getting test digest : " + ex);
-        }
-        
-        // this test will attempt to check for reasonable behavior of the
-        // generateTagURIBasedUUID method
-        
-        // we need a instance to use
-        UUIDGenerator uuid_gen = UUIDGenerator.getInstance();
-        
-        // first, check that a null passed in causes the appropriate exception
-        try
-        {
-            /*UUID uuid =*/ uuid_gen.generateTagURIBasedUUID(null, MESSAGE_DIGEST);
-            fail("Expected exception not thrown");
-        }
-        catch (NullPointerException ex)
-        {
-            // expected exception caught, do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("unexpected exception caught: " + ex);
-        }
-        
-        try
-        {
-            TagURI test_tag =
-                new TagURI(TEST_AUTHORITY, "test id", Calendar.getInstance());
-            /*UUID uuid =*/ uuid_gen.generateTagURIBasedUUID(test_tag, null);
-            fail("Expected exception not thrown");
-        }
-        catch (NullPointerException ex)
-        {
-            // expected exception caught, do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("unexpected exception caught: " + ex);
-        }
-
-        try
-        {
-            /*UUID uuid =*/ uuid_gen.generateTagURIBasedUUID(null, null);
-            fail("Expected exception not thrown");
-        }
-        catch (NullPointerException ex)
-        {
-            // expected exception caught, do nothing
-        }
-        catch (Exception ex)
-        {
-            fail("unexpected exception caught: " + ex);
-        }
-
-        UUID uuid_array[] = new UUID[SIZE_OF_TEST_ARRAY];
-        
-        // now create the array of uuids
         for (int i = 0; i < uuid_array.length; i++) {
-            TagURI test_tag = new TagURI(TEST_AUTHORITY, "test id" + i, Calendar.getInstance());
-            uuid_array[i] = uuid_gen.generateTagURIBasedUUID(test_tag, MESSAGE_DIGEST);
+            uuid_array[i] = uuid_gen.generate("test name" + i);
         }
         
-        // check that none of the UUIDs are null
-        checkUUIDArrayForNonNullUUIDs(uuid_array);
-        
-        // check that all the uuids were correct variant and version
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_MD5);
-        
-        // check that all uuids were unique
-        checkUUIDArrayForUniqueness(uuid_array);
-        
-        // now, lets make sure generating two sets of tag based uuid with the
-        // same args always gives the same result
-        uuid_array = new UUID[SIZE_OF_TEST_ARRAY];
         UUID uuid_array2[] = new UUID[SIZE_OF_TEST_ARRAY];
         
         // now create the array of uuids
-        for (int i = 0; i < uuid_array.length; i++) {
-            TagURI test_tag =
-                new TagURI(TEST_AUTHORITY, "test id" + i,
-                    Calendar.getInstance());
-            uuid_array[i] =
-                uuid_gen.generateTagURIBasedUUID(test_tag, MESSAGE_DIGEST);
-            uuid_array2[i] =
-                uuid_gen.generateTagURIBasedUUID(test_tag, MESSAGE_DIGEST);
+        for (int i = 0; i < uuid_array2.length; i++) {
+            uuid_array2[i] = uuid_gen.generate("test name" + i);
         }
         
         // check that none of the UUIDs are null
@@ -939,10 +472,11 @@ public class UUIDGeneratorTest extends TestCase
         // let's check that all the UUIDs are valid type-X UUIDs with the
         // correct variant according to the specification.
         for (int i = 0; i < uuidArray.length; i++) {
-            assertEquals("Expected version (type) did not match",
-                        expectedType,
-                        UUIDUtil.typeOf(uuidArray[i]));
-
+            UUIDType actual = UUIDUtil.typeOf(uuidArray[i]);
+            if (actual != expectedType) {
+                fail("Expected version (type) did not match for UUID '"+uuidArray[i]+"' "+i+" (of "+uuidArray.length+"); expected "
+                        +expectedType+", got "+actual);
+            }
             // now. let's double check the variant and type from the array
             byte[] temp_uuid = UUIDUtil.asByteArray(uuidArray[i]);
             

@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import com.fasterxml.uuid.UUIDType;
-import com.fasterxml.uuid.UUIDUtil;
+import com.fasterxml.uuid.impl.UUIDUtil;
 
 /**
  * This class tests UUID for correct functionality.

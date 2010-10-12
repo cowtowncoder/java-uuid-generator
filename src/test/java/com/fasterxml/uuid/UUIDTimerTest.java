@@ -17,17 +17,17 @@
 
 package com.fasterxml.uuid;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
+import java.io.IOException;
 import java.security.SecureRandom;
-
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
 
 import com.fasterxml.uuid.UUIDTimer;
 
@@ -65,12 +65,12 @@ public class UUIDTimerTest extends TestCase
      * Test of UUIDTimer(SecureRandom) constructor,
      * of class com.fasterxml.uuid.UUIDTimer.
      */
-    public void testSecureRandomUUIDTimerConstructor()
+    public void testSecureRandomUUIDTimerConstructor() throws IOException
     {
         // try passing a null SecureRandom argument
         try
         {
-            /*UUIDTimer uuid_timer =*/ new UUIDTimer((SecureRandom)null);
+            /*UUIDTimer uuid_timer =*/ new UUIDTimer((SecureRandom)null, null);
             // if we reach here we didn't catch what we should have
             fail("Expected exception not caught");
         }
@@ -85,7 +85,7 @@ public class UUIDTimerTest extends TestCase
         
         // now construct a valid case
         SecureRandom secure_random = new SecureRandom();
-        UUIDTimer uuid_timer = new UUIDTimer(secure_random);
+        UUIDTimer uuid_timer = new UUIDTimer(secure_random, null);
         
         // we'll do a simple run to see that it at least produces output
         byte[] test_array = new byte[UUID_TIMER_ARRAY_LENGTH];
@@ -102,14 +102,14 @@ public class UUIDTimerTest extends TestCase
     /**
      * Test of getAndSetTimestamp method, of class com.fasterxml.uuid.UUIDTimer.
      */
-    public void testGetTimestamp()
+    public void testGetTimestamp() throws IOException
     {
         // constant for use in this test
         final int EXTRA_DATA_LENGTH = 9;
         
         // construct a UUIDTimer
         SecureRandom secure_random = new SecureRandom();
-        UUIDTimer uuid_timer = new UUIDTimer(secure_random);
+        UUIDTimer uuid_timer = new UUIDTimer(secure_random, null);
         
         // test an array thats too small
         try

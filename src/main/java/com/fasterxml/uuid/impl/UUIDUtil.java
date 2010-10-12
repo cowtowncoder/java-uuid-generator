@@ -1,12 +1,14 @@
-package com.fasterxml.uuid;
+package com.fasterxml.uuid.impl;
 
 import java.util.UUID;
 
+import com.fasterxml.uuid.UUIDType;
+
 public class UUIDUtil
 {
-    protected final static int BYTE_OFFSET_CLOCK_LO = 0;
-    protected final static int BYTE_OFFSET_CLOCK_MID = 4;
-    protected final static int BYTE_OFFSET_CLOCK_HI = 6;
+    public final static int BYTE_OFFSET_CLOCK_LO = 0;
+    public final static int BYTE_OFFSET_CLOCK_MID = 4;
+    public final static int BYTE_OFFSET_CLOCK_HI = 6;
 
     // note: clock-hi and type occupy same byte (different bits)
     public final static int BYTE_OFFSET_TYPE = 6;
@@ -16,35 +18,18 @@ public class UUIDUtil
     public final static int BYTE_OFFSET_VARIATION = 8;
 	
     /*
-    /****************************************************************
+    /**********************************************************************
     /* 'Standard' namespaces defined (suggested) by UUID specs:
-    /****************************************************************
+    /**********************************************************************
      */
 
-    /**
-     * Namespace for name-based URLs
-     */
-    public final static String NAMESPACE_DNS = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
-
-    /**
-     * Namespace for name-based URLs
-     */
-    public final static String NAMESPACE_URL = "6ba7b811-9dad-11d1-80b4-00c04fd430c8";
-    /**
-     * Namespace for name-based URLs
-     */
-    public final static String NAMESPACE_OID = "6ba7b812-9dad-11d1-80b4-00c04fd430c8";
-    /**
-     * Namespace for name-based URLs
-     */
-    public final static String NAMESPACE_X500 = "6ba7b814-9dad-11d1-80b4-00c04fd430c8";
 
     private UUIDUtil() { }
 
     /*
-    /***********************************************************************
+    /**********************************************************************
     /* Factory methods
-    /***********************************************************************
+    /**********************************************************************
      */
 	
     /**
@@ -136,6 +121,33 @@ public class UUIDUtil
         return new UUID(_gatherLong(bytes, offset), _gatherLong(bytes, offset+8));
     }
 
+    /**
+     * Helper method for constructing UUID instances with appropriate type
+     */
+    public static UUID constructUUID(UUIDType type, byte[] uuidBytes)
+    {
+        // first, ensure type is ok
+        int b = uuidBytes[BYTE_OFFSET_TYPE] & 0xF; // clear out high nibble
+        b |= type.raw() << 4;
+        uuidBytes[BYTE_OFFSET_TYPE] = (byte) b;
+        // second, ensure variant is properly set too
+        b = uuidBytes[UUIDUtil.BYTE_OFFSET_VARIATION] & 0x3F; // remove 2 MSB
+        b |= 0x80; // set as '10'
+        uuidBytes[BYTE_OFFSET_VARIATION] = (byte) b;
+        return uuid(uuidBytes);
+    }
+
+    public static UUID constructUUID(UUIDType type, long l1, long l2)
+    {
+        // first, ensure type is ok
+        l1 &= ~0xF000L; // remove high nibble of 6th byte
+        l1 |= (long) (type.raw() << 12);
+        // second, ensure variant is properly set too (8th byte; most-sig byte of second long)
+        l2 = ((l2 << 2) >>> 2); // remove 2 MSB
+        l2 |= (2L << 62); // set 2 MSB to '10'
+        return new UUID(l1, l2);
+    }
+    
     /*
     /***********************************************************************
     /* Type introspection
@@ -174,6 +186,8 @@ public class UUIDUtil
 	    return UUIDType.NAME_BASED_MD5;
 	case 4:
 	    return UUIDType.RANDOM_BASED;
+        case 5:
+            return UUIDType.NAME_BASED_SHA1;
 	}
         // not recognized: return null
 	return null;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project>
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
  <!-- General information -->
 
   <modelVersion>4.0.0</modelVersion>
@@ -42,8 +42,7 @@ JUG supports all 3 official UUID generation methods.
  <!-- Contact information -->
   <url>http://wiki.fasterxml.com/JugHome</url>
   <issueManagement>
-    <url>http://github.com/cowtowncoder/java-uuid-generator/issues
-</url>
+    <url>http://github.com/cowtowncoder/java-uuid-generator/issues</url>
   </issueManagement>
 
  <!-- Dependency information -->

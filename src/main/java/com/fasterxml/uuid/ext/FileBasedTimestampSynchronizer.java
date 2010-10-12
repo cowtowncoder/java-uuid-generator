@@ -45,21 +45,21 @@ public final class FileBasedTimestampSynchronizer
 
     /**
      * The default update interval is 10 seconds, meaning that the
-     * synchronizer "reserves" next 10 secods for generation. This
+     * synchronizer "reserves" next 10 seconds for generation. This
      * also means that the lock files need to be accessed at most
      * once every ten second.
      */
     final static long DEFAULT_UPDATE_INTERVAL = 10L * 1000L;
 
-    final static String FILENAME1 = "uuid1.lck";
+    protected final static String DEFAULT_LOCK_FILE_NAME1 = "uuid1.lck";
 
-    final static String FILENAME2 = "uuid2.lck";
+    protected final static String DEFAULT_LOCK_FILE_NAME2 = "uuid2.lck";
 
     // // // Configuration:
 
-    long mInterval = DEFAULT_UPDATE_INTERVAL;
+    protected long mInterval = DEFAULT_UPDATE_INTERVAL;
 
-    final LockedFile mLocked1, mLocked2;
+    protected final LockedFile mLocked1, mLocked2;
 
     // // // State:
 
@@ -79,24 +79,24 @@ public final class FileBasedTimestampSynchronizer
     public FileBasedTimestampSynchronizer()
         throws IOException
     {
-        this(new File(FILENAME1), new File(FILENAME2));
+        this(new File(DEFAULT_LOCK_FILE_NAME1), new File(DEFAULT_LOCK_FILE_NAME2));
     }
 
-    public FileBasedTimestampSynchronizer(File f1, File f2)
+    public FileBasedTimestampSynchronizer(File lockFile1, File lockFile2)
         throws IOException
     {
-        this(f1, f2, DEFAULT_UPDATE_INTERVAL);
+        this(lockFile1, lockFile2, DEFAULT_UPDATE_INTERVAL);
     }
 
-    public FileBasedTimestampSynchronizer(File f1, File f2, long interval)
+    public FileBasedTimestampSynchronizer(File lockFile1, File lockFile2, long interval)
         throws IOException
     {
         mInterval = interval;
-        mLocked1 = new LockedFile(f1);
+        mLocked1 = new LockedFile(lockFile1);
 
         boolean ok = false;
         try {
-            mLocked2 = new LockedFile(f2);
+            mLocked2 = new LockedFile(lockFile2);
             ok = true;
         } finally {
             if (!ok) {

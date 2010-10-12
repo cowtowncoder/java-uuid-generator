@@ -18,6 +18,8 @@ package com.fasterxml.uuid;
 import java.io.*;
 import java.util.*;
 
+import com.fasterxml.uuid.impl.UUIDUtil;
+
 /**
  * UUIDTimer produces the time stamps required for time-based UUIDs.
  * It works as outlined in the UUID specification, with following
@@ -94,7 +96,22 @@ public final class UUIDTimer
 
     // // // Configuration
 
-    private final Random mRnd;
+    /**
+     * Object used to reliably ensure that no multiple JVMs
+     * generate UUIDs, and also that the time stamp value used for
+     * generating time-based UUIDs is monotonically increasing
+     * even if system clock moves backwards over a reboot (usually
+     * due to some system level problem).
+     *<p>
+     * See {@link TimestampSynchronizer} for details.
+     */
+    protected final TimestampSynchronizer mSync;
+
+    /**
+     * Random number generator used to generate additional information 
+     * to further reduce probability of collisions.
+     */
+    protected final Random mRnd;
 
     // // // Clock state:
 
@@ -139,24 +156,31 @@ public final class UUIDTimer
      */
     private int mClockCounter = 0;
 
-    /**
-     * Object used to reliably ensure that no multiple JVMs
-     * generate UUIDs, and also that the time stamp value used for
-     * generating time-based UUIDs is monotonically increasing
-     * even if system clock moves backwards over a reboot (usually
-     * due to some system level problem).
-     *<p>
-     * See {@link TimestampSynchronizer} for details.
-     */
-    private TimestampSynchronizer mSync = null;
-
-    public UUIDTimer(Random rnd)
+    public UUIDTimer(Random rnd, TimestampSynchronizer sync) throws IOException
     {
         mRnd = rnd;
+        mSync = sync;
         initCounters(rnd);
         mLastSystemTimestamp = 0L;
         // This may get overwritten by the synchronizer
         mLastUsedTimestamp = 0L;
+
+        /* Ok, now; synchronizer can tell us what is the first timestamp
+         * value that definitely was NOT used by the previous incarnation.
+         * This can serve as the last used time stamp, assuming it is not
+         * less than value we are using now.
+         */
+        if (sync != null) {
+            long lastSaved = sync.initialize();
+            if (lastSaved > mLastUsedTimestamp) {
+                mLastUsedTimestamp = lastSaved;
+            }
+        }
+
+        /* Also, we need to make sure there are now no safe values (since
+         * synchronizer is not yet requested to allocate any):
+         */
+        mFirstUnsafeTimestamp = 0L; // ie. will always trigger sync.update()
     }
 
     private void initCounters(Random rnd)
@@ -267,6 +291,9 @@ public final class UUIDTimer
         return systime;
     }
 
+    /**
+     * Method for accessing timestamp to use for creating UUIDs.
+     */
     public final void getAndSetTimestamp(byte[] uuidBytes)
     {
         long timestamp = getTimestamp(uuidBytes);
@@ -286,39 +313,6 @@ public final class UUIDTimer
         uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_LO+1] = (byte) (clockLo >>> 16);
         uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_LO+2] = (byte) (clockLo >>> 8);
         uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_LO+3] = (byte) clockLo;
-    }
-
-    public void setSynchronizer(TimestampSynchronizer sync)
-        throws IOException
-    {
-        TimestampSynchronizer old = mSync;
-
-        if (old != null) {
-            try {
-                old.deactivate();
-            } catch (IOException ioe) {
-                Logger.logError("Failed to deactivate the old synchronizer: "+ioe);
-            }
-        }
-
-        mSync = sync;
-
-        /* Ok, now; synchronizer can tell us what is the first timestamp
-         * value that definitely was NOT used by the previous incarnation.
-         * This can serve as the last used time stamp, assuming it is not
-         * less than value we are using now.
-         */
-        if (sync != null) {
-            long lastSaved = sync.initialize();
-            if (lastSaved > mLastUsedTimestamp) {
-                mLastUsedTimestamp = lastSaved;
-            }
-        }
-
-        /* Also, we need to make sure there are now no safe values (since
-         * synchronizer is not yet requested to allocate any):
-         */
-        mFirstUnsafeTimestamp = 0L; // ie. will always trigger sync.update()
     }
 
     /*

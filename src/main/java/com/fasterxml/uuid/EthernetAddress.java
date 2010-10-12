@@ -24,7 +24,6 @@ import java.util.Random;
 /**
  * EthernetAddress encapsulates the 6-byte MAC address defined in
  * IEEE 802.1 standard.
- * 
  */
 public class EthernetAddress
     implements Serializable, Cloneable, Comparable<EthernetAddress>
@@ -43,7 +42,7 @@ public class EthernetAddress
      * 48-bit MAC address, stored in 6 lowest-significant bytes (in
      * big endian notation)
      */
-    private final long _address;
+    protected final long _address;
 
     /**
      * Lazily-constructed String serialization

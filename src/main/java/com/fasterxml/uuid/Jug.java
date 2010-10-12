@@ -19,6 +19,8 @@ import java.io.*;
 import java.security.*;
 import java.util.*;
 
+import com.fasterxml.uuid.impl.NameBasedGenerator;
+
 /**
  * Class that provides two things: methods for constructing
  * generators ({@link UUIDGenerator} and {@link NameUUIDGenerator})
@@ -32,8 +34,6 @@ public class Jug
         TYPES.put("time-based", "t");
         TYPES.put("random-based", "r");
         TYPES.put("name-based", "n");
-        TYPES.put("tag-uri-no-timestamp", "u");
-        TYPES.put("tag-uri-with-timestamp", "U");
     }
 
     protected final static HashMap<String,String> OPTIONS = new HashMap<String,String>();
@@ -109,7 +109,8 @@ public class Jug
         String type = args[count-1];
         boolean verbose = false;
         int genCount = 1;
-        String name = null, nameSpace = null;
+        String name = null;
+        String nameSpace = null;
         EthernetAddress addr = null;
         boolean performance = false;
 
@@ -130,6 +131,10 @@ public class Jug
             type = tmp;
         }
 
+
+        NoArgGenerator noArgGenerator = null; // random- or time-based
+        StringArgGenerator nameArgGenerator = null; // name-based
+        
         for (int i = 0; i < count; ++i) {
             String opt = args[i];
 
@@ -214,12 +219,9 @@ public class Jug
         /* Ok, args look ok so far. Now to the generation; some args/options
          * can't be validated without knowing the type:
          */
-        boolean timestamp = false;
         char typeC = type.charAt(0);
         UUID nsUUID = null;
-        TagURI nsTagURI = null;
 
-        UUIDGenerator uuidGenerator = UUIDGenerator.getInstance();
         boolean usesRnd = false;
 
         switch (typeC) {
@@ -230,31 +232,25 @@ public class Jug
                 if (verbose) {
                     System.out.print("(no address specified, generating dummy address: ");
                 }
-                addr = uuidGenerator.getDummyAddress();
+                addr = EthernetAddress.constructMulticastAddress(new java.util.Random(System.currentTimeMillis()));
                 if (verbose) {
                     System.out.print(addr.toString());
                     System.out.println(")");
                 }
             }
+            noArgGenerator = Generators.timeBasedGenerator(addr);
             break;
         case 'r': // random-based
             usesRnd = true;
-            if (verbose) {
-                Random r = uuidGenerator.getRandomNumberGenerator();
-                if (r instanceof SecureRandom) {
-                    SecureRandom sr = (SecureRandom) r;
-                    System.out.print("(using the default random generator, info = '"+sr.getProvider().getInfo()+"')");
-                } else {
-                    System.out.print("(using the default random generator, class: "+r.getClass().toString()+".");
+            {
+                SecureRandom r = new SecureRandom();
+                if (verbose) {
+                    System.out.print("(using secure random generator, info = '"+r.getProvider().getInfo()+"')");
                 }
+                noArgGenerator = Generators.randomBasedGenerator(r);
             }
             break;
-        case 'U': // tagURI-based, use timestamp
-            timestamp = true;
-            // falldown to next
         case 'n': // name-based
-            // falldown to next
-        case 'u': // tagURI-based, no timestamp
             if (name == null) {
                 System.err.println("--name-space (-s) - argument missing when using method that requires it, exiting.");
                 System.exit(1);
@@ -267,35 +263,16 @@ public class Jug
                 String orig = nameSpace;
                 nameSpace = nameSpace.toLowerCase();
                 if (nameSpace.equals("url")) {
-                    nameSpace = UUIDUtil.NAMESPACE_URL;
+                    nsUUID = NameBasedGenerator.NAMESPACE_URL;
                 } else  if (nameSpace.equals("dns")) {
-                    nameSpace = UUIDUtil.NAMESPACE_DNS;
+                    nsUUID = NameBasedGenerator.NAMESPACE_DNS;
                 } else {
                     System.err.println("Unrecognized namespace '"+orig
                                        +"'; only DNS and URL allowed for name-based generation.");
                     System.exit(1);
                 }
-		
-                try {
-                    nsUUID = UUIDUtil.uuid(nameSpace);
-                } catch (NumberFormatException nex) {
-                    System.err.println("Internal error: "+nex.toString());
-                    System.err.println("Exiting.");
-                    System.exit(1);
-                }
-            } else if (!timestamp) {
-                nsTagURI = new TagURI(nameSpace, name, null);
-                if (verbose) {
-                    System.out.println("(Using tagURI '"+nsTagURI.toString()+"')");
-                }
             }
-
-            if (verbose) {
-                MessageDigest md = uuidGenerator.getHashAlgorithm();
-                System.out.println("(Using the default hash algorithm, type = '"
-                                   +md.getAlgorithm()+"', provider info - '"
-                                   +md.getProvider().getInfo()+"')");
-            }
+            nameArgGenerator = Generators.nameBasedGenerator(nsUUID);
             break;
         }
 
@@ -315,9 +292,8 @@ public class Jug
                 if (verbose) {
                     System.out.println("(initializing random number generator before UUID generation so that performance measurements are not skewed due to one-time init costs)");
                 }
-                Random r = uuidGenerator.getRandomNumberGenerator();
-                byte[] tmpB = new byte[1];
-                r.nextBytes(tmpB);
+                // should initialize by just calling it
+                noArgGenerator.generate();
                 if (verbose) {
                     System.out.println("(random number generator initialized ok)");
                 }
@@ -326,28 +302,8 @@ public class Jug
         }
 
         for (int i = 0; i < genCount; ++i) {
-            UUID uuid = null;
-            switch (typeC) {
-            case 't': // time-based
-                uuid = uuidGenerator.generateTimeBasedUUID(addr);
-                break;
-            case 'r': // random-based
-                uuid = uuidGenerator.generateRandomBasedUUID();
-                break;
-            case 'n': // name-based
-                uuid = uuidGenerator.generateNameBasedUUID(nsUUID, name);
-                break;
-            case 'u': // tagURI-based, no timestamp
-            case 'U': // tagURI-based, use timestamp
-                if (timestamp) {
-                    nsTagURI = new TagURI(nameSpace, name, Calendar.getInstance());
-                    if (verbose) {
-                        System.out.println("(Using tagURI '"+nsTagURI.toString()+"')");
-                    }
-                }
-                uuid = uuidGenerator.generateTagURIBasedUUID(nsTagURI);
-                break;
-            }
+            UUID uuid = (nameArgGenerator == null) ?
+                    noArgGenerator.generate() : nameArgGenerator.generate(name);
             if (verbose) {
                 System.out.print("UUID: ");
             }
