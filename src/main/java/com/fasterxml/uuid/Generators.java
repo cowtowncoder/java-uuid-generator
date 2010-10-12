@@ -57,7 +57,7 @@ public class Generators
      * is specified).
      * Digester to use will be SHA-1 as recommened by UUID spec.
      * 
-     * @param UUID that represents namespace to use; see
+     * @param namespace UUID that represents namespace to use; see
      *   {@link NameBasedGenerator} for 'standard' namespaces specified by
      *   UUID specs
      */
@@ -72,7 +72,7 @@ public class Generators
      * is specified), using specified digester.
      * If digester is passed as null, a SHA-1 digester will be constructed.
      * 
-     * @param UUID that represents namespace to use; see
+     * @param namespace UUID that represents namespace to use; see
      *   {@link NameBasedGenerator} for 'standard' namespaces specified by
      *   UUID specs
      * @param digester Digester to use; should be a MD5 or SHA-1 digester.
