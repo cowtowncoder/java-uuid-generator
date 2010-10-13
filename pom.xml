@@ -135,13 +135,7 @@ com.fasterxml.uuid, com.fasterxml.uuid.ext, com.fasterxml.uuid.impl
        </plugin>
 
         <!-- for maven release, need yet another plug-in -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>2.0</version>
-        </plugin>
-        <!-- And Sonatype also mandates GPG... oh brother -->
-        <!-- Need GPG signatures for releases -->
+        <!-- And Sonatype also mandates GPG... -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
