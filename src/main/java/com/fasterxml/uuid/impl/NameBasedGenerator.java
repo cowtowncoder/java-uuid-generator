@@ -1,5 +1,6 @@
 package com.fasterxml.uuid.impl;
 
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.UUID;
 
@@ -18,6 +19,11 @@ import com.fasterxml.uuid.UUIDType;
  */
 public class NameBasedGenerator extends StringArgGenerator
 {
+    public final static Charset _utf8;
+    static {
+        _utf8 = Charset.forName("UTF-8");
+    }
+    
     /**
      * Namespace used when name is a DNS name.
      */
@@ -108,9 +114,16 @@ public class NameBasedGenerator extends StringArgGenerator
     /* UUID generation
     /**********************************************************************
      */
-    
+
     @Override
     public UUID generate(String name)
+    {
+        // !!! TODO: 14-Oct-2010, tatu: can repurpose faster UTF-8 encoding from Jackson
+        return generate(name.getBytes(_utf8));
+    }
+    
+    @Override
+    public UUID generate(byte[] nameBytes)
     {
         byte[] digest;
         synchronized (_digester) {
@@ -118,7 +131,7 @@ public class NameBasedGenerator extends StringArgGenerator
             if (_namespace != null) {
                 _digester.update(UUIDUtil.asByteArray(_namespace));
             }
-            _digester.update(name.getBytes());
+            _digester.update(nameBytes);
             digest = _digester.digest();
         }
         return UUIDUtil.constructUUID(_type, digest);

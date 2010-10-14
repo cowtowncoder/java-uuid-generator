@@ -10,6 +10,17 @@ import java.util.UUID;
  */
 public abstract class StringArgGenerator extends UUIDGenerator
 {
-    public abstract UUID generate(String arg);
+    /**
+     * Method for generating name-based UUIDs using specified name (serialized to
+     * bytes using UTF-8 encoding)
+     */
+    public abstract UUID generate(String name);
 
+    /**
+     * Method for generating name-based UUIDs using specified byte-serialization
+     * of name.
+     * 
+     * @since 3.1
+     */
+    public abstract UUID generate(byte[] nameBytes);
 }

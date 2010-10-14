@@ -43,8 +43,7 @@ public class RandomBasedGenerator extends NoArgGenerator
     public RandomBasedGenerator(Random rnd)
     {
         if (rnd == null) {
-            /*
-             * Could be synchronized, but since side effects are trivial
+            /* Could be synchronized, but since side effects are trivial
              * (ie. possibility of generating more than one SecureRandom,
              * of which all but one are dumped) let's not add synchronization
              * overhead.
