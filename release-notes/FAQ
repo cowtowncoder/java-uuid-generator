@@ -10,7 +10,8 @@ but not all do. Additionally, accessing uuidgen from Java
 may be tricky (since its location in native OS filesystem depends
 on OS and possibly other factors).
 
-So, portability is one benefit; JUG works if you have Java 1.2.
+So, portability is one benefit; JUG works if you have Java 1.2 (version 2.0)
+or Java 1.6 (version 3.0).
 
 Performance may be another benefit when using JUG from Java. Interfacing
 to native functionality (either via uuidgen or directly to libuuigen)
@@ -45,29 +46,16 @@ unique UUIDs as is. :-)
 === 3. What is the fastest method to use for generating UUIDs? ===
 
 It depends on your system, random number generators used etc. etc.,
-but here are some quick test results from my work station (Ultra-60
-dual 450Mhz SparcII; JDK 1.3.1, default JIT == client)
-(measurements done using JUG command-line tool, generating 1000
-UUIDs for each type):
 
-Time-based:	0.03 msec / UUID
-Random-based:	0.08 msec / UUID
-Name-based:	0.18 msec / UUID
-TagURI, no date: 0.18 msec / UUID
-TagURI, with date: 0.43 msec / UUID
+But here are some numbers, running on a MacBook (2.5 GHz dual CPU)
 
-Creating datestamps for tag uris (new Calendar instances for each URI)
-slows the last entry significantly down it seems. Note also that
-names & namespaces for the last three methods were relatively short,
-so the 'real' numbers might be bit worse for them too (esp. since
-generating the separate names will add cost; for this test 3. and 4.
-used the same namespace + name for each UUID which is not too realistic)
+Time-based:	5 million/second
+Random-based:	0.25 million/second (when using SecureRandom)
+Name-based:	1 million/second (depends on length, namespace etc; this with MD5)
 
-So, it seems that for default settings, time-based algorithm is the
-fastest, followed by random-number based one. Name-based algorithms
-are slow probably due to MD5-hashing cost associated.
-[as a sidenote, at home on my 800mhz AMD system times were about
-half of those presented above]
+So with default settings, time-based algorithm is by far the fastest;
+usually followed by name/hash based alternative (for short/medium
+names at least), and random-based variant being slowest.
 
 Finally, if performance _really_ is very important for you, there
 is a further complication when using time-based algorithm; Java's
@@ -77,11 +65,11 @@ counter (in JUG), but the downside is that for each separate
 Java 'time slice' (time period when system clock returns same
 timestamp) can produce at most 10000 UUIDs. If JDK on the platform
 does advance in 1 msec ticks, this is good enough for generating
-up to 10 million UUIDs per second, but on many platforms resolution
-is coarser (on Windows it used to be 55 msec, meaning max. rate
-of 180 kUUIDs per second).
+up to 10 million UUIDs per second, but on some platforms resolution
+is coarser: on Windows granularity used to be 55 msec, meaning
+max. rate would be 180 kUUIDs per second.
 
-... which all means that for generating more than, say, ten thousand
+... which all means that for generating more than, say, hundred thousand
 UUIDs per second, you may need to look at native implementations.
 But often with system like that you aren't really using Java
 in the first place.
@@ -93,6 +81,7 @@ to use time-based algorithm, if you will only be generating UUIDs
 from single JVM (and won't be using other UUID-tools at the same
 time). If so, uniqueness is pretty much guaranteed and algorithm
 is fast as well.
+
 One potential drawback is that in case you consider giving out
 ethernet address a security problem (which in theory it could be,
 although there probably aren't any major immediate problems),
@@ -102,9 +91,13 @@ the ethernet address, but the standard doesn't mention this
 solution so it's not implemented yet)
 
 If there will be multiple UUID generators (different JVMs, using
-native uuidgen), using random-based method may be the best option.
-It should be reasonably safe to use (provided JDK's default
-SecureRandom is implemented as well as it should).
+native uuidgen), using random-based method may be the best option;
+although there is a file-locking base synchronizer available for
+time-based generation. This works with multiple JVMs, but may not
+be applicable to synchronize with non-Java generators.
+Random-number based variant should be safe to use, as long as the
+underlying random number generator is good (which SecureRandom by
+JDK should be).
 
 Finally, if it's easy to generate unique names from system (say,
 URL combined with a sequence number guaranteed to be unique), and
@@ -115,35 +108,10 @@ conversions can be done on-the-fly.
 
 === 5. How can I obtain the Ethernet MAC-address of the machine JUG runs on? ===
 
-Before version 1.0, your options would be limited to using native
-tools and passing address to JUG, or using dummy randomly generated
-broadcast addresses.
+Easiest way with version 3.x and above is to use EthernetAddress class,
+which internally uses method that JDK 1.6 introduced.
 
-However, beginning from version 1.0, there exists limited support
-for C/JNI - based native access for obtaining interface addresses.
-
-To obtain MAC-address of the primary interface, just call:
-
-EthernetAddress primary = NativeInterfaces.getPrimaryInterface();
-
-[Note that if there's a problem in loading the JNI library, an
-Error is thrown].
-
-Currently there exists binary library files for Linux/x86,
-Windows 32 / x86 (ie. 98, ME, NT, 2K, XP), Solaris/Sparc
-and Mac OS X platforms.
-Help with compiling/developing more versions would be greatly
-appreciated. In some cases existing native code might be usable
-as is; for example BSD unixes might be able to use Mac OS X
-code after recompilation.
-
-(1.0.2): Now it is possible to load native code both by using 'standard'
-library loading methods (which rely on java env. variable
-'java.library.path' for locating libs), as well as application-specific
-loading from any given directory (default being 'jug-native' in current
-directory). Default is still app-specific method; to enable standard
-loading, call NativeInterfaces.setUseStdLibDir().
-
+Earlier versions of JUG relied on JNI-access native libraries.
 
 === 6. What if system clock/time goes backward? ===
 
@@ -171,15 +139,12 @@ multiple instances of UUIDGenerator loaded using separate classloaders --
 this can happen with application servers on context reloads) from
 running concurrently (assuming they are configured to use same files).
 
-Note: FileBasedTimestampSynchronized requireds JDK 1.4 or above, since it
-needs NIO functionality for reliable file locking and synchronization.
-
 
 === 7. How do I configure (or disable) logging ===
 
 Starting with 2.0 release, JUG now has a simple configurable logging
 sub-system. You can start by looking at javadocs for:
 
- org.safehaus.uuid.Logger
+ com.fasterxml.uuid.Logger
 
 class.

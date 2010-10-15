@@ -1,16 +1,19 @@
-Version: 3.0.0
+Version: 3.1.0
 
-Release date: 12-Oct-2010
+Release date: 14-Oct-2010
 
 Description:
 
 Rewrite of Java Uuid Generator, to bring it up to date. Changes include:
 
+* Use Maven for build
+* Jars built as OSGi bundles with appropriate metadata
 * Converted to use java.util.UUID as the UUID value type
 * Change from using static UUIDGenerator into typed generator instances
   accessed via com.fasterxml.uuid.Generators factory class
 * Allow using JDK 1.6 Ethernet address access code (exposed via
   EthernetAddress class)
+* Made generators fully synchronized
 
 ============================================================================
   
