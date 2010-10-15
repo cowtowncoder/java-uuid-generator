@@ -49,7 +49,7 @@ public class Jug
         String clsName = Jug.class.getName();
         System.err.println("Usage: java "+clsName+" [options] type");
         System.err.println("Where options are:");
-        System.err.println("  --count / -c <number>: will generate <number> UUIDs (default: 1");
+        System.err.println("  --count / -c <number>: will generate <number> UUIDs (default: 1)");
         System.err.println("  --ethernet-address / -e <ether-address>: defines the ethernet address");
         System.err.println("    (in xx:xx:xx:xx:xx:xx notation, usually obtained using 'ifconfig' etc)");
         System.err.println("    to use with time-based UUID generation");

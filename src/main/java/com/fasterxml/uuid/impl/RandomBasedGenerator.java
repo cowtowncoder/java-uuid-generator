@@ -33,6 +33,13 @@ public class RandomBasedGenerator extends NoArgGenerator
      * Random number generator that this generator uses.
      */
     protected final Random _random;
+
+    /**
+     * Looks like {@link SecureRandom} implementation is more efficient
+     * using single call access (compared to basic {@link java.util.Random}),
+     * so let's use that knowledge to our benefit.
+     */
+    protected final boolean _secureRandom;
     
     /**
      * @param rnd Random number generator to use for generating UUIDs; if null,
@@ -51,6 +58,9 @@ public class RandomBasedGenerator extends NoArgGenerator
             if (_sharedRandom == null) {
                 _sharedRandom = rnd = new SecureRandom();
             }
+            _secureRandom = true;
+        } else {
+            _secureRandom = (rnd instanceof SecureRandom);
         }
         _random = rnd;
     }
@@ -71,9 +81,44 @@ public class RandomBasedGenerator extends NoArgGenerator
      */
     
     @Override
-    public UUID generate() {
-        long r1 = _random.nextLong();
-        long r2 = _random.nextLong();
+    public UUID generate()
+    {
+        /* 14-Oct-2010, tatu: Surprisingly, variant for reading byte array is
+         *   tad faster for SecureRandom... so let's use that then
+         */
+        long r1, r2;
+
+        if (_secureRandom) {
+            final byte[] buffer = new byte[16];
+            _random.nextBytes(buffer);
+            r1 = _toLong(buffer, 0);
+            r2 = _toLong(buffer, 1);
+        } else {
+            r1 = _random.nextLong();
+            r2 = _random.nextLong();
+        }
         return UUIDUtil.constructUUID(UUIDType.RANDOM_BASED, r1, r2);
+    }
+
+    /*
+    /**********************************************************************
+    /* Internal methods
+    /**********************************************************************
+     */
+
+    private final static long _toLong(byte[] buffer, int offset)
+    {
+        long l1 = _toInt(buffer, offset);
+        long l2 = _toInt(buffer, offset+4);
+        long l = (l1 << 32) + ((l2 << 32) >>> 32);
+        return l;
+    }
+
+    private final static long _toInt(byte[] buffer, int offset)
+    {
+        return (buffer[offset] << 24)
+            + ((buffer[++offset] & 0xFF) << 16)
+            + ((buffer[++offset] & 0xFF) << 8)
+            + (buffer[++offset] & 0xFF);
     }
 }
