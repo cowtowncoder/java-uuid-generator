@@ -18,6 +18,13 @@ import com.fasterxml.uuid.impl.TimeBasedGenerator;
  */
 public class Generators
 {
+    /**
+     * If no explicit timer (and synchronizer it implicitly uses) is specified,
+     * we will create and use a single lazily-constructed timer, which uses in-JVM
+     * synchronization but no external file-based syncing.
+     */
+    protected static UUIDTimer _sharedTimer;
+    
     // // Random-based generation
     
     /**
@@ -148,13 +155,26 @@ public class Generators
             UUIDTimer timer)
     {
         if (timer == null) {
+            timer = sharedTimer();
+        }
+        return new TimeBasedGenerator(ethernetAddress, timer);
+    }
+
+    /*
+    /**********************************************************************
+    /* Internal methods
+    /**********************************************************************
+     */
+
+    private static synchronized UUIDTimer sharedTimer()
+    {
+        if (_sharedTimer == null) {
             try {
-                timer = new UUIDTimer(new java.util.Random(System.currentTimeMillis()), null);
+                _sharedTimer = new UUIDTimer(new java.util.Random(System.currentTimeMillis()), null);
             } catch (IOException e) {
                 throw new IllegalArgumentException("Failed to create UUIDTimer with specified synchronizer: "+e.getMessage(), e);
             }
         }
-        return new TimeBasedGenerator(ethernetAddress, timer);
+        return _sharedTimer;
     }
 }
-

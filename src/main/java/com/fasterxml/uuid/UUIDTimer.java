@@ -105,13 +105,13 @@ public final class UUIDTimer
      *<p>
      * See {@link TimestampSynchronizer} for details.
      */
-    protected final TimestampSynchronizer mSync;
+    protected final TimestampSynchronizer _syncer;
 
     /**
      * Random number generator used to generate additional information 
      * to further reduce probability of collisions.
      */
-    protected final Random mRnd;
+    protected final Random _random;
 
     // // // Clock state:
 
@@ -121,7 +121,7 @@ public final class UUIDTimer
      * Third byte is actually used for seeding counter on counter
      * overflow.
      */
-    private final byte[] mClockSequence = new byte[3];
+    private final byte[] _clockSequence = new byte[3];
 
     /**
      * Last physical timestamp value <code>System.currentTimeMillis()</code>
@@ -130,40 +130,40 @@ public final class UUIDTimer
      * timestamps used can differ from the system time value. This value
      * is not guaranteed to be monotonically increasing.
      */
-    private long mLastSystemTimestamp = 0L;
+    private long _lastSystemTimestamp = 0L;
     
     /**
      * Timestamp value last used for generating a UUID (along with
-     * {@link #mClockCounter}. Usually the same as
-     * {@link #mLastSystemTimestamp}, but not always (system clock
+     * {@link #_clockCounter}. Usually the same as
+     * {@link #_lastSystemTimestamp}, but not always (system clock
      * moved backwards). Note that this value is guaranteed to be
      * monotonically increasing; that is, at given absolute time points
      * t1 and t2 (where t2 is after t1), t1 <= t2 will always hold true.
      */
-    private long mLastUsedTimestamp = 0L;
+    private long _lastUsedTimestamp = 0L;
 
     /**
      * First timestamp that can NOT be used without synchronizing
-     * using synchronization object ({@link #mSync}). Only used when
+     * using synchronization object ({@link #_syncer}). Only used when
      * external timestamp synchronization (and persistence) is used,
-     * ie. when {@link #mSync} is not null.
+     * ie. when {@link #_syncer} is not null.
      */
-    private long mFirstUnsafeTimestamp = Long.MAX_VALUE;
+    private long _firstUnsafeTimestamp = Long.MAX_VALUE;
 
     /**
      * Counter used to compensate inadequate resolution of JDK system
      * timer.
      */
-    private int mClockCounter = 0;
+    private int _clockCounter = 0;
 
     public UUIDTimer(Random rnd, TimestampSynchronizer sync) throws IOException
     {
-        mRnd = rnd;
-        mSync = sync;
+        _random = rnd;
+        _syncer = sync;
         initCounters(rnd);
-        mLastSystemTimestamp = 0L;
+        _lastSystemTimestamp = 0L;
         // This may get overwritten by the synchronizer
-        mLastUsedTimestamp = 0L;
+        _lastUsedTimestamp = 0L;
 
         /* Ok, now; synchronizer can tell us what is the first timestamp
          * value that definitely was NOT used by the previous incarnation.
@@ -172,15 +172,15 @@ public final class UUIDTimer
          */
         if (sync != null) {
             long lastSaved = sync.initialize();
-            if (lastSaved > mLastUsedTimestamp) {
-                mLastUsedTimestamp = lastSaved;
+            if (lastSaved > _lastUsedTimestamp) {
+                _lastUsedTimestamp = lastSaved;
             }
         }
 
         /* Also, we need to make sure there are now no safe values (since
          * synchronizer is not yet requested to allocate any):
          */
-        mFirstUnsafeTimestamp = 0L; // ie. will always trigger sync.update()
+        _firstUnsafeTimestamp = 0L; // ie. will always trigger sync.update()
     }
 
     private void initCounters(Random rnd)
@@ -188,7 +188,7 @@ public final class UUIDTimer
         /* Let's generate the clock sequence field now; as with counter,
          * this reduces likelihood of collisions (as explained in UUID specs)
          */
-        rnd.nextBytes(mClockSequence);
+        rnd.nextBytes(_clockSequence);
         /* Ok, let's also initialize the counter...
          * Counter is used to make it slightly less likely that
          * two instances of UUIDGenerator (from separate JVMs as no more
@@ -196,7 +196,7 @@ public final class UUIDTimer
          * time-based UUIDs. The practice of using multiple generators,
          * is strongly discouraged, of course, but just in case...
          */
-        mClockCounter = mClockSequence[2] & 0xFF;
+        _clockCounter = _clockSequence[2] & 0xFF;
     }
 
     /**
@@ -208,34 +208,34 @@ public final class UUIDTimer
     public final long getTimestamp(byte[] uuidBytes)
     {
         // First the clock sequence:
-        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_SEQUENCE] = mClockSequence[0];
-        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_SEQUENCE+1] = mClockSequence[1];
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_SEQUENCE] = _clockSequence[0];
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_SEQUENCE+1] = _clockSequence[1];
 
         long systime = System.currentTimeMillis();
 
         /* Let's first verify that the system time is not going backwards;
          * independent of whether we can use it:
          */
-        if (systime < mLastSystemTimestamp) {
-            Logger.logWarning("System time going backwards! (got value "+systime+", last "+mLastSystemTimestamp);
+        if (systime < _lastSystemTimestamp) {
+            Logger.logWarning("System time going backwards! (got value "+systime+", last "+_lastSystemTimestamp);
             // Let's write it down, still
-            mLastSystemTimestamp = systime;
+            _lastSystemTimestamp = systime;
         }
 
         /* But even without it going backwards, it may be less than the
          * last one used (when generating UUIDs fast with coarse clock
          * resolution; or if clock has gone backwards over reboot etc).
          */
-        if (systime <= mLastUsedTimestamp) {
+        if (systime <= _lastUsedTimestamp) {
             /* Can we just use the last time stamp (ok if the counter
              * hasn't hit max yet)
              */
-            if (mClockCounter < kClockMultiplier) { // yup, still have room
-                systime = mLastUsedTimestamp;
+            if (_clockCounter < kClockMultiplier) { // yup, still have room
+                systime = _lastUsedTimestamp;
             } else { // nope, have to roll over to next value and maybe wait
-                long actDiff = mLastUsedTimestamp - systime;
+                long actDiff = _lastUsedTimestamp - systime;
                 long origTime = systime;
-                systime = mLastUsedTimestamp + 1L;
+                systime = _lastUsedTimestamp + 1L;
 
                 Logger.logWarning("Timestamp over-run: need to reinitialize random sequence");
 
@@ -243,7 +243,7 @@ public final class UUIDTimer
                  * just anding its value. So, we better get some random
                  * numbers instead...
                  */
-                initCounters(mRnd);
+                initCounters(_random);
 
                 /* But do we also need to slow down? (to try to keep virtual
                  * time close to physical time; ie. either catch up when
@@ -260,18 +260,18 @@ public final class UUIDTimer
              * reset to a low value (need not be 0; good to leave a small
              * residual to further decrease collisions)
              */
-            mClockCounter &= 0xFF;
+            _clockCounter &= 0xFF;
         }
 
-        mLastUsedTimestamp = systime;
+        _lastUsedTimestamp = systime;
 
         /* Ok, we have consistent clock (virtual or physical) value that
          * we can and should use.
          * But do we need to check external syncing now?
          */
-        if (mSync != null && systime >= mFirstUnsafeTimestamp) {
+        if (_syncer != null && systime >= _firstUnsafeTimestamp) {
             try {
-                mFirstUnsafeTimestamp = mSync.update(systime);
+                _firstUnsafeTimestamp = _syncer.update(systime);
             } catch (IOException ioe) {
                 throw new RuntimeException("Failed to synchronize timestamp: "+ioe);
             }
@@ -284,9 +284,9 @@ public final class UUIDTimer
         systime += kClockOffset;
 
         // Plus add the clock counter:
-        systime += mClockCounter;
+        systime += _clockCounter;
         // and then increase
-        ++mClockCounter;
+        ++_clockCounter;
 
         return systime;
     }

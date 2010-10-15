@@ -82,7 +82,11 @@ public class TimeBasedGenerator extends NoArgGenerator
     public UUID generate()
     {
         long timestamp;
-        synchronized (_uuidBytes) {
+        /* As timer is not synchronized (nor _uuidBytes), need to sync; but most
+         * importantly, synchronize on timer which may also be shared between
+         * multiple instances
+         */
+        synchronized (_timer) {
             _ethernetAddress.toByteArray(_uuidBytes, 10);
             timestamp = _timer.getTimestamp(_uuidBytes);
         }
