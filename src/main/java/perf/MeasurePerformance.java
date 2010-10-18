@@ -56,8 +56,7 @@ public class MeasurePerformance
         
         while (true) {
             try {  Thread.sleep(100L); } catch (InterruptedException ie) { }
-            int round = (i++ % 7);
-//            int round = 2;
+            int round = (i++ % 6);
    
             long curr = System.currentTimeMillis();
             String msg;
@@ -96,10 +95,12 @@ public class MeasurePerformance
                 testNameBased(uuids, ROUNDS, nameGen);
                 break;
 
+                /*
             case 6:
                 msg = "http://johannburkard.de/software/uuid/";
                 testUUID32(uuids, ROUNDS);
                 break;
+                */
                 
             default:
                 throw new Error("Internal error");
@@ -114,6 +115,7 @@ public class MeasurePerformance
     }
 
     // Test implementation from http://johannburkard.de/software/uuid/
+    /*
     private final void testUUID32(Object[] uuids, int rounds)
     {
         while (--rounds >= 0) {
@@ -122,6 +124,7 @@ public class MeasurePerformance
             }
         }
     }
+    */
     
     private final void testJDK(Object[] uuids, int rounds)
     {
