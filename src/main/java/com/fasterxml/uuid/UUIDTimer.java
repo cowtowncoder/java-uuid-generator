@@ -66,9 +66,9 @@ import com.fasterxml.uuid.impl.UUIDUtil;
  *  to be the case when testing with Java calendars).
  *</ul>
  *<p>
- * Note about synchronization: this class is assumed to always be called
- * from a synchronized context (caller locks on either this object, or
- * a similar timer lock), and so has no method synchronization.
+ * Note about synchronization: main synchronization point (as of version
+ * 3.1.1 and above) is {@link #getTimestamp}, so caller need not
+ * synchronize access explicitly.
  */
 public final class UUIDTimer
 {
@@ -120,8 +120,9 @@ public final class UUIDTimer
      * cases (clock time going backwards, node id getting mixed up).
      * Third byte is actually used for seeding counter on counter
      * overflow.
+     * Note that only lowermost 16 bits are actually used as sequence
      */
-    private final byte[] _clockSequence = new byte[3];
+    private int _clockSequence;
 
     /**
      * Last physical timestamp value <code>System.currentTimeMillis()</code>
@@ -188,7 +189,7 @@ public final class UUIDTimer
         /* Let's generate the clock sequence field now; as with counter,
          * this reduces likelihood of collisions (as explained in UUID specs)
          */
-        rnd.nextBytes(_clockSequence);
+        _clockSequence = rnd.nextInt();
         /* Ok, let's also initialize the counter...
          * Counter is used to make it slightly less likely that
          * two instances of UUIDGenerator (from separate JVMs as no more
@@ -196,23 +197,24 @@ public final class UUIDTimer
          * time-based UUIDs. The practice of using multiple generators,
          * is strongly discouraged, of course, but just in case...
          */
-        _clockCounter = _clockSequence[2] & 0xFF;
+        _clockCounter = (_clockSequence >> 16) & 0xFF;
     }
 
+    public int getClockSequence() {
+        return (_clockSequence & 0xFFFF);
+    }
+    
     /**
      * Method that constructs timestamp unique and suitable to use for
-     * constructing UUIDs.
+     * constructing UUIDs. Default implementation just calls
+     * {@link #getTimestampSynchronized}, which is fully synchronized;
+     * sub-classes may choose to implemented alternate strategies
      *
      * @return 64-bit timestamp to use for constructing UUID
      */
-    public final long getTimestamp(byte[] uuidBytes)
+    public final synchronized long getTimestamp()
     {
-        // First the clock sequence:
-        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_SEQUENCE] = _clockSequence[0];
-        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_SEQUENCE+1] = _clockSequence[1];
-
         long systime = System.currentTimeMillis();
-
         /* Let's first verify that the system time is not going backwards;
          * independent of whether we can use it:
          */
@@ -246,7 +248,7 @@ public final class UUIDTimer
                 initCounters(_random);
 
                 /* But do we also need to slow down? (to try to keep virtual
-                 * time close to physical time; ie. either catch up when
+                 * time close to physical time; i.e. either catch up when
                  * system clock has been moved backwards, or when coarse
                  * clock resolution has forced us to advance virtual timer
                  * too far)
@@ -287,20 +289,27 @@ public final class UUIDTimer
         systime += _clockCounter;
         // and then increase
         ++_clockCounter;
-
         return systime;
     }
 
-    /**
-     * Method for accessing timestamp to use for creating UUIDs.
+    /*
+    /**********************************************************************
+    /* Test-support methods
+    /**********************************************************************
      */
-    public final void getAndSetTimestamp(byte[] uuidBytes)
+    
+    /* Method for accessing timestamp to use for creating UUIDs.
+     * Used ONLY by unit tests, hence protexted.
+     */
+    protected final void getAndSetTimestamp(byte[] uuidBytes)
     {
-        long timestamp = getTimestamp(uuidBytes);
+        long timestamp = getTimestamp();
 
-        /* Time fields aren't nicely split across the UUID, so can't just
-         * linearly dump the stamp:
-         */
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_SEQUENCE] = (byte) _clockSequence;
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_SEQUENCE+1] = (byte) (_clockSequence >> 8);
+        
+        // Time fields aren't nicely split across the UUID, so can't just
+        // linearly dump the stamp:
         int clockHi = (int) (timestamp >>> 32);
         int clockLo = (int) timestamp;
 

@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import com.fasterxml.uuid.*;
 import com.fasterxml.uuid.impl.NameBasedGenerator;
+import com.fasterxml.uuid.impl.RandomBasedGenerator;
+import com.fasterxml.uuid.impl.TimeBasedGenerator;
 
 /**
  * Simple micro-benchmark for evaluating performance of various UUID generation
@@ -38,7 +40,7 @@ public class MeasurePerformance
     {
         int i = 0;
 
-        final UUID[] uuids = new UUID[COUNT];
+        final Object[] uuids = new Object[COUNT];
 
         // can either use bogus address; or local one, no difference perf-wise
         EthernetAddress nic = EthernetAddress.fromInterface();
@@ -47,15 +49,16 @@ public class MeasurePerformance
 //        UUID namespaceForNamed = NAMESPACE;
         UUID namespaceForNamed = null;
 
-        final NoArgGenerator secureRandomGen = Generators.randomBasedGenerator();
-        final NoArgGenerator utilRandomGen = Generators.randomBasedGenerator(new java.util.Random(123));
-        final NoArgGenerator timeGen = Generators.timeBasedGenerator(nic);
+        final RandomBasedGenerator secureRandomGen = Generators.randomBasedGenerator();
+        final RandomBasedGenerator utilRandomGen = Generators.randomBasedGenerator(new java.util.Random(123));
+        final TimeBasedGenerator timeGen = Generators.timeBasedGenerator(nic);
         final StringArgGenerator nameGen = Generators.nameBasedGenerator(namespaceForNamed);
         
         while (true) {
             try {  Thread.sleep(100L); } catch (InterruptedException ie) { }
-            int round = (i++ % 6);
-    
+            int round = (i++ % 7);
+//            int round = 2;
+   
             long curr = System.currentTimeMillis();
             String msg;
             boolean lf = (round == 0);
@@ -73,23 +76,29 @@ public class MeasurePerformance
                 break;
                 
             case 2:
-                msg = "Jug, SecureRandom";
-                testNoArgs(uuids, ROUNDS, secureRandomGen);
+                msg = "Jug, time-based";
+                testTimeBased(uuids, ROUNDS, timeGen);
                 break;
 
             case 3:
-                msg = "Jug, java.util.Random";
-                testNoArgs(uuids, ROUNDS, utilRandomGen);
-                break;
-                
-            case 4:
-                msg = "Jug, time-based";
-                testNoArgs(uuids, ROUNDS, timeGen);
+                msg = "Jug, SecureRandom";
+                testRandom(uuids, ROUNDS, secureRandomGen);
                 break;
 
+            case 4:
+                msg = "Jug, java.util.Random";
+                testRandom(uuids, ROUNDS, utilRandomGen);
+                break;
+
+                
             case 5:
                 msg = "Jug, name-based";
-                testStringArg(uuids, ROUNDS, nameGen);
+                testNameBased(uuids, ROUNDS, nameGen);
+                break;
+
+            case 6:
+                msg = "http://johannburkard.de/software/uuid/";
+                testUUID32(uuids, ROUNDS);
                 break;
                 
             default:
@@ -104,7 +113,17 @@ public class MeasurePerformance
         }
     }
 
-    private final void testJDK(UUID[] uuids, int rounds)
+    // Test implementation from http://johannburkard.de/software/uuid/
+    private final void testUUID32(Object[] uuids, int rounds)
+    {
+        while (--rounds >= 0) {
+            for (int i = 0, len = uuids.length; i < len; ++i) {
+                uuids[i] = new com.eaio.uuid.UUID();
+            }
+        }
+    }
+    
+    private final void testJDK(Object[] uuids, int rounds)
     {
         while (--rounds >= 0) {
             for (int i = 0, len = uuids.length; i < len; ++i) {
@@ -113,7 +132,7 @@ public class MeasurePerformance
         }
     }
 
-    private final void testJDKNames(UUID[] uuids, int rounds) throws java.io.IOException
+    private final void testJDKNames(Object[] uuids, int rounds) throws java.io.IOException
     {
         while (--rounds >= 0) {
             for (int i = 0, len = uuids.length; i < len; ++i) {
@@ -123,7 +142,7 @@ public class MeasurePerformance
         }
     }
     
-    private final void testNoArgs(UUID[] uuids, int rounds, NoArgGenerator uuidGen)
+    private final void testRandom(Object[] uuids, int rounds, RandomBasedGenerator uuidGen)
     {
         while (--rounds >= 0) {
             for (int i = 0, len = uuids.length; i < len; ++i) {
@@ -132,7 +151,16 @@ public class MeasurePerformance
         }
     }
 
-    private final void testStringArg(UUID[] uuids, int rounds, StringArgGenerator uuidGen)
+    private final void testTimeBased(Object[] uuids, int rounds, TimeBasedGenerator uuidGen)
+    {
+        while (--rounds >= 0) {
+            for (int i = 0, len = uuids.length; i < len; ++i) {
+                uuids[i] = uuidGen.generate();
+            }
+        }
+    }
+    
+    private final void testNameBased(Object[] uuids, int rounds, StringArgGenerator uuidGen)
     {
         while (--rounds >= 0) {
             for (int i = 0, len = uuids.length; i < len; ++i) {

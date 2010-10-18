@@ -459,7 +459,7 @@ public class UUIDGeneratorTest extends TestCase
         HashSet<UUID> hash_set = new HashSet<UUID>();
         for (int i = 0; i < uuidArray.length; i++)
         {
-            assertTrue("Uniqueness test failed on insert into HashSet",
+            assertTrue("Uniqueness test failed on insert into HashSet: index "+i+", value "+uuidArray[i],
                     hash_set.add(uuidArray[i]));
             assertFalse("Paranoia Uniqueness test failed (second insert)",
                     hash_set.add(uuidArray[i]));

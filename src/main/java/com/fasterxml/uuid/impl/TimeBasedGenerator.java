@@ -36,9 +36,9 @@ public class TimeBasedGenerator extends NoArgGenerator
     protected final UUIDTimer _timer;
 
     /**
-     * Temporary buffer used for constructing bytes for UUID
+     * Base values for the second long (last 8 bytes) of UUID to construct
      */
-    protected final byte[] _uuidBytes = new byte[16];
+    protected final long _uuidL2;
     
     /*
     /**********************************************************************
@@ -53,13 +53,21 @@ public class TimeBasedGenerator extends NoArgGenerator
     
     public TimeBasedGenerator(EthernetAddress ethAddr, UUIDTimer timer)
     {
+        byte[] uuidBytes = new byte[16];
         if (ethAddr == null) {
             ethAddr = EthernetAddress.constructMulticastAddress();
         }
+        // initialize baseline with MAC address info
         _ethernetAddress = ethAddr;
+        _ethernetAddress.toByteArray(uuidBytes, 10);
+        // and add clock sequence
+        int clockSeq = timer.getClockSequence();
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_SEQUENCE] = (byte) clockSeq;
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_SEQUENCE+1] = (byte) (clockSeq >> 8);
+        long l2 = UUIDUtil.gatherLong(uuidBytes, 8);
+        _uuidL2 = UUIDUtil.initUUIDSecondLong(l2);
         _timer = timer;
     }
-
     
     /*
     /**********************************************************************
@@ -78,33 +86,27 @@ public class TimeBasedGenerator extends NoArgGenerator
     /**********************************************************************
      */
     
+    /* As timer is not synchronized (nor _uuidBytes), need to sync; but most
+     * importantly, synchronize on timer which may also be shared between
+     * multiple instances
+     */
     @Override
     public UUID generate()
     {
-        long timestamp;
-        /* As timer is not synchronized (nor _uuidBytes), need to sync; but most
-         * importantly, synchronize on timer which may also be shared between
-         * multiple instances
-         */
-        synchronized (_timer) {
-            _ethernetAddress.toByteArray(_uuidBytes, 10);
-            timestamp = _timer.getTimestamp(_uuidBytes);
-        }
-        // Time fields aren't nicely split across the UUID, so can't just
-        // linearly dump the stamp:
-        int clockHi = (int) (timestamp >>> 32);
-        int clockLo = (int) timestamp;
-
-        _uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_HI] = (byte) (clockHi >>> 24);
-        _uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_HI+1] = (byte) (clockHi >>> 16);
-        _uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_MID] = (byte) (clockHi >>> 8);
-        _uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_MID+1] = (byte) clockHi;
-
-        _uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_LO] = (byte) (clockLo >>> 24);
-        _uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_LO+1] = (byte) (clockLo >>> 16);
-        _uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_LO+2] = (byte) (clockLo >>> 8);
-        _uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_LO+3] = (byte) clockLo;
-
-        return UUIDUtil.constructUUID(UUIDType.TIME_BASED, _uuidBytes);
+        final long rawTimestamp = _timer.getTimestamp();
+        // Time field components are kind of shuffled, need to slice:
+        int clockHi = (int) (rawTimestamp >>> 32);
+        int clockLo = (int) rawTimestamp;
+        // and dice
+        int midhi = (clockHi << 16) | (clockHi >>> 16);
+        // need to squeeze in type (4 MSBs in byte 6, clock hi)
+        midhi &= ~0xF000; // remove high nibble of 6th byte
+        midhi |= 0x1000; // type 1
+        long midhiL = (long) midhi;
+        midhiL = ((midhiL << 32) >>> 32); // to get rid of sign extension
+        // and reconstruct
+        long l1 = (((long) clockLo) << 32) | midhiL;
+        // last detail: must force 2 MSB to be '10'
+        return new UUID(l1, _uuidL2);
     }
 }
