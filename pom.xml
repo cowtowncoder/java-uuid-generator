@@ -107,6 +107,15 @@ JUG supports all 3 official UUID generation methods.
                   <link>http://java.sun.com/javase/6/docs/api/</link>
               </links>
           </configuration>
+          <executions>
+              <execution>
+                  <id>attach-javadocs</id>
+                  <phase>verify</phase>
+                  <goals>
+                      <goal>jar</goal>
+                  </goals>
+              </execution>
+          </executions>
        </plugin>
 
        <!-- Plus, let's make jars OSGi bundles as well  -->
