@@ -1,8 +1,19 @@
-Version: 3.1.0
+Version: 3.1.1
 
-Release date: 14-Oct-2010
+Release date: xx-Apr-2011
 
 Description:
+
+Patch version to address following issues
+
+* [#5]: NPE when calling "Generators.randomBasedGenerator().generate()" second time
+  (reported by oswaldo)
+
+============================================================================
+  
+History:
+
+3.1.0 (14-Oct-2010):
 
 Rewrite of Java Uuid Generator, to bring it up to date. Changes include:
 
@@ -15,19 +26,16 @@ Rewrite of Java Uuid Generator, to bring it up to date. Changes include:
   EthernetAddress class)
 * Made generators fully synchronized
 
-============================================================================
-  
-History:
-  2.0.0 (29-Oct-2005):
+2.0.0 (29-Oct-2005):
 
-  The official 2.0 release. No functional changes since rc6, just
-  documentation updates.
+The official 2.0 release. No functional changes since rc6, just
+documentation updates.
 
-  2.0-rc6: (25-Sep-2005):
+2.0-rc6: (25-Sep-2005):
 
-  Added simple logger wrappers for log4j and java.util.logging: now it
-  should be trivial to make JUG use either of these logging sub-systems,
-  when integrating it to an existing system.
+Added simple logger wrappers for log4j and java.util.logging: now it
+should be trivial to make JUG use either of these logging sub-systems,
+when integrating it to an existing system.
 
   2.0-rc5: (05-Sep-2005):
 
@@ -65,7 +73,7 @@ History:
        (of Jug command-line functionality) from jar.
 
   1.1.1: Minor fixes:
-     - Added FreeBSD recognition check suggested by Jonas Fügedi.
+     - Added FreeBSD recognition check suggested by Jonas Fï¿½gedi.
 
   1.1: Better native support, full unit test suite.
      - Fixed a bug in Windows MAC address access, which would cause

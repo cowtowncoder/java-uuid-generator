@@ -55,7 +55,8 @@ public class RandomBasedGenerator extends NoArgGenerator
              * of which all but one are dumped) let's not add synchronization
              * overhead.
              */
-            if (_sharedRandom == null) {
+            rnd = _sharedRandom;
+            if (rnd == null) {
                 _sharedRandom = rnd = new SecureRandom();
             }
             _secureRandom = true;
