@@ -146,6 +146,9 @@ public class Generators
      * as the location part of UUID, and specified synchronizer (which may add
      * additional restrictions to guarantee system-wide uniqueness).
      * 
+     * @param ethernetAddress (optional) MAC address to use; if null, a transient
+     *   random address is generated.
+     * 
      * @see com.fasterxml.uuid.ext.FileBasedTimestampSynchronizer
      */
     public static TimeBasedGenerator timeBasedGenerator(EthernetAddress ethernetAddress,

@@ -48,12 +48,14 @@ public class MeasurePerformance
 
         final RandomBasedGenerator secureRandomGen = Generators.randomBasedGenerator();
         final RandomBasedGenerator utilRandomGen = Generators.randomBasedGenerator(new java.util.Random(123));
-        final TimeBasedGenerator timeGen = Generators.timeBasedGenerator(nic);
+        final TimeBasedGenerator timeGenPlain = Generators.timeBasedGenerator(nic);
+        final TimeBasedGenerator timeGenSynced = Generators.timeBasedGenerator(nic,
+                new com.fasterxml.uuid.ext.FileBasedTimestampSynchronizer());
         final StringArgGenerator nameGen = Generators.nameBasedGenerator(namespaceForNamed);
         
         while (true) {
             try {  Thread.sleep(100L); } catch (InterruptedException ie) { }
-            int round = (i++ % 6);
+            int round = (i++ % 7);
    
             long curr = System.currentTimeMillis();
             String msg;
@@ -72,28 +74,33 @@ public class MeasurePerformance
                 break;
                 
             case 2:
-                msg = "Jug, time-based";
-                testTimeBased(uuids, ROUNDS, timeGen);
+                msg = "Jug, time-based (non-sync)";
+                testTimeBased(uuids, ROUNDS, timeGenPlain);
                 break;
 
             case 3:
+                msg = "Jug, time-based (SYNC)";
+                testTimeBased(uuids, ROUNDS, timeGenSynced);
+                break;
+                
+            case 4:
                 msg = "Jug, SecureRandom";
                 testRandom(uuids, ROUNDS, secureRandomGen);
                 break;
 
-            case 4:
+            case 5:
                 msg = "Jug, java.util.Random";
                 testRandom(uuids, ROUNDS, utilRandomGen);
                 break;
 
                 
-            case 5:
+            case 6:
                 msg = "Jug, name-based";
                 testNameBased(uuids, ROUNDS, nameGen);
                 break;
 
                 /*
-            case 6:
+            case 7:
                 msg = "http://johannburkard.de/software/uuid/";
                 testUUID32(uuids, ROUNDS);
                 break;
