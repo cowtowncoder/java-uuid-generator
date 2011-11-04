@@ -3,7 +3,6 @@ package perf;
 import java.util.UUID;
 
 import com.fasterxml.uuid.*;
-import com.fasterxml.uuid.impl.NameBasedGenerator;
 import com.fasterxml.uuid.impl.RandomBasedGenerator;
 import com.fasterxml.uuid.impl.TimeBasedGenerator;
 
@@ -24,8 +23,6 @@ public class MeasurePerformance
     
     private static final int ROUNDS = 250;
     private static final int COUNT = 1000;
-
-    private final static UUID NAMESPACE = NameBasedGenerator.NAMESPACE_DNS;
     
     // also: let's just use a single name for name-based, to avoid extra overhead:
     final String NAME = "http://www.cowtowncoder.com/blog/blog.html";
