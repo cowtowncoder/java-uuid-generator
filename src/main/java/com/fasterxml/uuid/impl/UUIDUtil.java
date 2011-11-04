@@ -19,10 +19,12 @@ public class UUIDUtil
 	
     /*
     /**********************************************************************
-    /* 'Standard' namespaces defined (suggested) by UUID specs:
+    /* Construction (can instantiate, although usually not necessary)
     /**********************************************************************
      */
 
+    // note: left public just for convenience; all functionality available
+    // via static methods
     public UUIDUtil() { }
 
     /*
@@ -106,7 +108,7 @@ public class UUIDUtil
      * Factory method for constructing {@link java.util.UUID} instance from given
      * 16 bytes.
      * NOTE: since absolutely no validation is done for contents, this method should
-     * usually not be used, unless contents are known to be valid.
+     * only be used if contents are known to be valid.
      */
     public static UUID uuid(byte[] bytes)
     {
@@ -116,6 +118,15 @@ public class UUIDUtil
 	return new UUID(l1, l2);
     }
 
+    /**
+     * Factory method for constructing {@link java.util.UUID} instance from given
+     * 16 bytes.
+     * NOTE: since absolutely no validation is done for contents, this method should
+     * only be used if contents are known to be valid.
+     * 
+     * @param bytes Array that contains sequence of 16 bytes that contain a valid UUID
+     * @param offset Offset of the first of 16 bytes
+     */
     public static UUID uuid(byte[] bytes, int offset)
     {
         _checkUUIDByteArray(bytes, offset);

@@ -1,4 +1,3 @@
-
 /* JUG Java UUID Generator
  *
  * Copyright (c) 2002- Tatu Saloranta, tatu.saloranta@iki.fi
