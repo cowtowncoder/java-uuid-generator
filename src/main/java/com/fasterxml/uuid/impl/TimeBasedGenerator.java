@@ -62,8 +62,8 @@ public class TimeBasedGenerator extends NoArgGenerator
         _ethernetAddress.toByteArray(uuidBytes, 10);
         // and add clock sequence
         int clockSeq = timer.getClockSequence();
-        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_SEQUENCE] = (byte) clockSeq;
-        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_SEQUENCE+1] = (byte) (clockSeq >> 8);
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_SEQUENCE] = (byte) (clockSeq >> 8);
+        uuidBytes[UUIDUtil.BYTE_OFFSET_CLOCK_SEQUENCE+1] = (byte) clockSeq;
         long l2 = UUIDUtil.gatherLong(uuidBytes, 8);
         _uuidL2 = UUIDUtil.initUUIDSecondLong(l2);
         _timer = timer;

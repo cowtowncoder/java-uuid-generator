@@ -1,17 +1,27 @@
-Version: 3.1.1
+Version: 3.1.3
 
-Release date: 04-Apr-2011
+Release date: xx-No-2011
 
 Description:
 
-Patch version to address following issues
+A patch version to address following issues
 
-* [#5]: NPE when calling "Generators.randomBasedGenerator().generate()" second time
-  (reported by oswaldo)
+* [#7] Bytes of clock sequence were switched (unlikely to cause problems,
+  but incorrect -- regressions from 2.x)
+  (reported by Ed A)
 
 ============================================================================
   
 History:
+
+3.1.2 (25-Jun-2011):
+
+* Fixed a packaging problem (missing sources)
+
+3.1.1 (05-Apr-2011):
+
+* [#5]: NPE when calling "Generators.randomBasedGenerator().generate()" second time
+  (reported by oswaldo)
 
 3.1.0 (14-Oct-2010):
 
