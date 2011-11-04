@@ -43,22 +43,14 @@ public class RandomBasedGenerator extends NoArgGenerator
     
     /**
      * @param rnd Random number generator to use for generating UUIDs; if null,
-     *   shared default generator is used. Note that it is strongly recommened to
+     *   shared default generator is used. Note that it is strongly recommend to
      *   use a <b>good</b> (pseudo) random number generator; for example, JDK's
      *   {@link SecureRandom}.
      */
     public RandomBasedGenerator(Random rnd)
     {
         if (rnd == null) {
-            /* Could be synchronized, but since side effects are trivial
-             * (ie. possibility of generating more than one SecureRandom,
-             * of which all but one are dumped) let's not add synchronization
-             * overhead.
-             */
-            rnd = _sharedRandom;
-            if (rnd == null) {
-                _sharedRandom = rnd = new SecureRandom();
-            }
+            rnd = LazyRandom.sharedSecureRandom();
             _secureRandom = true;
         } else {
             _secureRandom = (rnd instanceof SecureRandom);
@@ -121,5 +113,25 @@ public class RandomBasedGenerator extends NoArgGenerator
             + ((buffer[++offset] & 0xFF) << 16)
             + ((buffer[++offset] & 0xFF) << 8)
             + (buffer[++offset] & 0xFF);
+    }
+
+    /*
+    /**********************************************************************
+    /* Helper classes
+    /**********************************************************************
+     */
+
+    /**
+     * Trivial helper class that uses class loading as synchronization
+     * mechanism for lazy instantation of the shared secure random
+     * instance.
+     */
+    private final static class LazyRandom
+    {
+        private final static SecureRandom shared = new SecureRandom();
+
+        public static SecureRandom sharedSecureRandom() {
+            return shared;
+        }
     }
 }

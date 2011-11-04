@@ -9,6 +9,8 @@ A patch version to address following issues
 * [#7] Bytes of clock sequence were switched (unlikely to cause problems,
   but incorrect -- regressions from 2.x)
   (reported by Ed A)
+* [#8] A potential race condition for RandomBasedGenerator
+  (reported by "facboy")
 
 ============================================================================
   
