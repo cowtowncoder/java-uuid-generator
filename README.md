@@ -4,7 +4,7 @@ JUG is a set of Java classes for generating UUIDs. It generates UUIDs according 
 
     http://www1.ics.uci.edu/~ejw/authoring/uuid-guid/draft-leach-uuids-guids-01.txt
 
-or at [Wikipedia](http://en.wikipedia.org/wiki/UUID) (draft id being "<draft-leach-uuids-guids-01.txt>")
+or at [Wikipedia](http://en.wikipedia.org/wiki/UUID) (draft id being "&lt;draft-leach-uuids-guids-01.txt>")
 
 Alternatively you can also read [newer IETF draft](http://www.ietf.org/internet-drafts/draft-mealling-uuid-urn-00.txt)
  that describes URN name space for UUIDs, and also contains UUID definition.
