@@ -197,8 +197,8 @@ public class UUIDUtil
     public static UUIDType typeOf(UUID uuid)
     {
         if (uuid == null) {
-	    return null;
-	}
+            return null;
+        }
         // Ok: so 4 MSB of byte at offset 6...
         long l = uuid.getMostSignificantBits();
         int typeNibble = (((int) l) >> 12) & 0xF;
@@ -209,19 +209,19 @@ public class UUIDUtil
                 return UUIDType.UNKNOWN;
             }
             break;
-	case 1:
-	    return UUIDType.TIME_BASED;
-	case 2:
-	    return UUIDType.DCE;
-	case 3:
-	    return UUIDType.NAME_BASED_MD5;
-	case 4:
-	    return UUIDType.RANDOM_BASED;
+        case 1:
+            return UUIDType.TIME_BASED;
+        case 2:
+            return UUIDType.DCE;
+        case 3:
+            return UUIDType.NAME_BASED_MD5;
+        case 4:
+            return UUIDType.RANDOM_BASED;
         case 5:
             return UUIDType.NAME_BASED_SHA1;
-	}
+        }
         // not recognized: return null
-	return null;
+        return null;
     }
 	
     /*
@@ -243,7 +243,7 @@ public class UUIDUtil
     }
 
     public static void toByteArray(UUID uuid, byte[] buffer) {
-	toByteArray(uuid, buffer, 0);
+        toByteArray(uuid, buffer, 0);
     }
 
     public static void toByteArray(UUID uuid, byte[] buffer, int offset)

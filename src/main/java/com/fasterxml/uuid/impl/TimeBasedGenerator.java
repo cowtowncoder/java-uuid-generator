@@ -47,7 +47,7 @@ public class TimeBasedGenerator extends NoArgGenerator
      */
 
     /**
-     * @param addr Hardware address (802.1) to use for generating
+     * @param ethAddr Hardware address (802.1) to use for generating
      *   spatially unique part of UUID. If system has more than one NIC,
      */
     
