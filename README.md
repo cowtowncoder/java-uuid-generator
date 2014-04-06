@@ -1,13 +1,10 @@
 #  Java Uuid Generator (JUG)
 
-JUG is a set of Java classes for generating UUIDs. It generates UUIDs according to the UUID specification (IETF draft), found  (for example) at:
+JUG is a set of Java classes for generating UUIDs. It generates UUIDs according to the UUID specification (RFC-4122):
 
-    http://www1.ics.uci.edu/~ejw/authoring/uuid-guid/draft-leach-uuids-guids-01.txt
+    https://tools.ietf.org/html/rfc4122
 
-or at [Wikipedia](http://en.wikipedia.org/wiki/UUID) (draft id being "&lt;draft-leach-uuids-guids-01.txt>")
-
-Alternatively you can also read [newer IETF draft](http://www.ietf.org/internet-drafts/draft-mealling-uuid-urn-00.txt)
- that describes URN name space for UUIDs, and also contains UUID definition.
+(also see [Wikipedia UUID page](http://en.wikipedia.org/wiki/UUID))
 
 JUG was written by Tatu Saloranta (<tatu.saloranta@iki.fi>) in 2002 (or so?), and has been updated over years.
 In addition, many other individuals have helped fix bugs and implement new features: please see CREDITS for the complete list.
