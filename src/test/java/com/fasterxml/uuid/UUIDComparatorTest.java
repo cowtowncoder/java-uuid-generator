@@ -14,6 +14,8 @@
  */
 package com.fasterxml.uuid;
 
+import java.util.UUID;
+
 import junit.framework.TestCase;
 
 public class UUIDComparatorTest
@@ -62,5 +64,40 @@ public class UUIDComparatorTest
         assertTrue(UUIDComparator.compareULongs(0xffffffffFFFFFFFEL, 0xffffffffFFFFFFFCL) > 0);
         assertTrue(UUIDComparator.compareULongs(0xffffffffFFFFFF17L, 0xffffffffFFFFFF00L) > 0);
         assertTrue(UUIDComparator.compareULongs(0xffffffffFFFFFF00L, 0xffffffffFFFFFF17L) < 0);
+    }
+
+    /*
+     * [Issue#13]
+     */
+    public void testSorting()
+    {
+        String[] src = new String[] {
+            "7ef7c38a-bb6e-11e3-9e8f-000000000000",
+            "7f905a0b-bb6e-11e3-9e8f-000000000000",
+            "8028f08c-bb6e-11e3-9e8f-000000000000",
+            "80c1870d-bb6e-11e3-9e8f-000000000000"
+        };
+
+        /* 03-Apr-2014, tatu: NOTE: JDK's UUID.compareTo() is broken, and it can
+         *   NOT be used. Which is why we have "UUIDComparator" that does work.
+         */
+        final UUIDComparator comp = new UUIDComparator();
+        for (int i = 0; i < src.length-1; ++i) {
+            
+            UUID u1 = UUID.fromString(src[i]);
+            UUID u2 = UUID.fromString(src[i+1]);
+
+            assertEquals(0, comp.compare(u1, u1));
+            assertEquals(0, comp.compare(u2, u2));
+
+            int x = comp.compare(u1, u2);
+            if (x >= 0) {
+                fail("Entry #"+i+" should have value < 0, had "+x);
+            }
+            int y = comp.compare(u2, u1);
+            if (y <= 0) {
+                fail("Entry #"+i+" should have value > 0, had "+y);
+            }
+        }
     }
 }

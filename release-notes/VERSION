@@ -1,10 +1,14 @@
-Version: 3.1.3
+Project: java-uuid-generator
+Version: 3.1.4 (xx-xxx-2014)
 
-Release date: xx-No-2011
+#4: Add LICENSE file in resulting jar.
 
-Description:
+============================================================================
+History:
+============================================================================
 
-A patch version to address following issues
+3.1.3 (04-Nov-2011)
+
 
 * [#3] Make sure UUIDUtil has convenience factory methods, conversions,
   to make it easier to work with java.util.UUID.
@@ -13,10 +17,6 @@ A patch version to address following issues
   (reported by Ed A)
 * [#8] A potential race condition for RandomBasedGenerator
   (reported by "facboy")
-
-============================================================================
-  
-History:
 
 3.1.2 (25-Jun-2011):
 

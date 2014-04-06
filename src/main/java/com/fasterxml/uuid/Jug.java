@@ -72,9 +72,9 @@ public class Jug
 
     private static void printMap(Map<String,String> m, PrintStream out, boolean option)
     {
-    	int i = 0;
-    	int len = m.size();
-    	for (Map.Entry<String, String> en : m.entrySet()) {
+        int i = 0;
+        int len = m.size();
+        for (Map.Entry<String, String> en : m.entrySet()) {
             if (++i > 1) {
                 if (i < len) {
                     out.print(", ");
