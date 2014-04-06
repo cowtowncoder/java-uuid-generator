@@ -42,7 +42,9 @@ Because of this, you should always use external comparator, such as
 unsigned sorting, which is also same as lexicographic (alphabetic) sorting of UUIDs (when
 assuming uniform capitalization).
 
-## Other implementations:
+## Alternative JVM UUID generators
+
+There are many other publicly available UUID generators. For example:
 
 * [Apache Commons IO](http://commons.apache.org/sandbox/commons-id/uuid.html) has UUID generator
 * [eaio-uuid](http://stephenc.github.io/eaio-uuid/)
