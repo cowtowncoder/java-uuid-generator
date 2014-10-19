@@ -5,8 +5,9 @@ efficiently, sorting and so on.
 It generates UUIDs according to the [UUID specification (RFC-4122)](https://tools.ietf.org/html/rfc4122)
 (also see [Wikipedia UUID page](http://en.wikipedia.org/wiki/UUID) for more explanation)
 
-JUG was written by Tatu Saloranta (<tatu.saloranta@iki.fi>) in 2002 (or so?), and has been updated over years.
-In addition, many other individuals have helped fix bugs and implement new features: please see CREDITS for the complete list.
+JUG was written by Tatu Saloranta (<tatu.saloranta@iki.fi>) originally in 2002 and has been updated over years.
+In addition, many other individuals have helped fix bugs and implement new features: please see `release-notes/CREDITS`
+for the complete list.
 
 JUG is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
 
@@ -40,6 +41,10 @@ UUID anotherUuid = gen.generate();
 
 Generators are fully thread-safe, so a single instance may be shared among multiple threads.
 
+## Compatibility
+
+JUG version 3.1
+
 ## Known Issues
 
 JDK's `java.util.UUID` has flawed implementation of `compareTo()`, which uses naive comparison
@@ -68,3 +73,9 @@ There are many other publicly available UUID generators. For example:
 * JDK has included `java.util.UUID` since 1.4, but omits generation methods (esp. time/location based ones), has sub-standard performance for many operations and implements comparison in useless way
 * [ohannburkard.de UUID generator](http://johannburkard.de/software/uuid/)
 
+Note that although some packages claim to be faster than others, it is not clear whether:
+
+1. Claims have been properly verified (or, if they have, can be independently verified), AND
+2. It is not likely that performance differences truly matter: JUG, for example, can generate a millions of UUID per second per core (sometimes hitting the theoretical limit of 10 million per second), and it seems unlikely that generation will be bottleneck for about any use case
+
+so it is often best to choose based on stability of packages and API.
