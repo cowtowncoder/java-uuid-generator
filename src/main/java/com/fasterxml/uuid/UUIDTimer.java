@@ -205,9 +205,8 @@ public final class UUIDTimer
     }
     
     /**
-     * Method that constructs timestamp unique and suitable to use for
-     * constructing UUIDs. Default implementation just calls
-     * {@link #getTimestampSynchronized}, which is fully synchronized;
+     * Method that constructs unique timestamp suitable for use for
+     * constructing UUIDs. Default implementation is fully synchronized;
      * sub-classes may choose to implemented alternate strategies
      *
      * @return 64-bit timestamp to use for constructing UUID

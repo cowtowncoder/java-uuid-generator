@@ -67,12 +67,12 @@ public class NameBasedGenerator extends StringArgGenerator
      */
 
     /**
-     * @param nameSpaceUUID of the namespace, as defined by the
+     * @param namespace of the namespace, as defined by the
      *   spec. UUID has 4 pre-defined "standard" name space strings
      *   that can be passed to UUID constructor (see example below).
      *   Note that this argument is optional; if no namespace is needed
      *   (for example when name includes namespace prefix), null may be passed.
-     * @param hasher Hashing algorithm to use. 
+     * @param digester Hashing algorithm to use. 
 
     */
     public NameBasedGenerator(UUID namespace, MessageDigest digester, UUIDType type)

@@ -8,20 +8,37 @@ It generates UUIDs according to the [UUID specification (RFC-4122)](https://tool
 JUG was written by Tatu Saloranta (<tatu.saloranta@iki.fi>) in 2002 (or so?), and has been updated over years.
 In addition, many other individuals have helped fix bugs and implement new features: please see CREDITS for the complete list.
 
-Jug licensing is explained in file LICENSE; basically you have a choice of one of 2 common Open Source licenses (when downloading source package) -- Apache License 2.0 or GNU LGPL 2.1 -- and you will need to accept terms for one of the license.
-Please read LICENSE to understand requirements of the license you choose.
+JUG is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
 
 ## Usage
 
 JUG can be used as a command-line tool (via class 'com.fasterxml.uuid.Jug`), or as a pluggable component.
 Maven coordinates are:
 
-    <dependency>
-      <groupId>com.fasterxml.uuid</groupId>
-      <artifactId>java-uuid-generator</artifactId>
-      <version>3.1.3</version>
-    </dependency>
+```xml
+<dependency>
+  <groupId>com.fasterxml.uuid</groupId>
+  <artifactId>java-uuid-generator</artifactId>
+  <version>3.1.3</version>
+</dependency>
+```
 
+Generation itself is done by first selecting a kind of generator to use, and then calling its `generate()` method,
+for example:
+
+```java
+UUID uuid = Generators.randomBasedGenerator().generate();
+UUID uuid = Generators.timeBasedGenerator().generate();
+```
+
+If you want customize generators, you may also just want to hold on to generator instance, for example:
+```java
+TimeBasedGenerator gen = Generators.timeBasedGenerator(EthernetAddress.fromInterface());
+UUID uuid = gen.generate();
+UUID anotherUuid = gen.generate();
+```
+
+Generators are fully thread-safe, so a single instance may be shared among multiple threads.
 
 ## Known Issues
 
