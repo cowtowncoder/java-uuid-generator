@@ -24,7 +24,7 @@ Maven coordinates are:
 </dependency>
 ```
 
-For direct downloads, check out [Project Wiki](../../../wiki).
+For direct downloads, check out [Project Wiki](../../wiki).
 
 Generation itself is done by first selecting a kind of generator to use, and then calling its `generate()` method,
 for example:
@@ -43,7 +43,7 @@ UUID anotherUuid = gen.generate();
 
 Generators are fully thread-safe, so a single instance may be shared among multiple threads.
 
-JavaDocs for project can be found from [Project Wiki](../../../wiki).
+JavaDocs for project can be found from [Project Wiki](../../wiki).
 
 ## Compatibility
 
