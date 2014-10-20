@@ -24,6 +24,8 @@ Maven coordinates are:
 </dependency>
 ```
 
+For direct downloads, check out [Project Wiki](../../../wiki).
+
 Generation itself is done by first selecting a kind of generator to use, and then calling its `generate()` method,
 for example:
 
@@ -41,9 +43,12 @@ UUID anotherUuid = gen.generate();
 
 Generators are fully thread-safe, so a single instance may be shared among multiple threads.
 
+JavaDocs for project can be found from [Project Wiki](../../../wiki).
+
 ## Compatibility
 
-JUG version 3.1
+JUG version 3.1 requires JDK 1.6 to work, mostly to be able to access local Ethernet MAC address.
+Earlier versions (3.0 and before) worked on 1.4 (which introduced `java.util.UUID`).
 
 ## Known Issues
 
