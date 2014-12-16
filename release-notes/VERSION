@@ -1,5 +1,5 @@
 Project: java-uuid-generator
-Version: 3.1.4 (xx-xxx-2014)
+Version: 3.1.4 (15-Dec-2014)
 
 #4: Add LICENSE file in resulting jar.
 #15: Please make log4j "provided" rather than compile if it's really optionally
