@@ -2,13 +2,14 @@ Project: java-uuid-generator
 Version: 3.1.4 (xx-xxx-2014)
 
 #4: Add LICENSE file in resulting jar.
+#15: Please make log4j "provided" rather than compile if it's really optionally
+ (requested by ymenager@github)
 
 ============================================================================
 History:
 ============================================================================
 
 3.1.3 (04-Nov-2011)
-
 
 * [#3] Make sure UUIDUtil has convenience factory methods, conversions,
   to make it easier to work with java.util.UUID.
