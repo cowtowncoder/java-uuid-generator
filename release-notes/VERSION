@@ -6,7 +6,8 @@ Releases
 
 3.1.5 (not yet released)
 
--
+#19: LICENSE file refers to the Java Classmate library instead of Java UUID Generator (JUG)
+ (reported by Roger Aird, rogeraird@github)
 
 3.1.4 (15-Dec-2014)
 
