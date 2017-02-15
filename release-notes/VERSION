@@ -8,6 +8,8 @@ Releases
 
 #19: LICENSE file refers to the Java Classmate library instead of Java UUID Generator (JUG)
  (reported by Roger Aird, rogeraird@github)
+#22: UUIDTimer is not extendable which is not consistent with it's Javadoc
+ (reported by Spikhalskiy@github, mazurkin@github)
 
 3.1.4 (15-Dec-2014)
 

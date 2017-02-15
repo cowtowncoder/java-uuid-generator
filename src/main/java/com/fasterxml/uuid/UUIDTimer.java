@@ -342,7 +342,7 @@ public class UUIDTimer
      * @param msecs Number of milliseconds to wait for from current 
      *    time point
      */
-    private static void slowDown(long startTime, long actDiff)
+    protected static void slowDown(long startTime, long actDiff)
     {
         /* First, let's determine how long we'd like to wait.
          * This is based on how far ahead are we as of now.
