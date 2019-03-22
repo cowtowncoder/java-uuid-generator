@@ -339,8 +339,8 @@ public class UUIDTimer
      * eventually synchronize physical clock with virtual clock values
      * used for UUIDs.
      *
-     * @param msecs Number of milliseconds to wait for from current 
-     *    time point
+     * @param actDiff Number of milliseconds to wait for from current 
+     *    time point, to catch up
      */
     protected static void slowDown(long startTime, long actDiff)
     {
