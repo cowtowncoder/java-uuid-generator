@@ -1,5 +1,5 @@
 // NOTE: auto-generated with Moditect plugin using "-Pmoditect", on 22-Mar-2019
-module java.uuid.generator {
+module com.fasterxml.uuid {
     requires java.logging;
     requires log4j;
 

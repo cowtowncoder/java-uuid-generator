@@ -14,17 +14,28 @@ JUG is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENS
 ## Usage
 
 JUG can be used as a command-line tool (via class 'com.fasterxml.uuid.Jug`), or as a pluggable component.
+
+### Via Maven
+
 Maven coordinates are:
 
 ```xml
 <dependency>
   <groupId>com.fasterxml.uuid</groupId>
   <artifactId>java-uuid-generator</artifactId>
-  <version>3.1.5</version>
+  <version>3.2.0</version>
 </dependency>
 ```
 
+### JDK9+ module info
+
+Since version `3.2.0`, JUG defines JDK9+ compatible `module-info.class`, with module name of `com.fasterxml.uuid`.
+
+### Downloads
+
 For direct downloads, check out [Project Wiki](../../wiki).
+
+### Using JUG
 
 Generation itself is done by first selecting a kind of generator to use, and then calling its `generate()` method,
 for example:
@@ -47,7 +58,7 @@ JavaDocs for project can be found from [Project Wiki](../../wiki).
 
 ## Compatibility
 
-JUG version 3.1 requires JDK 1.6 to work, mostly to be able to access local Ethernet MAC address.
+JUG versions 3.1 and 3.2 require JDK 1.6 to work, mostly to be able to access local Ethernet MAC address.
 Earlier versions (3.0 and before) worked on 1.4 (which introduced `java.util.UUID`).
 
 ## Known Issues

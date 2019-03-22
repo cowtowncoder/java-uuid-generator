@@ -210,7 +210,7 @@ public class UUIDTimerTest extends TestCase
             uuid_timer |= ((uuidTimerArrayOfByteArrays[i][7] & 0xFFL) << 48);
             uuid_timer |= ((uuidTimerArrayOfByteArrays[i][6] & 0xFFL) << 56);
             
-            array_of_longs[i] = new Long(uuid_timer);
+            array_of_longs[i] = Long.valueOf(uuid_timer);
         }
         
         return array_of_longs;
