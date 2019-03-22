@@ -6,13 +6,13 @@
   <parent>
       <groupId>com.fasterxml</groupId>
       <artifactId>oss-parent</artifactId>
-      <version>31</version>
+      <version>35</version>
   </parent>
   <groupId>com.fasterxml.uuid</groupId>
   <artifactId>java-uuid-generator</artifactId>
   <packaging>bundle</packaging>
   <name>Java UUID Generator</name>
-  <version>3.1.6-SNAPSHOT</version>
+  <version>3.2.0-SNAPSHOT</version>
   <description>
 Java UUID Generator (JUG) is a Java library for generating
 Universally Unique IDentifiers, UUIDs (see http://en.wikipedia.org/wiki/UUID).
@@ -43,7 +43,7 @@ JUG supports all 3 official UUID generation methods.
   </prerequisites>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <log4j.version>1.2.13</log4j.version>
+    <log4j.version>1.2.17</log4j.version>
   </properties>
   <licenses>
     <license>
@@ -70,7 +70,7 @@ JUG supports all 3 official UUID generation methods.
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <version>${version.junit}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -81,7 +81,7 @@ JUG supports all 3 official UUID generation methods.
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.0</version>
+          <version>${version.plugin.compiler}</version>
           <configuration>
             <source>1.6</source>
             <target>1.6</target>
@@ -172,7 +172,7 @@ JUG supports all 3 official UUID generation methods.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.1</version>
+                        <version>${version.plugin.gpg}</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
