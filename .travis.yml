@@ -2,5 +2,4 @@ language: java
 
 jdk:
   - openjdk8
-  - oraclejdk9
   - openjdk11

@@ -20,9 +20,10 @@ It can be used either as a component in a bigger application, or as a standalone
 JUG generates UUIDs according to the IETF UUID draft specification.
 JUG supports all 3 official UUID generation methods.
 </description>
+  <url>https://github.com/cowtowncoder/java-uuid-generator</url>
   <scm>
     <connection>scm:git:git://github.com/cowtowncoder/java-uuid-generator.git</connection>
-    <url>scm:git:git@github.com:cowtowncoder/java-uuid-generator.git</url>
+    <url>https://github.com/cowtowncoder/java-uuid-generator</url>
     <developerConnection>scm:git:git@github.com:cowtowncoder/java-uuid-generator.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
@@ -33,7 +34,6 @@ JUG supports all 3 official UUID generation methods.
       <email>tatu.saloranta@iki.fi</email>
     </developer>
   </developers>
-  <url>http://wiki.fasterxml.com/JugHome</url>
   <issueManagement>
     <url>http://github.com/cowtowncoder/java-uuid-generator/issues</url>
   </issueManagement>

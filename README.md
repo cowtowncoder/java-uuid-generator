@@ -11,6 +11,11 @@ for the complete list.
 
 JUG is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
 
+## Status
+
+[![Build Status](https://travis-ci.org/cowtowncoder/java-uuid-generator.svg)](https://travis-ci.org/cowtowncoder/java-uuid-generator)
+[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/com.fasterxml.uuid/java-uuid-generator/badge.svg)](http://www.javadoc.io/doc/com.fasterxml.uuid/java-uuid-generator)
+
 ## Usage
 
 JUG can be used as a command-line tool (via class 'com.fasterxml.uuid.Jug`), or as a pluggable component.
