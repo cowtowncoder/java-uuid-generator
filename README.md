@@ -88,7 +88,7 @@ assuming uniform capitalization).
 
 ## Support
 
-Optional commercial is available via [Tidelift](https://tidelift.com): see
+Optional commercial support is available via [Tidelift](https://tidelift.com): see
 [java-uuid-generator subscription](https://tidelift.com/subscription/pkg/maven-com-fasterxml-uuid-java-uuid-generator?utm_source=maven-com-fasterxml-uuid-java-uuid-generator&utm_medium=referral&utm_campaign=readme)
 for details.
 
