@@ -86,6 +86,20 @@ Because of this, you should always use external comparator, such as
 unsigned sorting, which is also same as lexicographic (alphabetic) sorting of UUIDs (when
 assuming uniform capitalization).
 
+## Support
+
+Optional commercial is available via [Tidelift](https://tidelift.com): see
+[java-uuid-generator subscription](https://tidelift.com/subscription/pkg/maven-com-fasterxml-uuid-java-uuid-generator?utm_source=maven-com-fasterxml-uuid-java-uuid-generator&utm_medium=referral&utm_campaign=readme)
+for details.
+
+## Contributing
+
+For simple bug reports and fixes, and feature requests, please simply use projects
+[Issue Tracker](../../issues), with exception of security-related issues for which
+we recommend filing
+[Tidelift security contact](https://tidelift.com/security) (NOTE: you do NOT have to be
+a subscriber to do this).
+
 ## Alternative JVM UUID generators
 
 There are many other publicly available UUID generators. For example:
