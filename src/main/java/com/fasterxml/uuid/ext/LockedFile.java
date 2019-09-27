@@ -20,7 +20,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 
-import com.fasterxml.uuid.Logger;
+import static com.fasterxml.uuid.Logger.getLogger;
 
 /**
  * Utility class used by {@link FileBasedTimestampSynchronizer} to do
@@ -127,7 +127,7 @@ class LockedFile
         try {
             size = (int) mChannel.size();
         } catch (IOException ioe) {
-            doLogError("Failed to read file size: "+ioe);
+            getLogger().error("Failed to read file size", ioe);
             return READ_ERROR;
         }
 
@@ -135,7 +135,7 @@ class LockedFile
 
         // Let's check specifically empty files though
         if (size == 0) {
-            doLogWarning("Missing or empty file, can not read timestamp value");
+            getLogger().warn("Missing or empty file, can not read timestamp value");
             return READ_ERROR;
         }
 
@@ -147,7 +147,7 @@ class LockedFile
         try {
             mRAFile.readFully(data);
         } catch (IOException ie) {
-            doLogError("Failed to read "+size+" bytes: "+ie);
+            getLogger().error("(file '{}') Failed to read {} bytes", mFile, size, ie);
             return READ_ERROR;
         }
 
@@ -191,7 +191,7 @@ class LockedFile
 
         // Unsuccesful?
         if (result < 0L) {
-            doLogError("Malformed timestamp file contents: "+err);
+            getLogger().error("(file '{}') Malformed timestamp file contents: {}", mFile, err);
             return READ_ERROR;
         }
 
@@ -210,10 +210,10 @@ class LockedFile
 	     * not an error:
 	     */
 	    if (stamp == mLastTimestamp) {
-		doLogWarning("Trying to re-write existing timestamp ("+stamp+")");
+	        getLogger().warn("(file '{}') Trying to re-write existing timestamp ({})", mFile, stamp);
 		return;
 	    }
-	    throw new IOException(""+getFileDesc()+" trying to overwrite existing value ("+mLastTimestamp+") with an earlier timestamp ("+stamp+")");
+	    throw new IOException(""+mFile+" trying to overwrite existing value ("+mLastTimestamp+") with an earlier timestamp ("+stamp+")");
 	}
 
 //System.err.println("!!!! Syncing ["+mFile+"] with "+stamp+" !!!");
@@ -255,20 +255,6 @@ class LockedFile
     //////////////////////////////////////////////////////////////
      */
 
-    protected void doLogWarning(String msg)
-    {
-        Logger.logWarning("(file '"+getFileDesc()+"') "+msg);
-    }
-
-    protected void doLogError(String msg)
-    {
-        Logger.logError("(file '"+getFileDesc()+"') "+msg);
-    }
-
-    protected String getFileDesc() {
-	return mFile.toString();
-    }
-
     protected static void doDeactivate(File f, RandomAccessFile raf,
                                        FileLock lock)
     {
@@ -276,14 +262,14 @@ class LockedFile
             try {
                 lock.release();
             } catch (Throwable t) {
-                Logger.logError("Failed to release lock (for file '"+f+"'): "+t);
+                getLogger().error("Failed to release lock (for file '{}')", f, t);
             }
         }
         if (raf != null) {
             try {
                 raf.close();
             } catch (Throwable t) {
-                Logger.logError("Failed to close file '"+f+"':"+t);
+                getLogger().error("Failed to close file '{}'", f, t);
             }
         }
     }

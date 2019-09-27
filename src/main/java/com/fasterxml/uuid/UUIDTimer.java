@@ -20,6 +20,8 @@ import java.util.*;
 
 import com.fasterxml.uuid.impl.UUIDUtil;
 
+import static com.fasterxml.uuid.Logger.getLogger;
+
 /**
  * UUIDTimer produces the time stamps required for time-based UUIDs.
  * It works as outlined in the UUID specification, with following
@@ -241,7 +243,7 @@ public class UUIDTimer
          * independent of whether we can use it:
          */
         if (systime < _lastSystemTimestamp) {
-            Logger.logWarning("System time going backwards! (got value "+systime+", last "+_lastSystemTimestamp);
+            getLogger().warn("System time going backwards! (got value {}, last {}", systime, _lastSystemTimestamp);
             // Let's write it down, still
             _lastSystemTimestamp = systime;
         }
@@ -261,7 +263,7 @@ public class UUIDTimer
                 long origTime = systime;
                 systime = _lastUsedTimestamp + 1L;
 
-                Logger.logWarning("Timestamp over-run: need to reinitialize random sequence");
+                getLogger().warn("Timestamp over-run: need to reinitialize random sequence");
 
                 /* Clock counter is now at exactly the multiplier; no use
                  * just anding its value. So, we better get some random
@@ -382,7 +384,7 @@ public class UUIDTimer
         } else {
             delay = 5L;
         }
-        Logger.logWarning("Need to wait for "+delay+" milliseconds; virtual clock advanced too far in the future");
+        getLogger().warn("Need to wait for {} milliseconds; virtual clock advanced too far in the future", delay);
         long waitUntil = startTime + delay;
         int counter = 0;
         do {

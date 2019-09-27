@@ -43,7 +43,7 @@ JUG supports all 3 official UUID generation methods.
   </prerequisites>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <log4j.version>1.2.17</log4j.version>
+    <slf4j.version>1.7.28</slf4j.version>
   </properties>
   <licenses>
     <license>
@@ -60,17 +60,22 @@ JUG supports all 3 official UUID generation methods.
  <!-- Dependency information -->
  
   <dependencies>
-    <dependency> <!-- log4j is optional, but needed for compilation -->
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>${log4j.version}</version>
-      <scope>provided</scope>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
     </dependency>
-    <!-- and for testing, JUnit is needed -->
+    <!-- For testing, JUnit is needed -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${version.junit}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>${slf4j.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
