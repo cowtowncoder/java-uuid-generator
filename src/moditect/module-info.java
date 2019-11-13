@@ -1,7 +1,6 @@
 // NOTE: auto-generated with Moditect plugin using "-Pmoditect", on 22-Mar-2019
 module com.fasterxml.uuid {
-    requires java.logging;
-    requires log4j;
+    requires org.slf4j;
 
     exports com.fasterxml.uuid;
     // despite name, contains classes users may want to use directly so:
