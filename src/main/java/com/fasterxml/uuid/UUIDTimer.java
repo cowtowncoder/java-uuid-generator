@@ -113,6 +113,11 @@ public class UUIDTimer
      */
     protected final Random _random;
 
+    /**
+     * Clock used to get the time when a timestamp is requested.
+     */
+    protected final UUIDClock _clock;
+
     // // // Clock state:
 
     /**
@@ -159,8 +164,14 @@ public class UUIDTimer
 
     public UUIDTimer(Random rnd, TimestampSynchronizer sync) throws IOException
     {
+        this(rnd, sync, new UUIDClock());
+    }
+
+    public UUIDTimer(Random rnd, TimestampSynchronizer sync, UUIDClock clock) throws IOException
+    {
         _random = rnd;
         _syncer = sync;
+        _clock = clock;
         initCounters(rnd);
         _lastSystemTimestamp = 0L;
         // This may get overwritten by the synchronizer
@@ -213,7 +224,7 @@ public class UUIDTimer
      */
     public synchronized long getTimestamp()
     {
-        long systime = System.currentTimeMillis();
+        long systime = _clock.currentTimeMillis();
         /* Let's first verify that the system time is not going backwards;
          * independent of whether we can use it:
          */
