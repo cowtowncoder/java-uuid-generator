@@ -22,6 +22,7 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 import junit.framework.Test;
@@ -186,6 +187,31 @@ public class UUIDTimerTest extends TestCase
         // check that all timestamps are between the start and end time
         checkUUIDTimerLongArrayForCorrectCreationTime(
             uuid_timer_array_of_longs, start_time, end_time);
+    }
+
+    /**
+     * Test of reproducibility of getTimestamp method, of class
+     * com.fasterxml.uuid.UUIDTimer.
+     */
+    public void testGetTimestampReproducible() throws IOException
+    {
+        final long seed = new Random().nextLong();
+        final long time = new Random().nextLong();
+
+        final UUIDTimer timer1 = new UUIDTimer(new Random(seed), null, new UUIDClock() {
+            @Override
+            public long currentTimeMillis() {
+                return time;
+            }
+        });
+        final UUIDTimer timer2 = new UUIDTimer(new Random(seed), null, new UUIDClock() {
+            @Override
+            public long currentTimeMillis() {
+                return time;
+            }
+        });
+
+        assertEquals(timer1.getTimestamp(), timer2.getTimestamp());
     }
     
     /**************************************************************************
