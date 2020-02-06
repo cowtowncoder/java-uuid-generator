@@ -21,6 +21,8 @@ package com.fasterxml.uuid;
  * be overriden to return any number. This is useful when UUIDs with past or
  * future timestamps should be generated, or when UUIDs must be generated in
  * a reproducible manner.
+ *
+ * @since 3.3
  */
 public class UUIDClock
 {

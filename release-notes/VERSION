@@ -4,6 +4,11 @@ Project: java-uuid-generator
 Releases
 ============================================================================
 
+3.3.0 (07-Feb-2020)
+
+#36: Add customisable clock to UUIDTimer
+ (contributed by Felix W-D)
+
 3.2.0 (22-Mar-2019)
 
 #29: Add simple module-info for JDK9+, using Moditect

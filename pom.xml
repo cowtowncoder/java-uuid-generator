@@ -6,13 +6,13 @@
   <parent>
       <groupId>com.fasterxml</groupId>
       <artifactId>oss-parent</artifactId>
-      <version>35</version>
+      <version>38</version>
   </parent>
   <groupId>com.fasterxml.uuid</groupId>
   <artifactId>java-uuid-generator</artifactId>
   <packaging>bundle</packaging>
   <name>Java UUID Generator</name>
-  <version>3.2.1-SNAPSHOT</version>
+  <version>3.3.0-SNAPSHOT</version>
   <description>
 Java UUID Generator (JUG) is a Java library for generating
 Universally Unique IDentifiers, UUIDs (see http://en.wikipedia.org/wiki/UUID).
@@ -90,8 +90,7 @@ JUG supports all 3 official UUID generation methods.
         <plugin><!-- plug-in to attach source bundle in repo -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>2.1.2</version>
-          <executions>
+           <executions>
             <execution>
               <id>attach-sources</id>
               <goals>

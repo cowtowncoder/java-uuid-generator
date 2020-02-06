@@ -115,6 +115,8 @@ public class UUIDTimer
 
     /**
      * Clock used to get the time when a timestamp is requested.
+     *
+     * @since 3.3
      */
     protected final UUIDClock _clock;
 
@@ -167,6 +169,16 @@ public class UUIDTimer
         this(rnd, sync, new UUIDClock());
     }
 
+    /**
+     * @param rnd Random-number generator to use
+     * @param sync Synchronizer needed for multi-threaded timestamp access
+     * @param clock Provider for milli-second resolution timestamp
+     *
+     * @throws IOException if initialization of {@code sync} fails due to problem related
+     *    to reading of persisted last-used timestamp
+     *
+     * @since 3.3
+     */
     public UUIDTimer(Random rnd, TimestampSynchronizer sync, UUIDClock clock) throws IOException
     {
         _random = rnd;
