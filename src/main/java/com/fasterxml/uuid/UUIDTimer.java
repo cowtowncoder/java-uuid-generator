@@ -20,7 +20,8 @@ import java.util.*;
 
 import com.fasterxml.uuid.impl.UUIDUtil;
 
-import static com.fasterxml.uuid.Logger.getLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * UUIDTimer produces the time stamps required for time-based UUIDs.
@@ -74,6 +75,9 @@ import static com.fasterxml.uuid.Logger.getLogger;
  */
 public class UUIDTimer
 {
+
+    private static final Logger logger = LoggerFactory.getLogger(UUIDTimer.class);
+    
     // // // Constants
 
     /**
@@ -243,7 +247,7 @@ public class UUIDTimer
          * independent of whether we can use it:
          */
         if (systime < _lastSystemTimestamp) {
-            getLogger().warn("System time going backwards! (got value {}, last {}", systime, _lastSystemTimestamp);
+            logger.warn("System time going backwards! (got value {}, last {}", systime, _lastSystemTimestamp);
             // Let's write it down, still
             _lastSystemTimestamp = systime;
         }
@@ -263,7 +267,7 @@ public class UUIDTimer
                 long origTime = systime;
                 systime = _lastUsedTimestamp + 1L;
 
-                getLogger().warn("Timestamp over-run: need to reinitialize random sequence");
+                logger.warn("Timestamp over-run: need to reinitialize random sequence");
 
                 /* Clock counter is now at exactly the multiplier; no use
                  * just anding its value. So, we better get some random
@@ -384,7 +388,7 @@ public class UUIDTimer
         } else {
             delay = 5L;
         }
-        getLogger().warn("Need to wait for {} milliseconds; virtual clock advanced too far in the future", delay);
+        logger.warn("Need to wait for {} milliseconds; virtual clock advanced too far in the future", delay);
         long waitUntil = startTime + delay;
         int counter = 0;
         do {

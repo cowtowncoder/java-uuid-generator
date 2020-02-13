@@ -19,7 +19,8 @@ import com.fasterxml.uuid.TimestampSynchronizer;
 
 import java.io.*;
 
-import static com.fasterxml.uuid.Logger.getLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of {@link TimestampSynchronizer}, which uses file system
@@ -42,6 +43,9 @@ import static com.fasterxml.uuid.Logger.getLogger;
 public final class FileBasedTimestampSynchronizer
     extends TimestampSynchronizer
 {
+
+    private static final Logger logger = LoggerFactory.getLogger(FileBasedTimestampSynchronizer.class);
+    
     // // // Constants:
 
     /**
@@ -158,7 +162,7 @@ public final class FileBasedTimestampSynchronizer
          * ahead of current time, let's log something:
          */
         if (result <= 0L) {
-            getLogger().warn("Could not determine safe timer starting point: assuming current system time is acceptable");
+            logger.warn("Could not determine safe timer starting point: assuming current system time is acceptable");
         } else {
             long now = System.currentTimeMillis();
             //long diff = now - result;
@@ -168,7 +172,7 @@ public final class FileBasedTimestampSynchronizer
              * let's base check on current iteration value:
              */
             if ((now + mInterval) < result) {
-                getLogger().warn("Safe timestamp read is {} milliseconds in future, and is greater than the inteval ({})",  (result - now), mInterval);
+                logger.warn("Safe timestamp read is {} milliseconds in future, and is greater than the inteval ({})",  (result - now), mInterval);
             }
 
             /* Hmmh. Is there any way a suspiciously old timestamp could be
