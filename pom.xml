@@ -95,6 +95,7 @@ JUG supports all 3 official UUID generation methods.
         <plugin><!-- plug-in to attach source bundle in repo -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
+          <version>${version.plugin.source}</version>
            <executions>
             <execution>
               <id>attach-sources</id>
