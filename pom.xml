@@ -65,17 +65,18 @@ JUG supports all 3 official UUID generation methods.
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j.version}</version>
     </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>${slf4j.version}</version>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
     <!-- For testing, JUnit is needed -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${version.junit}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <version>${slf4j.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
