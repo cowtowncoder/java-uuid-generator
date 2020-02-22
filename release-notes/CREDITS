@@ -106,4 +106,7 @@ Ed Anuff:
 Felix W. Dekker (FWDekker@github)
   Contributed #36: Add customisable clock to UUIDTimer
   [3.3.0]
- 
+
+Andre Brait (andrebrait@github)
+  Contributed #32: Use SLF4J instead of Log4J directly
+  [4.0]
