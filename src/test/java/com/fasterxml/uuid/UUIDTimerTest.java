@@ -69,21 +69,14 @@ public class UUIDTimerTest extends TestCase
     public void testSecureRandomUUIDTimerConstructor() throws IOException
     {
         // try passing a null SecureRandom argument
-        try
-        {
+        try {
             /*UUIDTimer uuid_timer =*/ new UUIDTimer((SecureRandom)null, null);
             // if we reach here we didn't catch what we should have
             fail("Expected exception not caught");
-        }
-        catch (NullPointerException ex)
-        {
+        } catch (NullPointerException ex) {
             // caught the expected exception, this is good, just go on
         }
-        catch (Exception ex)
-        {
-            fail("Unexpected exception caught");
-        }
-        
+
         // now construct a valid case
         SecureRandom secure_random = new SecureRandom();
         UUIDTimer uuid_timer = new UUIDTimer(secure_random, null);
@@ -248,11 +241,13 @@ public class UUIDTimerTest extends TestCase
         // compare method in UUIDTimerArrayComparator (so we can be sure our
         // arrays below are 'not ordered in sorted order'
         // before we sort them).
+        @Override
         public int compare(Long uuid_timer_long1, Long uuid_timer_long2) {
             return -uuid_timer_long1.compareTo(uuid_timer_long2);
         }
         
         // we are only implementing equals because it's needed, super should do
+        @Override
         public boolean equals(Object o)
         {
             return super.equals(o);

@@ -143,8 +143,8 @@ public final class FileBasedTimestampSynchronizer
      * @return First timestamp value that was NOT locked by lock files;
      *   0L to indicate that no information was read.
      */
-    protected long initialize()
-        throws IOException
+    @Override
+    protected long initialize() throws IOException
     {
         long ts1 = mLocked1.readStamp();
         long ts2 = mLocked2.readStamp();
@@ -183,8 +183,8 @@ public final class FileBasedTimestampSynchronizer
         return result;
     }
 
-    public void deactivate()
-        throws IOException
+    @Override
+    public void deactivate() throws IOException
     {
         doDeactivate(mLocked1, mLocked2);
     }
@@ -195,6 +195,7 @@ public final class FileBasedTimestampSynchronizer
      *   ok, but this value and ones after can only be used by first
      *   calling update.
      */
+    @Override
     public long update(long now)
         throws IOException
     {

@@ -120,8 +120,7 @@ public class UUIDGeneratorTest extends TestCase
         UUID uuid_array[] = new UUID[SIZE_OF_TEST_ARRAY];
         
         // now create the array of uuids
-        for (int i = 0; i < uuid_array.length; i++)
-        {
+        for (int i = 0; i < uuid_array.length; i++) {
             uuid_array[i] = uuid_gen.generate();
         }
         
@@ -162,8 +161,7 @@ public class UUIDGeneratorTest extends TestCase
         long start_time = System.currentTimeMillis();
         
         // now create the array of uuids
-        for (int i = 0; i < uuid_array.length; i++)
-        {
+        for (int i = 0; i < uuid_array.length; i++) {
             uuid_array[i] = uuid_gen.generate();
         }
         
@@ -406,12 +404,14 @@ public class UUIDGeneratorTest extends TestCase
         // this Comparator class has a compare which orders reverse of the
         // compareTo methond in UUID (so we can be sure our arrays below are
         // 'not ordered in sorted order' before we sort them.
+        @Override
         public int compare(UUID uuid1, UUID uuid2)
         {
             return -uuid1.compareTo(uuid2);
         }
         
         // we are only implementing equals because it's needed, super should do
+        @Override
         public boolean equals(Object o)
         {
             return super.equals(o);
@@ -504,10 +504,10 @@ public class UUIDGeneratorTest extends TestCase
         final long GREGORIAN_CALENDAR_START_TO_UTC_START_OFFSET =
             122192928000000000L;
 
-        assertTrue(
-            "Start time: " + startTime +
-                " was not before the end time: " + endTime,
-            startTime < endTime);
+        // 21-Feb-2020, tatu: Not sure why this would be checked, as timestamps come from
+        //     System.currenTimeMillis()...
+        assertTrue("Start time: " + startTime +" was after the end time: " + endTime,
+            startTime <= endTime);
         
         // let's check that all uuids in the array have a timestamp which lands
         // between the start and end time
