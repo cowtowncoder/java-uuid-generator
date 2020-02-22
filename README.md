@@ -33,6 +33,13 @@ Maven coordinates are:
 </dependency>
 ```
 
+#### Dependencies
+
+The only dependency for JUG is the logging library:
+
+* For versions up to 3.x, `log4j` is used, optionally (runtime dependency)
+* For versions 4.x and up, `slf4j` API is used: logging implementation to be provided by calling application
+
 ### JDK9+ module info
 
 Since version `3.2.0`, JUG defines JDK9+ compatible `module-info.class`, with module name of `com.fasterxml.uuid`.
@@ -64,7 +71,7 @@ JavaDocs for project can be found from [Project Wiki](../../wiki).
 
 ## Compatibility
 
-JUG versions 3.1 and 3.2 require JDK 1.6 to work, mostly to be able to access local Ethernet MAC address.
+JUG versions 3.1 and later require JDK 1.6 to work, mostly to be able to access local Ethernet MAC address.
 Earlier versions (3.0 and before) worked on 1.4 (which introduced `java.util.UUID`).
 
 ## Known Issues
@@ -112,6 +119,6 @@ There are many other publicly available UUID generators. For example:
 Note that although some packages claim to be faster than others, it is not clear whether:
 
 1. Claims have been properly verified (or, if they have, can be independently verified), AND
-2. It is not likely that performance differences truly matter: JUG, for example, can generate a millions of UUID per second per core (sometimes hitting the theoretical limit of 10 million per second), and it seems unlikely that generation will be bottleneck for about any use case
+2. It is not likely that performance differences truly matter: JUG, for example, can generate a millions of UUID per second per core (sometimes hitting the theoretical limit of 10 million per second) -- and it seems unlikely that generation will be bottleneck for about any use case
 
 so it is often best to choose based on stability of packages and API.
