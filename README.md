@@ -14,7 +14,7 @@ JUG is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENS
 ## Status
 
 [![Build Status](https://travis-ci.org/cowtowncoder/java-uuid-generator.svg)](https://travis-ci.org/cowtowncoder/java-uuid-generator)
-[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/com.fasterxml.uuid/java-uuid-generator/badge.svg)](http://www.javadoc.io/doc/com.fasterxml.uuid/java-uuid-generator)
+[![Javadoc](https://javadoc.io/badge2/com.fasterxml.uuid/java-uuid-generator/javadoc.svg)](http://www.javadoc.io/doc/com.fasterxml.uuid/java-uuid-generator)
 [![Tidelift](https://tidelift.com/badges/package/maven/com.fasterxml.uuid:java-uuid-generator)](https://tidelift.com/subscription/pkg/maven-com-fasterxml-uuid-java-uuid-generator?utm_source=maven-com-fasterxml-uuid-java-uuid-generator&utm_medium=referral&utm_campaign=readme)
 
 ## Usage
