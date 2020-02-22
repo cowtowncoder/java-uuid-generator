@@ -4,7 +4,7 @@ Project: java-uuid-generator
 Releases
 ============================================================================
 
-4.0.0 (22-Feb-2020)
+4.0 (22-Feb-2020)
 
 #32: Use SLF4J instead of Log4J directly
  (implemented by Andre B)
