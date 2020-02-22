@@ -504,7 +504,10 @@ public class UUIDGeneratorTest extends TestCase
         final long GREGORIAN_CALENDAR_START_TO_UTC_START_OFFSET =
             122192928000000000L;
 
-        assertTrue("start time was not before the end time", startTime < endTime);
+        assertTrue(
+            "Start time: " + startTime +
+                " was not before the end time: " + endTime,
+            startTime < endTime);
         
         // let's check that all uuids in the array have a timestamp which lands
         // between the start and end time
@@ -537,7 +540,7 @@ public class UUIDGeneratorTest extends TestCase
                 startTime  <= uuid_time);
             assertTrue(
                 "UUID timestamp: " + uuid_time +
-                    " was not before the start time: " + endTime,
+                    " was not before the end time: " + endTime,
                 uuid_time <= endTime);            
         }
     }

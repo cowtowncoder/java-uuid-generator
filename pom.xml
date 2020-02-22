@@ -43,7 +43,7 @@ JUG supports all 3 official UUID generation methods.
   </prerequisites>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <log4j.version>1.2.17</log4j.version>
+    <slf4j.version>1.7.29</slf4j.version>
   </properties>
   <licenses>
     <license>
@@ -60,13 +60,19 @@ JUG supports all 3 official UUID generation methods.
  <!-- Dependency information -->
  
   <dependencies>
-    <dependency> <!-- log4j is optional, but needed for compilation -->
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>${log4j.version}</version>
-      <scope>provided</scope>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
     </dependency>
-    <!-- and for testing, JUnit is needed -->
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>${slf4j.version}</version>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+    <!-- For testing, JUnit is needed -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -90,6 +96,7 @@ JUG supports all 3 official UUID generation methods.
         <plugin><!-- plug-in to attach source bundle in repo -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
+          <version>${version.plugin.source}</version>
            <executions>
             <execution>
               <id>attach-sources</id>
@@ -135,12 +142,10 @@ JUG supports all 3 official UUID generation methods.
               <Import-Package>
                 com.fasterxml.uuid;version="[${project.version},${project.version}]",
                 com.fasterxml.uuid.ext;version="[${project.version},${project.version}]",
-                com.fasterxml.uuid.impl;version="[${project.version},${project.version}]"
+                com.fasterxml.uuid.impl;version="[${project.version},${project.version}]",
+                org.slf4j;version="[${slf4j.version},)"
               </Import-Package>
               <Private-Package />
-              <DynamicImport-Package>
-                org.apache.log4j;version="[${log4j.version},1.3)"
-              </DynamicImport-Package>
             </instructions>
           </configuration>
        </plugin>

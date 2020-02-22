@@ -4,9 +4,11 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.UUID;
 
-import com.fasterxml.uuid.Logger;
 import com.fasterxml.uuid.StringArgGenerator;
 import com.fasterxml.uuid.UUIDType;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of UUID generator that uses one of name-based generation methods
@@ -19,6 +21,9 @@ import com.fasterxml.uuid.UUIDType;
  */
 public class NameBasedGenerator extends StringArgGenerator
 {
+
+    private static final Logger logger = LoggerFactory.getLogger(NameBasedGenerator.class);
+    
     public final static Charset _utf8;
     static {
         _utf8 = Charset.forName("UTF-8");
@@ -91,7 +96,7 @@ public class NameBasedGenerator extends StringArgGenerator
             } else {
                 // Hmmh... error out? Let's default to SHA-1, but log a warning
                 type = UUIDType.NAME_BASED_SHA1;
-                Logger.logWarning("Could not determine type of Digester from '"+typeStr+"'; assuming 'SHA-1' type");
+                logger.warn("Could not determine type of Digester from '{}'; assuming 'SHA-1' type", typeStr);
             }
         }
         _digester = digester;
