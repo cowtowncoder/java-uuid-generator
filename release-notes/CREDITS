@@ -110,3 +110,7 @@ Felix W. Dekker (FWDekker@github)
 Andre Brait (andrebrait@github)
   Contributed #32: Use SLF4J instead of Log4J directly
   [4.0]
+
+Pascal Schumacher (PascalSchumacher@github)
+  * Reported #37: Problematic OSGI version range for slf4j dependency
+  [4.0.1]

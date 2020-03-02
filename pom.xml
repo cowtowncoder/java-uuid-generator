@@ -143,7 +143,7 @@ JUG supports all 3 official UUID generation methods.
                 com.fasterxml.uuid;version="[${project.version},${project.version}]",
                 com.fasterxml.uuid.ext;version="[${project.version},${project.version}]",
                 com.fasterxml.uuid.impl;version="[${project.version},${project.version}]",
-                org.slf4j;version="[${slf4j.version},)"
+                org.slf4j;version="[${slf4j.version},2)"
               </Import-Package>
               <Private-Package />
             </instructions>
