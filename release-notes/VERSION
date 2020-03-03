@@ -4,7 +4,7 @@ Project: java-uuid-generator
 Releases
 ============================================================================
 
-4.0.1 (not yet released)
+4.0.1 (03-Mar-2020)
 
 #37: Problematic OSGI version range for slf4j dependency
  (reported by Pascal S)
