@@ -286,7 +286,7 @@ public class EthernetAddress
     /**
      * Factory method that can be used to construct a random multicast
      * address; to be used in cases where there is no "real" ethernet
-     * address to use. Address to generate should be a multicase address
+     * address to use. Address to generate should be a multicast address
      * to avoid accidental collision with real manufacturer-assigned
      * MAC addresses.
      *<p>
@@ -301,7 +301,7 @@ public class EthernetAddress
     /**
      * Factory method that can be used to construct a random multicast
      * address; to be used in cases where there is no "real" ethernet
-     * address to use. Address to generate should be a multicase address
+     * address to use. Address to generate should be a multicast address
      * to avoid accidental collision with real manufacturer-assigned
      * MAC addresses.
      *<p>
