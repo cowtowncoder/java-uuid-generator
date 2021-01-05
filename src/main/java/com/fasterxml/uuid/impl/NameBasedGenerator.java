@@ -78,14 +78,13 @@ public class NameBasedGenerator extends StringArgGenerator
      *   Note that this argument is optional; if no namespace is needed
      *   (for example when name includes namespace prefix), null may be passed.
      * @param digester Hashing algorithm to use. 
-
-    */
+     */
     public NameBasedGenerator(UUID namespace, MessageDigest digester, UUIDType type)
     {
         _namespace = namespace;
         // And default digester SHA-1
         if (digester == null) {
-            
+            throw new IllegalArgumentException("Digester not optional: cannot pass `null`");
         }
         if (type == null) {
             String typeStr = digester.getAlgorithm();
