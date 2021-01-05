@@ -420,6 +420,11 @@ public class EthernetAddress
         return ((EthernetAddress) o)._address == _address;
     }
 
+    @Override
+    public int hashCode() {
+        return (int) _address ^ (int) (_address >>> 32);
+    }
+
     /**
      * Method that compares this EthernetAddress to one passed in as
      * argument. Comparison is done simply by comparing individual

@@ -248,7 +248,7 @@ public class Jug
             }
             break;
         case 'n': // name-based
-            if (name == null) {
+            if (nameSpace == null) {
                 System.err.println("--name-space (-s) - argument missing when using method that requires it, exiting.");
                 System.exit(1);
             }
@@ -265,7 +265,7 @@ public class Jug
                     nsUUID = NameBasedGenerator.NAMESPACE_DNS;
                 } else {
                     System.err.println("Unrecognized namespace '"+orig
-                                       +"'; only DNS and URL allowed for name-based generation.");
+                            +"'; only DNS and URL allowed for name-based generation.");
                     System.exit(1);
                 }
             }
@@ -278,9 +278,8 @@ public class Jug
             System.out.println();
         }
 
-        /* When measuring performance, make sure that the random number
-         * generator is initialized prior to measurements...
-         */
+        // When measuring performance, make sure that the random number
+        // generator is initialized prior to measurements...
         long now = 0L;
 
         if (performance) {
