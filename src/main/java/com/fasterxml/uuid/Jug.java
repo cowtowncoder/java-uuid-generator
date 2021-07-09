@@ -299,7 +299,7 @@ public class Jug
 
         for (int i = 0; i < genCount; ++i) {
             UUID uuid = (nameArgGenerator == null) ?
-                    noArgGenerator.generate() : nameArgGenerator.generate(name);
+                    noArgGenerator.generate() : nameArgGenerator.generate(name); // lgtm [java/dereferenced-value-may-be-null]
             if (verbose) {
                 System.out.print("UUID: ");
             }
