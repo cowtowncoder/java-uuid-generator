@@ -30,8 +30,6 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import com.fasterxml.uuid.UUIDTimer;
-
 /**
  * JUnit Test class for the com.fasterxml.uuid.UUIDTimer class.
  *
@@ -235,7 +233,7 @@ public class UUIDTimerTest extends TestCase
         return array_of_longs;
     }
 
-    private class ReverseOrderUUIDTimerLongComparator implements Comparator<Long>
+    class ReverseOrderUUIDTimerLongComparator implements Comparator<Long>
     {
         // this Comparator class has a compare which orders reverse of the
         // compare method in UUIDTimerArrayComparator (so we can be sure our

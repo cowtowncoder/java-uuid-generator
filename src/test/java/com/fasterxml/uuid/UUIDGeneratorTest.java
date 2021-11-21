@@ -26,9 +26,6 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 
-import com.fasterxml.uuid.EthernetAddress;
-import com.fasterxml.uuid.Generators;
-import com.fasterxml.uuid.UUIDType;
 import com.fasterxml.uuid.impl.UUIDUtil;
 import com.fasterxml.uuid.impl.NameBasedGenerator;
 import com.fasterxml.uuid.impl.RandomBasedGenerator;
@@ -399,7 +396,8 @@ public class UUIDGeneratorTest extends TestCase
     /**************************************************************************
      * Begin Private Helper Methods for use in tests 
      *************************************************************************/
-    private class ReverseOrderUUIDComparator implements Comparator<UUID>
+
+    class ReverseOrderUUIDComparator implements Comparator<UUID>
     {
         // this Comparator class has a compare which orders reverse of the
         // compareTo methond in UUID (so we can be sure our arrays below are

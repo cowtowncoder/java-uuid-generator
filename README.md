@@ -60,7 +60,7 @@ For direct downloads, check out [Project Wiki](../../wiki).
 `java.util.UUID` values are often passed as java `String`s or `byte[]`s (byte arrays),
 and conversions are needed between representations.
 JUG has optimized conversion functionality available via class `UUIDUtil` (package
-`com.fasterxml.uuid.impl`:
+`com.fasterxml.uuid.impl`), used as follows:
 
 ```
 UUID uuidFromStr = UUIDUtil.uuid("ebb8e8fe-b1b1-11d7-8adb-00b0d078fa18");
@@ -68,7 +68,27 @@ byte[] rawUuidBytes = ...; // byte array with 16 bytes
 UUID uuidFromBytes = UUIDUtil.uuid(rawUuidBytes)
 ```
 
+Note that while JDK has functionality for constructing `UUID` from `String`, like so:
 
+```
+UUID uuidFromStr = UUID.fromString("ebb8e8fe-b1b1-11d7-8adb-00b0d078fa18");
+```
+
+it is rather slower than JUG version: for more information, read
+[Measuring performance of Java UUID.fromString()](https://cowtowncoder.medium.com/measuring-performance-of-java-uuid-fromstring-or-lack-thereof-d16a910fa32a).
+
+#### Converting `java.util.UUID` values into byte[]
+
+At other times you may want to convert from `java.util.UUID` into external serialization.
+`UUIDUtil` class has further methods for efficient conversions:
+
+```
+byte[] asBytes = UUIDUtil.asByteArray(uuid);
+// or if you have longer buffer already
+byte[] outputBuffer = new byte[1000];
+// append at position #100
+UUIDUtil.toByteArray(uuid, outputBuffer, 100);
+```
 
 #### Generating UUIDs
 
