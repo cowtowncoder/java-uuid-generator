@@ -93,7 +93,6 @@ JUG supports all 3 official UUID generation methods.
         <plugin><!-- plug-in to attach source bundle in repo -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>${version.plugin.source}</version>
            <executions>
             <execution>
               <id>attach-sources</id>
@@ -108,7 +107,13 @@ JUG supports all 3 official UUID generation methods.
        <plugin>
          <groupId>org.apache.maven.plugins</groupId>
          <artifactId>maven-javadoc-plugin</artifactId>
-         <version>${version.plugin.javadoc}</version>
+         <!-- 20-Nov-2021, tatu: No idea why this is needed, but it is, as per:
+
+https://stackoverflow.com/questions/37958104/maven-javadoc-no-source-files-for-package          
+          -->
+         <configuration>
+           <sourcepath>src/main/java</sourcepath>         
+         </configuration>
          <executions>
              <execution>
                   <id>attach-javadocs</id>
