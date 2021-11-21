@@ -13,13 +13,19 @@ JUG is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENS
 
 ## Status
 
-[![Build Status](https://travis-ci.org/cowtowncoder/java-uuid-generator.svg)](https://travis-ci.org/cowtowncoder/java-uuid-generator)
-[![Javadoc](https://javadoc.io/badge2/com.fasterxml.uuid/java-uuid-generator/javadoc.svg)](http://www.javadoc.io/doc/com.fasterxml.uuid/java-uuid-generator)
-[![Tidelift](https://tidelift.com/badges/package/maven/com.fasterxml.uuid:java-uuid-generator)](https://tidelift.com/subscription/pkg/maven-com-fasterxml-uuid-java-uuid-generator?utm_source=maven-com-fasterxml-uuid-java-uuid-generator&utm_medium=referral&utm_campaign=readme)
+| Type | Status |
+| ---- | ------ |
+| Build (CI) | [![Build (github)](https://github.com/cowtowncoder/java-uuid-generator/actions/workflows/main.yml/badge.svg)](https://github.com/cowtowncoder/java-uuid-generator/actions/workflows/main.yml) |
+| Artifact |  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.fasterxml.uuid/java-uuid-generator/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.fasterxml.uuid/java-uuid-generator/) |
+| OSS Sponsorship | None yet |
+| Javadocs | [![Javadoc](https://javadoc.io/badge/com.fasterxml.uuid/java-uuid-generator.svg)](http://www.javadoc.io/doc/com.fasterxml.uuid/java-uuid-generator)
+| Code coverage (6.x) | [![codecov.io](https://codecov.io/github/cowtowncoder/java-uuid-generator/coverage.svg?branch=master)](https://codecov.io/github/cowtowncoder/java-uuid-generator?branch=master) |
+| CodeQ (LGTM.com) | [![LGTM alerts](https://img.shields.io/lgtm/alerts/g/cowtowncoder/java-uuid-generator.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cowtowncoder/java-uuid-generator/alerts/) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/cowtowncoder/java-uuid-generator.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cowtowncoder/java-uuid-generator/context:java) |
 
 ## Usage
 
-JUG can be used as a command-line tool (via class 'com.fasterxml.uuid.Jug`), or as a pluggable component.
+JUG can be used as a command-line tool (via class 'com.fasterxml.uuid.Jug`),
+or as a pluggable component.
 
 ### Via Maven
 
@@ -29,7 +35,7 @@ Maven coordinates are:
 <dependency>
   <groupId>com.fasterxml.uuid</groupId>
   <artifactId>java-uuid-generator</artifactId>
-  <version>4.0</version>
+  <version>4.0.1</version>
 </dependency>
 ```
 
@@ -49,6 +55,23 @@ Since version `3.2.0`, JUG defines JDK9+ compatible `module-info.class`, with mo
 For direct downloads, check out [Project Wiki](../../wiki).
 
 ### Using JUG
+
+#### Creating `java.util.UUID` values from String, byte[]
+
+`java.util.UUID` values are often passed as java `String`s or `byte[]`s (byte arrays),
+and conversions are needed between representations.
+JUG has optimized conversion functionality available via class `UUIDUtil` (package
+`com.fasterxml.uuid.impl`:
+
+```
+UUID uuidFromStr = UUIDUtil.uuid("ebb8e8fe-b1b1-11d7-8adb-00b0d078fa18");
+byte[] rawUuidBytes = ...; // byte array with 16 bytes
+UUID uuidFromBytes = UUIDUtil.uuid(rawUuidBytes)
+```
+
+
+
+#### Generating UUIDs
 
 Generation itself is done by first selecting a kind of generator to use, and then calling its `generate()` method,
 for example:
