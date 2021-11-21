@@ -5,9 +5,8 @@ efficiently, sorting and so on.
 It generates UUIDs according to the [UUID specification (RFC-4122)](https://tools.ietf.org/html/rfc4122)
 (also see [Wikipedia UUID page](http://en.wikipedia.org/wiki/UUID) for more explanation)
 
-JUG was written by Tatu Saloranta (<tatu.saloranta@iki.fi>) originally in 2002 and has been updated over years.
-In addition, many other individuals have helped fix bugs and implement new features: please see `release-notes/CREDITS`
-for the complete list.
+JUG was written by Tatu Saloranta (<tatu.saloranta@iki.fi>) originally in 2002 and has been updated over the years.
+In addition, many other individuals have helped fix bugs and implement new features: please see `release-notes/CREDITS` for the complete list.
 
 JUG is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
 
@@ -24,7 +23,7 @@ JUG is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENS
 
 ## Usage
 
-JUG can be used as a command-line tool (via class 'com.fasterxml.uuid.Jug`),
+JUG can be used as a command-line tool (via class `com.fasterxml.uuid.Jug`),
 or as a pluggable component.
 
 ### Via Maven
