@@ -6,7 +6,7 @@
   <parent>
       <groupId>com.fasterxml</groupId>
       <artifactId>oss-parent</artifactId>
-      <version>41</version>
+      <version>43</version>
   </parent>
   <groupId>com.fasterxml.uuid</groupId>
   <artifactId>java-uuid-generator</artifactId>
@@ -38,9 +38,6 @@ JUG supports all 3 official UUID generation methods.
     <url>http://github.com/cowtowncoder/java-uuid-generator/issues</url>
   </issueManagement>
 
-  <prerequisites>
-    <maven>2.2.1</maven>
-  </prerequisites>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j.version>1.7.29</slf4j.version>
