@@ -219,6 +219,8 @@ public class UUIDUtil
             return UUIDType.RANDOM_BASED;
         case 5:
             return UUIDType.NAME_BASED_SHA1;
+        case 6:
+            return UUIDType.DB_LOCALITY;
         }
         // not recognized: return null
         return null;
