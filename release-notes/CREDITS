@@ -114,3 +114,7 @@ Andre Brait (andrebrait@github)
 Pascal Schumacher (PascalSchumacher@github)
   * Reported #37: Problematic OSGI version range for slf4j dependency
   [4.0.1]
+
+Hal Hildebrand (Hellblazer@github)
+  * Contributed #41: Add support for Proposed type v6 (reordered timestamp)
+  [4.1.0]

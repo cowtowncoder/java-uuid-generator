@@ -99,20 +99,23 @@ public class TimeBasedReorderedGenerator extends NoArgGenerator
     @Override
     public UUID generate()
     {
+        // Ok, get 60-bit timestamp (4 MSB are ignored)
         final long rawTimestamp = _timer.getTimestamp();
-        // Time field components are kind of shuffled, need to slice:
-        int clockHi = (int) (rawTimestamp >>> 32);
-        int clockLo = (int) rawTimestamp;
-        // and dice
-        int midhi = (clockHi << 16) | (clockHi >>> 16);
-        // need to squeeze in type (4 MSBs in byte 6, clock hi)
-        midhi &= ~0xF000; // remove high nibble of 6th byte
-        midhi |= 0x6000; // type 6
-        long midhiL = (long) midhi;
-        midhiL = ((midhiL << 32) >>> 32); // to get rid of sign extension
+
+        // First: discard 4 MSB, next 32 bits (top of 60-bit timestamp) form the
+        // highest 32-bit segments
+        final long timestampHigh = (rawTimestamp >>> 28) << 32;
+        // and then bottom 28 bits split into mid (16 bits), low (12 bits)
+        final int timestampLow = (int) rawTimestamp;
+        // and then low part gets mixed with variant identifier
+        final int timeBottom = (((timestampLow >> 12) & 0xFFFF) << 16)
+                // and final 12 bits mixed with variant identifier
+                | 0x6000 | (timestampLow & 0xFFF);
+        long timeBottomL = (long) timeBottom;
+        timeBottomL = ((timeBottomL << 32) >>> 32); // to get rid of sign extension
+
         // and reconstruct
-        long l1 = (((long) clockLo) << 32) | midhiL;
-        // last detail: must force 2 MSB to be '10'
+        long l1 = timestampHigh | timeBottomL;
         return new UUID(l1, _uuidL2);
     }
 }

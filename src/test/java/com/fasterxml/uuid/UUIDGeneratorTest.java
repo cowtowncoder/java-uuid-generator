@@ -438,7 +438,7 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForUniqueness(uuid_array);
         
         // check that all uuids have timestamps between the start and end time
-        checkUUIDArrayForCorrectCreationTime(uuid_array, start_time, end_time);
+        checkUUIDArrayForCorrectCreationTimeReorder(uuid_array, start_time, end_time);
     }
     
     /**
@@ -487,7 +487,7 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForUniqueness(uuid_array);
         
         // check that all uuids have timestamps between the start and end time
-        checkUUIDArrayForCorrectCreationTime(uuid_array, start_time, end_time);
+        checkUUIDArrayForCorrectCreationTimeReorder(uuid_array, start_time, end_time);
         
         // check that all UUIDs have the correct ethernet address in the UUID
         checkUUIDArrayForCorrectEthernetAddress(uuid_array, ethernet_address);
@@ -565,7 +565,7 @@ public class UUIDGeneratorTest extends TestCase
     }
     
     private void checkUUIDArrayForCorrectVariantAndVersion(UUID[] uuidArray,
-                                                           UUIDType expectedType)
+            UUIDType expectedType)
     {
         // let's check that all the UUIDs are valid type-X UUIDs with the
         // correct variant according to the specification.
@@ -606,15 +606,16 @@ public class UUIDGeneratorTest extends TestCase
         //     System.currenTimeMillis()...
         assertTrue("Start time: " + startTime +" was after the end time: " + endTime,
             startTime <= endTime);
-        
+
         // let's check that all uuids in the array have a timestamp which lands
         // between the start and end time
         for (int i = 0; i < uuidArray.length; i++){
             byte[] temp_uuid = UUIDUtil.asByteArray(uuidArray[i]);
-            
+
             // first we'll collect the UUID time stamp which is
             // the number of 100-nanosecond intervals since
             // 00:00:00.00 15 October 1582
+
             long uuid_time = 0L;
             uuid_time |= ((temp_uuid[3] & 0xF0L) <<  0);
             uuid_time |= ((temp_uuid[2] & 0xFFL) <<  8);
@@ -640,6 +641,60 @@ public class UUIDGeneratorTest extends TestCase
                 "UUID timestamp: " + uuid_time +
                     " was not before the end time: " + endTime,
                 uuid_time <= endTime);            
+        }
+    }
+
+    // Modified version for Variant 6 (reordered timestamps)
+    private void checkUUIDArrayForCorrectCreationTimeReorder(UUID[] uuidArray,
+            long startTime, long endTime)
+    {
+        // we need to convert from 100-nanosecond units (as used in UUIDs)
+        // to millisecond units as used in UTC based time
+        final long MILLI_CONVERSION_FACTOR = 10000L;
+        // Since System.currentTimeMillis() returns time epoc time
+        // (from 1-Jan-1970), and UUIDs use time from the beginning of
+        // Gregorian calendar (15-Oct-1582) we have a offset for correction
+        final long GREGORIAN_CALENDAR_START_TO_UTC_START_OFFSET =
+            122192928000000000L;
+
+        // 21-Feb-2020, tatu: Not sure why this would be checked, as timestamps come from
+        //     System.currenTimeMillis()...
+        assertTrue("Start time: " + startTime +" was after the end time: " + endTime,
+            startTime <= endTime);
+
+        // let's check that all uuids in the array have a timestamp which lands
+        // between the start and end time
+        for (int i = 0; i < uuidArray.length; i++){
+            byte[] temp_uuid = UUIDUtil.asByteArray(uuidArray[i]);
+
+            // first we'll collect the UUID time stamp which is
+            // the number of 100-nanosecond intervals since
+            // 00:00:00.00 15 October 1582
+            long uuid_time = 0L;
+            uuid_time |= ((temp_uuid[0] & 0xFFL) << 52);
+            uuid_time |= ((temp_uuid[1] & 0xFFL) << 44);
+            uuid_time |= ((temp_uuid[2] & 0xFFL) << 36);
+            uuid_time |= ((temp_uuid[3] & 0xFFL) << 28);
+            uuid_time |= ((temp_uuid[4] & 0xFFL) << 20);
+            uuid_time |= ((temp_uuid[5] & 0xFFL) << 12);
+            uuid_time |= ((temp_uuid[6] & 0x0FL) << 8);
+            uuid_time |= ((temp_uuid[7] & 0xFFL));
+
+            // first we'll remove the gregorian offset
+            uuid_time -= GREGORIAN_CALENDAR_START_TO_UTC_START_OFFSET;
+
+            // and convert to milliseconds as the system clock is in millis
+            uuid_time /= MILLI_CONVERSION_FACTOR;
+
+            // now check that the times are correct
+            assertTrue(
+                "Start time: " + startTime +
+                    " was not before UUID timestamp: " + uuid_time,
+                startTime  <= uuid_time);
+            assertTrue(
+                "UUID timestamp: " + uuid_time +
+                    " was not before the end time: " + endTime,
+                uuid_time <= endTime);
         }
     }
 
