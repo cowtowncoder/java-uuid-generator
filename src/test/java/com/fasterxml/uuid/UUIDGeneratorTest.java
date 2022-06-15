@@ -29,7 +29,7 @@ import junit.textui.TestRunner;
 import com.fasterxml.uuid.impl.UUIDUtil;
 import com.fasterxml.uuid.impl.NameBasedGenerator;
 import com.fasterxml.uuid.impl.RandomBasedGenerator;
-import com.fasterxml.uuid.impl.DbLocalityTimeBasedGenerator;
+import com.fasterxml.uuid.impl.TimeBasedReorderedGenerator;
 import com.fasterxml.uuid.impl.TimeBasedGenerator;
 
 /**
@@ -395,16 +395,16 @@ public class UUIDGeneratorTest extends TestCase
     }
     
     /**
-     * Test of generateDbTimeBasedUUID() method,
+     * Test of generateTimeBasedReorderedUUID() method,
      * of class com.fasterxml.uuid.UUIDGenerator.
      */
-    public void testDbGenerateTimeBasedUUID()
+    public void testGenerateTimeBasedReorderedUUID()
     {
         // this test will attempt to check for reasonable behavior of the
         // generateTimeBasedUUID method
         
         // we need a instance to use
-        DbLocalityTimeBasedGenerator uuid_gen = Generators.dbTimeBasedGenerator();
+        TimeBasedReorderedGenerator uuid_gen = Generators.timeBasedReorderedGenerator();
         
         // first check that given a number of calls to generateTimeBasedUUID,
         // all returned UUIDs order after the last returned UUID
@@ -429,7 +429,7 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForNonNullUUIDs(uuid_array);
 
         // check that all the uuids were correct variant and version (type-1)
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.DB_LOCALITY);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.TIME_BASED_REORDERED);
 
         // check that all the uuids were generated with correct order
         checkUUIDArrayForCorrectOrdering(uuid_array);
@@ -442,10 +442,10 @@ public class UUIDGeneratorTest extends TestCase
     }
     
     /**
-     * Test of generateDbTimeBasedUUID(EthernetAddress) method,
+     * Test of generateTimeBasedReorderedUUID(EthernetAddress) method,
      * of class com.fasterxml.uuid.UUIDGenerator.
      */
-    public void testDbGenerateTimeBasedUUIDWithEthernetAddress()
+    public void testGenerateTimeBasedReorderedUUIDWithEthernetAddress()
     {
         // this test will attempt to check for reasonable behavior of the
         // generateTimeBasedUUID(EthernetAddress) method
@@ -453,7 +453,7 @@ public class UUIDGeneratorTest extends TestCase
             new EthernetAddress("87:F5:93:06:D3:0C");
         
         // we need a instance to use
-        DbLocalityTimeBasedGenerator uuid_gen = Generators.dbTimeBasedGenerator(ethernet_address);
+        TimeBasedReorderedGenerator uuid_gen = Generators.timeBasedReorderedGenerator(ethernet_address);
         
         // check that given a number of calls to generateTimeBasedUUID,
         // all returned UUIDs order after the last returned UUID
@@ -478,7 +478,7 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForNonNullUUIDs(uuid_array);
         
         // check that all the uuids were correct variant and version (type-1)
-        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.DB_LOCALITY);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.TIME_BASED_REORDERED);
 
         // check that all the uuids were generated with correct order
         checkUUIDArrayForCorrectOrdering(uuid_array);

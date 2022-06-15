@@ -17,7 +17,7 @@ import com.fasterxml.uuid.*;
  *
  * @since 3.1
  */
-public class DbLocalityTimeBasedGenerator extends NoArgGenerator
+public class TimeBasedReorderedGenerator extends NoArgGenerator
 {
     
     public static int BYTE_OFFSET_TIME_HIGH = 0;
@@ -57,7 +57,7 @@ public class DbLocalityTimeBasedGenerator extends NoArgGenerator
      *   spatially unique part of UUID. If system has more than one NIC,
      */
     
-    public DbLocalityTimeBasedGenerator(EthernetAddress ethAddr, UUIDTimer timer)
+    public TimeBasedReorderedGenerator(EthernetAddress ethAddr, UUIDTimer timer)
     {
         byte[] uuidBytes = new byte[16];
         if (ethAddr == null) {
@@ -82,7 +82,7 @@ public class DbLocalityTimeBasedGenerator extends NoArgGenerator
      */
 
     @Override
-    public UUIDType getType() { return UUIDType.DB_LOCALITY; }
+    public UUIDType getType() { return UUIDType.TIME_BASED_REORDERED; }
 
     public EthernetAddress getEthernetAddress() { return _ethernetAddress; }
     

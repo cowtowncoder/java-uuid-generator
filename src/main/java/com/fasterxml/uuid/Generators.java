@@ -22,7 +22,7 @@ import java.util.*;
 
 import com.fasterxml.uuid.impl.NameBasedGenerator;
 import com.fasterxml.uuid.impl.RandomBasedGenerator;
-import com.fasterxml.uuid.impl.DbLocalityTimeBasedGenerator;
+import com.fasterxml.uuid.impl.TimeBasedReorderedGenerator;
 import com.fasterxml.uuid.impl.TimeBasedGenerator;
 
 /**
@@ -183,42 +183,42 @@ public class Generators
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 1 (time+location based).
-     * Since no Ethernet address is passed, a bogus broadcast address will be
-     * constructed for purpose of UUID generation; usually it is better to
-     * instead access one of host's NIC addresses using
-     * {@link EthernetAddress#fromInterface} which will use one of available
-     * MAC (Ethernet) addresses available.
-    */
-    public static DbLocalityTimeBasedGenerator dbTimeBasedGenerator()
+     * variant 6 (time+location based, reordered for DB locality). Since no Ethernet
+     * address is passed, a bogus broadcast address will be constructed for purpose
+     * of UUID generation; usually it is better to instead access one of host's NIC
+     * addresses using {@link EthernetAddress#fromInterface} which will use one of
+     * available MAC (Ethernet) addresses available.
+     */
+    public static TimeBasedReorderedGenerator timeBasedReorderedGenerator()
     {
-        return dbTimeBasedGenerator(null);
+        return timeBasedReorderedGenerator(null);
     }
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 1 (time+location based), using specified Ethernet address
-     * as the location part of UUID.
-     * No additional external synchronization is used.
+     * variant 6 (time+location based, reordered for DB locality), using specified
+     * Ethernet address as the location part of UUID. No additional external
+     * synchronization is used.
      */
-    public static DbLocalityTimeBasedGenerator dbTimeBasedGenerator(EthernetAddress ethernetAddress)
+    public static TimeBasedReorderedGenerator timeBasedReorderedGenerator(EthernetAddress ethernetAddress)
     {
-        return dbTimeBasedGenerator(ethernetAddress, (UUIDTimer) null);
+        return timeBasedReorderedGenerator(ethernetAddress, (UUIDTimer) null);
     }
-    
+
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 1 (time+location based), using specified Ethernet address
-     * as the location part of UUID, and specified {@link UUIDTimer} instance
-     * (which includes embedded synchronizer that defines synchronization behavior).
+     * variant 6 (time+location based, reordered for DB locality), using specified
+     * Ethernet address as the location part of UUID, and specified
+     * {@link UUIDTimer} instance (which includes embedded synchronizer that defines
+     * synchronization behavior).
      */
-    public static DbLocalityTimeBasedGenerator dbTimeBasedGenerator(EthernetAddress ethernetAddress,
+    public static TimeBasedReorderedGenerator timeBasedReorderedGenerator(EthernetAddress ethernetAddress,
             UUIDTimer timer)
     {
         if (timer == null) {
             timer = sharedTimer();
         }
-        return new DbLocalityTimeBasedGenerator(ethernetAddress, timer);
+        return new TimeBasedReorderedGenerator(ethernetAddress, timer);
     }
 
     /*
