@@ -29,6 +29,7 @@ import junit.textui.TestRunner;
 import com.fasterxml.uuid.impl.UUIDUtil;
 import com.fasterxml.uuid.impl.NameBasedGenerator;
 import com.fasterxml.uuid.impl.RandomBasedGenerator;
+import com.fasterxml.uuid.impl.TimeBasedEpochGenerator;
 import com.fasterxml.uuid.impl.TimeBasedReorderedGenerator;
 import com.fasterxml.uuid.impl.TimeBasedGenerator;
 
@@ -235,6 +236,53 @@ public class UUIDGeneratorTest extends TestCase
     }
     
     /**
+     * Test of generateTimeBasedEpochUUID() method,
+     * of class com.fasterxml.uuid.UUIDGenerator.
+     */
+    public void testGenerateTimeBasedEpochUUID()
+    {
+        // this test will attempt to check for reasonable behavior of the
+        // generateTimeBasedUUID method
+        
+        // we need a instance to use
+        TimeBasedEpochGenerator uuid_gen = Generators.timeBasedEpochGenerator();
+        
+        // first check that given a number of calls to generateTimeBasedEpochUUID,
+        // all returned UUIDs order after the last returned UUID
+        // we'll check this by generating the UUIDs into one array and sorting
+        // then in another and checking the order of the two match
+        // change the number in the array statement if you want more or less
+        // UUIDs to be generated and tested
+        UUID uuid_array[] = new UUID[SIZE_OF_TEST_ARRAY];
+        
+        // before we generate all the uuids, lets get the start time
+        long start_time = System.currentTimeMillis();
+        
+        // now create the array of uuids
+        for (int i = 0; i < uuid_array.length; i++) {
+            uuid_array[i] = uuid_gen.generate();
+        }
+        
+        // now capture the end time
+        long end_time = System.currentTimeMillis();
+        
+        // check that none of the UUIDs are null
+        checkUUIDArrayForNonNullUUIDs(uuid_array);
+
+        // check that all the uuids were correct variant and version (type-1)
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.TIME_BASED_EPOCH);
+
+        // check that all the uuids were generated with correct order
+        checkUUIDArrayForCorrectOrdering(uuid_array);
+        
+        // check that all uuids were unique
+        checkUUIDArrayForUniqueness(uuid_array);
+        
+        // check that all uuids have timestamps between the start and end time
+//        checkUUIDArrayForCorrectCreationTimeReorder(uuid_array, start_time, end_time);
+    }
+    
+    /**
      * Test of generateNameBasedUUID(UUID, String)
      * method, of class com.fasterxml.uuid.UUIDGenerator.
      */
@@ -406,7 +454,7 @@ public class UUIDGeneratorTest extends TestCase
         // we need a instance to use
         TimeBasedReorderedGenerator uuid_gen = Generators.timeBasedReorderedGenerator();
         
-        // first check that given a number of calls to generateTimeBasedUUID,
+        // first check that given a number of calls to generateTimeBasedReorderedUUID,
         // all returned UUIDs order after the last returned UUID
         // we'll check this by generating the UUIDs into one array and sorting
         // then in another and checking the order of the two match
@@ -455,7 +503,7 @@ public class UUIDGeneratorTest extends TestCase
         // we need a instance to use
         TimeBasedReorderedGenerator uuid_gen = Generators.timeBasedReorderedGenerator(ethernet_address);
         
-        // check that given a number of calls to generateTimeBasedUUID,
+        // check that given a number of calls to generateTimeBasedReorderedUUID,
         // all returned UUIDs order after the last returned UUID
         // we'll check this by generating the UUIDs into one array and sorting
         // then in another and checking the order of the two match

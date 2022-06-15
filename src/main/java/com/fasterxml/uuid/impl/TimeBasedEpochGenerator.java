@@ -112,6 +112,9 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
         // and reconstruct
         long l1 = (((long) clockLo) << 32) | midhiL;
         // last detail: must force 2 MSB to be '10'
+        byte b = (byte) (buffer[2] & 0x3F); // remove 2 MSB
+        b |= 0x80; // set as '10'
+        buffer[2] = (byte) b;
         long _uuidL2 = _toLong(buffer, 2); 
         return new UUID(l1, _uuidL2);
     }

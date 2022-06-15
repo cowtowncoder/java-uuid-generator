@@ -22,6 +22,7 @@ import java.util.*;
 
 import com.fasterxml.uuid.impl.NameBasedGenerator;
 import com.fasterxml.uuid.impl.RandomBasedGenerator;
+import com.fasterxml.uuid.impl.TimeBasedEpochGenerator;
 import com.fasterxml.uuid.impl.TimeBasedReorderedGenerator;
 import com.fasterxml.uuid.impl.TimeBasedGenerator;
 
@@ -112,6 +113,62 @@ public class Generators
             }
         }
         return new NameBasedGenerator(namespace, digester, type);
+    }
+    
+    // // Epoch Time+random generation
+
+    /**
+     * Factory method for constructing UUID generator that generates UUID using
+     * variant 7 (Unix Epoch time+random based).
+    */
+    public static TimeBasedEpochGenerator timeBasedEpochGenerator()
+    {
+        return timeBasedEpochGenerator(null);
+    }
+
+    /**
+     * Factory method for constructing UUID generator that generates UUID using
+     * variant 7 (time+random based), using specified Ethernet address
+     * as the location part of UUID.
+     * No additional external synchronization is used.
+     */
+    public static TimeBasedEpochGenerator timeBasedEpochGenerator(Random random)
+    {
+        return timeBasedEpochGenerator(random, (UUIDTimer) null);
+    }
+    
+    /**
+     * Factory method for constructing UUID generator that generates UUID using
+     * variant 7 (time+random based), using specified Random instance
+     * supplying the random part of UUID, and specified synchronizer (which may add
+     * additional restrictions to guarantee system-wide uniqueness).
+     * 
+     * @see com.fasterxml.uuid.ext.FileBasedTimestampSynchronizer
+     */
+    public static TimeBasedEpochGenerator timeBasedGenerator(Random random,
+            TimestampSynchronizer sync)
+    {
+        UUIDTimer timer;
+        try {
+            timer = new UUIDTimer(new Random(System.currentTimeMillis()), sync);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Failed to create UUIDTimer with specified synchronizer: "+e.getMessage(), e);
+        }
+        return timeBasedEpochGenerator(random, timer);
+    }
+    /**
+     * Factory method for constructing UUID generator that generates UUID using
+     * variant 7 (time+random based), using specified Random instance
+     * supplying the random part of UUID, and specified {@link UUIDTimer} instance
+     * (which includes embedded synchronizer that defines synchronization behavior).
+     */
+    public static TimeBasedEpochGenerator timeBasedEpochGenerator(Random random,
+            UUIDTimer timer)
+    {
+        if (timer == null) {
+            timer = sharedTimer();
+        }
+        return new TimeBasedEpochGenerator(timer, random);
     }
     
     // // Time+location-based generation
