@@ -50,13 +50,6 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
      * Random number generator that this generator uses.
      */
     protected final Random _random;
-
-    /**
-     * Looks like {@link SecureRandom} implementation is more efficient
-     * using single call access (compared to basic {@link java.util.Random}),
-     * so let's use that knowledge to our benefit.
-     */
-    protected final boolean _secureRandom;
     
     /*
     /**********************************************************************
@@ -74,10 +67,7 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
     public TimeBasedEpochGenerator(UUIDTimer timer, Random rnd)
     {
         if (rnd == null) {
-            rnd = LazyRandom.sharedSecureRandom();
-            _secureRandom = true;
-        } else {
-            _secureRandom = (rnd instanceof SecureRandom);
+            rnd = LazyRandom.sharedSecureRandom(); 
         }
         _random = rnd;
         _timer = timer;
@@ -111,9 +101,9 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
         int clockLo = (int) rawTimestamp;
         // and dice
         int midhi = (clockHi << 16) | (clockHi >>> 16); 
-        final byte[] b = new byte[2];
-        _random.nextBytes(b);
-        midhi = midhi | (((b[0] & 0xFF) << 8) + (b[1] & 0xFF)); 
+        final byte[] buffer = new byte[10];
+        _random.nextBytes(buffer);
+        midhi = midhi | (((buffer[0] & 0xFF) << 8) + (buffer[1] & 0xFF)); 
         // need to squeeze in type (4 MSBs in byte 6, clock hi)
         midhi &= ~0xF000; // remove high nibble of 6th byte
         midhi |= 0x7000; // type 7
@@ -122,14 +112,7 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
         // and reconstruct
         long l1 = (((long) clockLo) << 32) | midhiL;
         // last detail: must force 2 MSB to be '10'
-        long _uuidL2;
-        if (_secureRandom) {
-            final byte[] buffer = new byte[16];
-            _random.nextBytes(buffer);
-            _uuidL2 = _toLong(buffer, 0);
-        } else {
-            _uuidL2 = _random.nextLong(); 
-        }
+        long _uuidL2 = _toLong(buffer, 2); 
         return new UUID(l1, _uuidL2);
     }
 }
