@@ -99,7 +99,7 @@ public class RandomBasedGenerator extends NoArgGenerator
     /**********************************************************************
      */
 
-    private final static long _toLong(byte[] buffer, int offset)
+    protected final static long _toLong(byte[] buffer, int offset)
     {
         long l1 = _toInt(buffer, offset);
         long l2 = _toInt(buffer, offset+4);
@@ -126,7 +126,7 @@ public class RandomBasedGenerator extends NoArgGenerator
      * mechanism for lazy instantation of the shared secure random
      * instance.
      */
-    private final static class LazyRandom
+    protected final static class LazyRandom
     {
         private final static SecureRandom shared = new SecureRandom();
 
