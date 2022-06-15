@@ -110,7 +110,10 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
         int clockHi = (int) (rawTimestamp >>> 32);
         int clockLo = (int) rawTimestamp;
         // and dice
-        int midhi = (clockHi << 16) | (clockHi >>> 16);
+        int midhi = (clockHi << 16) | (clockHi >>> 16); 
+        final byte[] b = new byte[2];
+        _random.nextBytes(b);
+        midhi = midhi | (((b[0] & 0xFF) << 8) + (b[1] & 0xFF)); 
         // need to squeeze in type (4 MSBs in byte 6, clock hi)
         midhi &= ~0xF000; // remove high nibble of 6th byte
         midhi |= 0x7000; // type 7
