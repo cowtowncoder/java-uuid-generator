@@ -219,6 +219,12 @@ public class UUIDUtil
             return UUIDType.RANDOM_BASED;
         case 5:
             return UUIDType.NAME_BASED_SHA1;
+        case 6:
+            return UUIDType.TIME_BASED_REORDERED;
+        case 7:
+            return UUIDType.TIME_BASED_EPOCH;
+        case 8:
+            return UUIDType.FREE_FORM;
         }
         // not recognized: return null
         return null;
