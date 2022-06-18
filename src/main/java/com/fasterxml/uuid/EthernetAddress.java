@@ -16,7 +16,11 @@
 package com.fasterxml.uuid;
 
 import java.io.Serializable;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.security.SecureRandom;
 import java.util.Enumeration;
 import java.util.Random;
@@ -271,10 +275,7 @@ public class EthernetAddress
             while (en.hasMoreElements()) {
                 NetworkInterface nint = en.nextElement();
                 if (!nint.isLoopback()) {
-                    byte[] data = nint.getHardwareAddress();
-                    if (data != null && data.length == 6) {
-                        return new EthernetAddress(data);
-                    }
+                    return fromInterface(nint);
                 }
             }
         } catch (java.net.SocketException e) {
@@ -282,7 +283,73 @@ public class EthernetAddress
         }
         return null;
     }
-    
+
+    /**
+     * A factory method to return the ethernet address of a specified network interface.
+     */
+    public static EthernetAddress fromInterface(NetworkInterface nint) 
+    {
+        try {
+            byte[] data = nint.getHardwareAddress();
+            if (data != null && data.length == 6) {
+                return new EthernetAddress(data);
+            }
+        } catch (SocketException e) {
+            // could not get address
+        }
+        return null;
+    }
+
+    /**
+     * A factory method that will try to determine the ethernet address of
+     * the network interface that connects to the default network gateway.
+     * To do this it will try to open a connection to one of the root DNS
+     * servers, or barring that, to adresss 1.1.1.1, or finally if that also
+     * fails then to IPv6 address "1::1".  If a connection can be opened then
+     * the interface through which that connection is routed is determined
+     * to be the default egress interface, and the corresponding address of
+     * that interface will be returned.  If all attempts are unsuccessful,
+     * null will be returned.
+     */
+    public static EthernetAddress fromEgressInterface() 
+    {
+        String roots = "abcdefghijklm";
+        int index = new Random().nextInt(roots.length());
+        String name = roots.charAt(index) + ".root-servers.net";
+        InetSocketAddress externalAddress = new InetSocketAddress(name, 0);
+        if (externalAddress.isUnresolved()) {
+            externalAddress = new InetSocketAddress("1.1.1.1", 0);
+        }
+        EthernetAddress ifAddr = fromEgressInterface(externalAddress);
+        if (ifAddr == null) {
+            return fromEgressInterface(new InetSocketAddress("1::1", 0));
+        } else {
+            return ifAddr;
+        }
+    }
+
+    /**
+     * A factory method to return the address of the interface used to route
+     * traffic to the specified address.
+     */
+    public static EthernetAddress fromEgressInterface(InetSocketAddress externalSocketAddress) 
+    {
+        DatagramSocket socket = null;
+        try {
+            socket = new DatagramSocket();
+            socket.connect(externalSocketAddress);
+            InetAddress localAddress = socket.getLocalAddress();
+            NetworkInterface egressIf = NetworkInterface.getByInetAddress(localAddress);
+            return fromInterface(egressIf);
+        } catch (SocketException e) {
+            return null;
+        } finally {
+            if (socket != null) {
+                socket.close();
+            }
+        }
+    }
+
     /**
      * Factory method that can be used to construct a random multicast
      * address; to be used in cases where there is no "real" ethernet
