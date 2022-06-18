@@ -40,7 +40,7 @@ public class RandomBasedGenerator extends NoArgGenerator
      * so let's use that knowledge to our benefit.
      */
     protected final boolean _secureRandom;
-    
+
     /**
      * @param rnd Random number generator to use for generating UUIDs; if null,
      *   shared default generator is used. Note that it is strongly recommend to
@@ -123,7 +123,7 @@ public class RandomBasedGenerator extends NoArgGenerator
 
     /**
      * Trivial helper class that uses class loading as synchronization
-     * mechanism for lazy instantation of the shared secure random
+     * mechanism for lazy instantiation of the shared secure random
      * instance.
      */
     private final static class LazyRandom
