@@ -5,21 +5,26 @@ efficiently, sorting and so on.
 It generates UUIDs according to the [UUID specification (RFC-4122)](https://tools.ietf.org/html/rfc4122)
 (also see [Wikipedia UUID page](http://en.wikipedia.org/wiki/UUID) for more explanation)
 
-JUG was written by Tatu Saloranta (<tatu.saloranta@iki.fi>) originally in 2002 and has been updated over years.
-In addition, many other individuals have helped fix bugs and implement new features: please see `release-notes/CREDITS`
-for the complete list.
+JUG was written by Tatu Saloranta (<tatu.saloranta@iki.fi>) originally in 2002 and has been updated over the years.
+In addition, many other individuals have helped fix bugs and implement new features: please see `release-notes/CREDITS` for the complete list.
 
 JUG is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
 
 ## Status
 
-[![Build Status](https://travis-ci.org/cowtowncoder/java-uuid-generator.svg)](https://travis-ci.org/cowtowncoder/java-uuid-generator)
-[![Javadoc](https://javadoc.io/badge2/com.fasterxml.uuid/java-uuid-generator/javadoc.svg)](http://www.javadoc.io/doc/com.fasterxml.uuid/java-uuid-generator)
-[![Tidelift](https://tidelift.com/badges/package/maven/com.fasterxml.uuid:java-uuid-generator)](https://tidelift.com/subscription/pkg/maven-com-fasterxml-uuid-java-uuid-generator?utm_source=maven-com-fasterxml-uuid-java-uuid-generator&utm_medium=referral&utm_campaign=readme)
+| Type | Status |
+| ---- | ------ |
+| Build (CI) | [![Build (github)](https://github.com/cowtowncoder/java-uuid-generator/actions/workflows/main.yml/badge.svg)](https://github.com/cowtowncoder/java-uuid-generator/actions/workflows/main.yml) |
+| Artifact |  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.fasterxml.uuid/java-uuid-generator/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.fasterxml.uuid/java-uuid-generator/) |
+| OSS Sponsorship | None yet |
+| Javadocs | [![Javadoc](https://javadoc.io/badge/com.fasterxml.uuid/java-uuid-generator.svg)](http://www.javadoc.io/doc/com.fasterxml.uuid/java-uuid-generator)
+| Code coverage (6.x) | [![codecov.io](https://codecov.io/github/cowtowncoder/java-uuid-generator/coverage.svg?branch=master)](https://codecov.io/github/cowtowncoder/java-uuid-generator?branch=master) |
+| CodeQ (LGTM.com) | [![LGTM alerts](https://img.shields.io/lgtm/alerts/g/cowtowncoder/java-uuid-generator.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cowtowncoder/java-uuid-generator/alerts/) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/cowtowncoder/java-uuid-generator.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cowtowncoder/java-uuid-generator/context:java) |
 
 ## Usage
 
-JUG can be used as a command-line tool (via class 'com.fasterxml.uuid.Jug`), or as a pluggable component.
+JUG can be used as a command-line tool (via class `com.fasterxml.uuid.Jug`),
+or as a pluggable component.
 
 ### Via Maven
 
@@ -29,7 +34,7 @@ Maven coordinates are:
 <dependency>
   <groupId>com.fasterxml.uuid</groupId>
   <artifactId>java-uuid-generator</artifactId>
-  <version>4.0</version>
+  <version>4.0.1</version>
 </dependency>
 ```
 
@@ -50,15 +55,18 @@ For direct downloads, check out [Project Wiki](../../wiki).
 
 ### Using JUG
 
-Generation itself is done by first selecting a kind of generator to use, and then calling its `generate()` method,
-for example:
+#### Generating UUIDs
+
+The original use case for JUG was generation of UUID values. This is done by first selecting a kind of generator to use, and then calling its `generate()` method.
+For example:
 
 ```java
 UUID uuid = Generators.randomBasedGenerator().generate();
 UUID uuid = Generators.timeBasedGenerator().generate();
 ```
 
-If you want customize generators, you may also just want to hold on to generator instance, for example:
+If you want customize generators, you may also just want to hold on to generator instance:
+
 ```java
 TimeBasedGenerator gen = Generators.timeBasedGenerator(EthernetAddress.fromInterface());
 UUID uuid = gen.generate();
@@ -67,7 +75,45 @@ UUID anotherUuid = gen.generate();
 
 Generators are fully thread-safe, so a single instance may be shared among multiple threads.
 
-JavaDocs for project can be found from [Project Wiki](../../wiki).
+Javadocs for further information can be found from [Project Wiki](../../wiki).
+
+#### Converting `java.util.UUID` values into byte[]
+
+Sometimes you may want to convert from `java.util.UUID` into external serialization:
+for example, as `String`s or byte arrays (`byte[]`).
+Conversion to `String` is easy with `UUID.toString()` (provided by JDK), but there is no similar functionality for converting into `byte[]`.
+
+But `UUIDUtil` class provides methods for efficient conversions:
+
+```
+byte[] asBytes = UUIDUtil.asByteArray(uuid);
+// or if you have longer buffer already
+byte[] outputBuffer = new byte[1000];
+// append at position #100
+UUIDUtil.toByteArray(uuid, outputBuffer, 100);
+```
+
+#### Constructing `java.util.UUID` values from String, byte[]
+
+`UUID` values are often passed as java `String`s or `byte[]`s (byte arrays),
+and conversion is needed to get to actual `java.util.UUID` instances.
+JUG has optimized conversion functionality available via class `UUIDUtil` (package
+`com.fasterxml.uuid.impl`), used as follows:
+
+```
+UUID uuidFromStr = UUIDUtil.uuid("ebb8e8fe-b1b1-11d7-8adb-00b0d078fa18");
+byte[] rawUuidBytes = ...; // byte array with 16 bytes
+UUID uuidFromBytes = UUIDUtil.uuid(rawUuidBytes)
+```
+
+Note that while JDK has functionality for constructing `UUID` from `String`, like so:
+
+```
+UUID uuidFromStr = UUID.fromString("ebb8e8fe-b1b1-11d7-8adb-00b0d078fa18");
+```
+
+it is rather slower than JUG version: for more information, read
+[Measuring performance of Java UUID.fromString()](https://cowtowncoder.medium.com/measuring-performance-of-java-uuid-fromstring-or-lack-thereof-d16a910fa32a).
 
 ## Compatibility
 

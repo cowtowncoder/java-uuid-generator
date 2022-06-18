@@ -25,8 +25,6 @@ import junit.textui.TestRunner;
 import java.util.Arrays;
 import java.util.Random;
 
-import com.fasterxml.uuid.EthernetAddress;
-
 /**
  * JUnit Test class for the com.fasterxml.uuid.EthernetAddress class.
  *

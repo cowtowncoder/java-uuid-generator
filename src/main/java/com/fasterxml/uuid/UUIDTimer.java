@@ -247,7 +247,7 @@ public class UUIDTimer
          * independent of whether we can use it:
          */
         if (systime < _lastSystemTimestamp) {
-            logger.warn("System time going backwards! (got value {}, last {}", systime, _lastSystemTimestamp);
+            logger.warn("System time going backwards! (got value {}, last {})", systime, _lastSystemTimestamp);
             // Let's write it down, still
             _lastSystemTimestamp = systime;
         }

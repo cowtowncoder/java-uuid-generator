@@ -6,13 +6,13 @@
   <parent>
       <groupId>com.fasterxml</groupId>
       <artifactId>oss-parent</artifactId>
-      <version>41</version>
+      <version>43</version>
   </parent>
   <groupId>com.fasterxml.uuid</groupId>
   <artifactId>java-uuid-generator</artifactId>
   <packaging>bundle</packaging>
   <name>Java UUID Generator</name>
-  <version>4.0.2-SNAPSHOT</version>
+  <version>4.1.0-SNAPSHOT</version>
   <description>
 Java UUID Generator (JUG) is a Java library for generating
 Universally Unique IDentifiers, UUIDs (see http://en.wikipedia.org/wiki/UUID).
@@ -38,12 +38,9 @@ JUG supports all 3 official UUID generation methods.
     <url>http://github.com/cowtowncoder/java-uuid-generator/issues</url>
   </issueManagement>
 
-  <prerequisites>
-    <maven>2.2.1</maven>
-  </prerequisites>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <slf4j.version>1.7.29</slf4j.version>
+    <slf4j.version>1.7.36</slf4j.version>
   </properties>
   <licenses>
     <license>
@@ -96,7 +93,6 @@ JUG supports all 3 official UUID generation methods.
         <plugin><!-- plug-in to attach source bundle in repo -->
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>${version.plugin.source}</version>
            <executions>
             <execution>
               <id>attach-sources</id>
@@ -111,7 +107,13 @@ JUG supports all 3 official UUID generation methods.
        <plugin>
          <groupId>org.apache.maven.plugins</groupId>
          <artifactId>maven-javadoc-plugin</artifactId>
-         <version>${version.plugin.javadoc}</version>
+         <!-- 20-Nov-2021, tatu: No idea why this is needed, but it is, as per:
+
+https://stackoverflow.com/questions/37958104/maven-javadoc-no-source-files-for-package          
+          -->
+         <configuration>
+           <sourcepath>src/main/java</sourcepath>         
+         </configuration>
          <executions>
              <execution>
                   <id>attach-javadocs</id>

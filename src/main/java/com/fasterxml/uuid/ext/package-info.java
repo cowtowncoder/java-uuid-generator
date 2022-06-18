@@ -1,11 +1,9 @@
-<body>
+/**
 Package that contains optional Java UUID Generator classes; classes that:
 <ul>
  <li>Depend on optional external packages; like log4j or java.util.logging -
-based Logger adapters (java.util.logging itself was added in JDK 1.4)
+based Logger adapters
   </li>
 </ul>
-<p>
-Otherwise base JDK version requirement for these classes is 1.4.
-</p>
-</body>
+*/
+package com.fasterxml.uuid.ext;

@@ -1,0 +1,43 @@
+name: Build
+on:
+  push:
+    branches:
+    - master
+    - "3.0"
+    paths-ignore:
+    - "README.md"
+    - "release-notes/*"
+  pull_request:
+    branches:
+    - master
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # Alas, JDK14 can't be yet used as JUG builds for Java 6
+        java_version: ['8', '11']
+        os: ['ubuntu-20.04']
+    env:
+      JAVA_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: "temurin"
+        java-version: ${{ matrix.java_version }}
+        cache: 'maven'
+    - name: Build
+      run: ./mvnw -B -q -ff -ntp verify
+    - name: Generate code coverage
+      if: github.event_name != 'pull_request' && matrix.java_version == '8'
+      run: ./mvnw -B -q -ff -ntp test
+    - name: Publish code coverage
+      if: github.event_name != 'pull_request' && matrix.java_version == '8'
+      uses: codecov/codecov-action@v2
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./target/site/jacoco/jacoco.xml
+        flags: unittests

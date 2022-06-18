@@ -25,7 +25,6 @@ import junit.textui.TestRunner;
 import java.util.Arrays;
 import java.util.UUID;
 
-import com.fasterxml.uuid.UUIDType;
 import com.fasterxml.uuid.impl.UUIDUtil;
 
 /**
