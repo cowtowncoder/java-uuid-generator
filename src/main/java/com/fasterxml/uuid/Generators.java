@@ -40,11 +40,6 @@ public class Generators
      * synchronization but no external file-based syncing.
      */
     protected static UUIDTimer _sharedTimer;
-
-    /**
-     * The default egress network interface.
-     */
-    protected static EthernetAddress _egressIfAddr = null;
     
     // // Random-based generation
     
@@ -120,18 +115,6 @@ public class Generators
     }
     
     // // Time+location-based generation
-
-    /**
-     * Factory method for constructing UUID generator that generates UUID using variant 1
-     * (time+location based). This method will use the ethernet address of the interface
-     * that routes to the default gateway. For most simple and common networking configurations
-     * this will be the most appropriate address to use. The default interface is determined
-     * by the calling {@link EthernetAddress#fromEgressInterface()}.
-     */
-    public static TimeBasedGenerator egressTimeBasedGenerator()
-    {
-        return timeBasedGenerator(egressInterfaceAddress());
-    }
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
@@ -255,12 +238,4 @@ public class Generators
         }
         return _sharedTimer;
     }
-
-    private static synchronized EthernetAddress egressInterfaceAddress() 
-    {
-    	  if (_egressIfAddr == null) {
-    	      _egressIfAddr = EthernetAddress.fromEgressInterface();
-    	  }
-    	  return _egressIfAddr;
-  	}
 }
