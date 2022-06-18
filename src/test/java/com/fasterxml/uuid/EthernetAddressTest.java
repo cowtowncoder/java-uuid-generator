@@ -17,6 +17,8 @@
 
 package com.fasterxml.uuid;
 
+import com.fasterxml.uuid.impl.TimeBasedGenerator;
+import java.net.InetSocketAddress;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -1305,6 +1307,45 @@ public class EthernetAddressTest extends TestCase
         EthernetAddress addr = EthernetAddress.fromInterface();
         assertNotNull(addr);
         assertNotNull(addr.toString());
+    }
+
+    public void testFromEgressInterfaceRoot() throws Exception
+    {
+        InetSocketAddress extAddr = new InetSocketAddress("a.root-servers.net", 0);
+        EthernetAddress ifAddr = EthernetAddress.fromEgressInterface(extAddr);
+        assertNotNull(ifAddr);
+        assertNotNull(ifAddr.toString());
+    }
+
+    public void testFromEgressInterfaceIp4() throws Exception
+    {
+        InetSocketAddress extAddr = new InetSocketAddress("1.1.1.1", 0);
+        EthernetAddress ifAddr = EthernetAddress.fromEgressInterface(extAddr);
+        assertNotNull(ifAddr);
+        assertNotNull(ifAddr.toString());
+    }
+
+    public void testFromEgressInterfaceIp6() throws Exception
+    {
+        InetSocketAddress extAddr = new InetSocketAddress("1::1", 0);
+        EthernetAddress ifAddr = EthernetAddress.fromEgressInterface(extAddr);
+        assertNotNull(ifAddr);
+        assertNotNull(ifAddr.toString());
+    }
+
+    public void testFromEgressInterface() throws Exception
+    {
+        EthernetAddress ifAddr = EthernetAddress.fromEgressInterface();
+        assertNotNull(ifAddr);
+        assertNotNull(ifAddr.toString());
+    }
+
+    public void testDefaultTimeBasedGenerator()
+    {
+        TimeBasedGenerator generator = Generators.egressTimeBasedGenerator();
+        EthernetAddress ifAddr = generator.getEthernetAddress();
+        assertNotNull(ifAddr);
+        assertNotNull(ifAddr.toString());
     }
 
     public void testBogus() throws Exception
