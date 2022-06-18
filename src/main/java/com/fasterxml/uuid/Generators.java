@@ -41,7 +41,7 @@ public class Generators
     protected static UUIDTimer _sharedTimer;
 
     /**
-     * The default egress network interface.
+     * The hardware address of the egress network interface.
      */
     protected static EthernetAddress _egressIfAddr = null;
     
@@ -125,7 +125,10 @@ public class Generators
      * (time+location based). This method will use the ethernet address of the interface
      * that routes to the default gateway. For most simple and common networking configurations
      * this will be the most appropriate address to use. The default interface is determined
-     * by the calling {@link EthernetAddress#fromEgressInterface()}.
+     * by the calling {@link EthernetAddress#fromEgressInterface()}.  Note that this will only
+     * identify the egress interface once: if you have a complex network setup where your
+     * outbound routes/interfaces may change dynamically, and you want your UUIDs to
+     * accurately reflect which interface is being actively used, this method is not for you.
      */
     public static TimeBasedGenerator egressTimeBasedGenerator()
     {

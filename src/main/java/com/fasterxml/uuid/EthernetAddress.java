@@ -275,7 +275,10 @@ public class EthernetAddress
             while (en.hasMoreElements()) {
                 NetworkInterface nint = en.nextElement();
                 if (!nint.isLoopback()) {
-                    return fromInterface(nint);
+                    EthernetAddress addr = fromInterface(nint);
+                    if (addr != null) {
+                        return addr;
+                    }
                 }
             }
         } catch (java.net.SocketException e) {
@@ -289,13 +292,15 @@ public class EthernetAddress
      */
     public static EthernetAddress fromInterface(NetworkInterface nint) 
     {
-        try {
-            byte[] data = nint.getHardwareAddress();
-            if (data != null && data.length == 6) {
-                return new EthernetAddress(data);
+        if (nint != null) {
+            try {
+                byte[] data = nint.getHardwareAddress();
+                if (data != null && data.length == 6) {
+                    return new EthernetAddress(data);
+                }
+            } catch (SocketException e) {
+                // could not get address
             }
-        } catch (SocketException e) {
-            // could not get address
         }
         return null;
     }
@@ -304,7 +309,7 @@ public class EthernetAddress
      * A factory method that will try to determine the ethernet address of
      * the network interface that connects to the default network gateway.
      * To do this it will try to open a connection to one of the root DNS
-     * servers, or barring that, to adresss 1.1.1.1, or finally if that also
+     * servers, or barring that, to address 1.1.1.1, or finally if that also
      * fails then to IPv6 address "1::1".  If a connection can be opened then
      * the interface through which that connection is routed is determined
      * to be the default egress interface, and the corresponding address of
@@ -330,7 +335,7 @@ public class EthernetAddress
 
     /**
      * A factory method to return the address of the interface used to route
-     * traffic to the specified address.
+     * traffic to the specified IP address.
      */
     public static EthernetAddress fromEgressInterface(InetSocketAddress externalSocketAddress) 
     {

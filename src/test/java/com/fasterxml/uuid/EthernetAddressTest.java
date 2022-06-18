@@ -1317,22 +1317,6 @@ public class EthernetAddressTest extends TestCase
         assertNotNull(ifAddr.toString());
     }
 
-    public void testFromEgressInterfaceIp4() throws Exception
-    {
-        InetSocketAddress extAddr = new InetSocketAddress("1.1.1.1", 0);
-        EthernetAddress ifAddr = EthernetAddress.fromEgressInterface(extAddr);
-        assertNotNull(ifAddr);
-        assertNotNull(ifAddr.toString());
-    }
-
-    public void testFromEgressInterfaceIp6() throws Exception
-    {
-        InetSocketAddress extAddr = new InetSocketAddress("1::1", 0);
-        EthernetAddress ifAddr = EthernetAddress.fromEgressInterface(extAddr);
-        assertNotNull(ifAddr);
-        assertNotNull(ifAddr.toString());
-    }
-
     public void testFromEgressInterface() throws Exception
     {
         EthernetAddress ifAddr = EthernetAddress.fromEgressInterface();
@@ -1343,6 +1327,7 @@ public class EthernetAddressTest extends TestCase
     public void testDefaultTimeBasedGenerator()
     {
         TimeBasedGenerator generator = Generators.egressTimeBasedGenerator();
+        assertNotNull(generator);
         EthernetAddress ifAddr = generator.getEthernetAddress();
         assertNotNull(ifAddr);
         assertNotNull(ifAddr.toString());

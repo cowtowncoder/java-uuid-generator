@@ -65,6 +65,16 @@ UUID uuid = gen.generate();
 UUID anotherUuid = gen.generate();
 ```
 
+If your machine has a standard IP networking setup, the `Generators.egressTimeBasedGenerator` 
+factory method will try to determine which network interface corresponds to the default route for 
+all outgoing network traffic, and use that for creating a time based generator.  This is likely a 
+good choice for common usage scenarios if you want a version 1 UUID generator:
+```java
+TimeBasedGenerator gen = Generators.egressTimeBasedGenerator();
+UUID uuid = gen.generate();
+UUID anotherUuid = gen.generate();
+```
+
 Generators are fully thread-safe, so a single instance may be shared among multiple threads.
 
 JavaDocs for project can be found from [Project Wiki](../../wiki).
