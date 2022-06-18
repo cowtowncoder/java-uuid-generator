@@ -10,6 +10,7 @@ Releases
  (contributed by Hal H)
 - Fix a minor issue with argument validation for `Jug` tool class
 - Update junit dependency (via oss-parent:41)
+- Update slf4j-api to 1.7.36
 
 4.0.1 (03-Mar-2020)
 
