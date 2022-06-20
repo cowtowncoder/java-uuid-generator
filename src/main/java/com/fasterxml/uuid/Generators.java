@@ -130,6 +130,8 @@ public class Generators
      * identify the egress interface once: if you have a complex network setup where your
      * outbound routes/interfaces may change dynamically, and you want your UUIDs to
      * accurately reflect which interface is being actively used, this method is not for you.
+     *
+     * @since 4.1
      */
     public static TimeBasedGenerator egressTimeBasedGenerator()
     {

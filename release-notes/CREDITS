@@ -118,3 +118,7 @@ Pascal Schumacher (PascalSchumacher@github)
 Hal Hildebrand (Hellblazer@github)
   * Contributed #41: Add support for Proposed type v6 (reordered timestamp)
   [4.1.0]
+
+Paul Galbraith (pgalbraith@github)
+  * Contributed #52: Add `Generators.egressTimeBasedGenerator()` method that constructs
+    `TimedBasedGenerator` with a sensible choice of interface

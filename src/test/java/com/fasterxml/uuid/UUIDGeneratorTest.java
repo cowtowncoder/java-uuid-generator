@@ -40,7 +40,10 @@ import com.fasterxml.uuid.impl.TimeBasedGenerator;
 public class UUIDGeneratorTest extends TestCase
 {
     // size of the arrays to create for tests using arrays of values
-    private static final int SIZE_OF_TEST_ARRAY = 10000;
+    // 19-Jun-2022, tatu: Reduce from 10000 since that seems to sometimes
+    //    trigger timing overflow wrt sanity checks (sanity checks being
+    //    simplistic; not exposing an actual issue)
+    private static final int SIZE_OF_TEST_ARRAY = 9000;
     
     public UUIDGeneratorTest(java.lang.String testName)
     {

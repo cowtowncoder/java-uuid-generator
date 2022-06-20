@@ -289,6 +289,8 @@ public class EthernetAddress
 
     /**
      * A factory method to return the ethernet address of a specified network interface.
+     *
+     * @since 4.1
      */
     public static EthernetAddress fromInterface(NetworkInterface nint) 
     {
@@ -315,6 +317,8 @@ public class EthernetAddress
      * to be the default egress interface, and the corresponding address of
      * that interface will be returned.  If all attempts are unsuccessful,
      * null will be returned.
+     *
+     * @since 4.1
      */
     public static EthernetAddress fromEgressInterface() 
     {
@@ -336,6 +340,8 @@ public class EthernetAddress
     /**
      * A factory method to return the address of the interface used to route
      * traffic to the specified IP address.
+     *
+     * @since 4.1
      */
     public static EthernetAddress fromEgressInterface(InetSocketAddress externalSocketAddress) 
     {
