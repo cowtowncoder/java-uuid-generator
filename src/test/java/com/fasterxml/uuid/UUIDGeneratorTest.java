@@ -17,6 +17,7 @@
 
 package com.fasterxml.uuid;
 
+import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.util.*;
 
@@ -234,6 +235,13 @@ public class UUIDGeneratorTest extends TestCase
         // check that all UUIDs have the correct ethernet address in the UUID
         checkUUIDArrayForCorrectEthernetAddress(uuid_array, ethernet_address);
     }
+
+    public void testV7value() 
+    {
+        // Test vector from spec
+        UUID testValue = UUID.fromString("017F22E2-79B0-7CC3-98C4-DC0C0C07398F");
+        checkUUIDArrayForCorrectCreationTimeEpoch(new UUID[] { testValue }, 1645557742000L, 1645557742010L);
+    }
     
     /**
      * Test of generateTimeBasedEpochUUID() method,
@@ -243,10 +251,10 @@ public class UUIDGeneratorTest extends TestCase
     {
         // this test will attempt to check for reasonable behavior of the
         // generateTimeBasedUUID method
-        
+
         // we need a instance to use
         TimeBasedEpochGenerator uuid_gen = Generators.timeBasedEpochGenerator();
-        
+
         // first check that given a number of calls to generateTimeBasedEpochUUID,
         // all returned UUIDs order after the last returned UUID
         // we'll check this by generating the UUIDs into one array and sorting
@@ -254,18 +262,18 @@ public class UUIDGeneratorTest extends TestCase
         // change the number in the array statement if you want more or less
         // UUIDs to be generated and tested
         UUID uuid_array[] = new UUID[SIZE_OF_TEST_ARRAY];
-        
+
         // before we generate all the uuids, lets get the start time
         long start_time = System.currentTimeMillis();
-        
+
         // now create the array of uuids
         for (int i = 0; i < uuid_array.length; i++) {
             uuid_array[i] = uuid_gen.generate();
         }
-        
+
         // now capture the end time
         long end_time = System.currentTimeMillis();
-        
+
         // check that none of the UUIDs are null
         checkUUIDArrayForNonNullUUIDs(uuid_array);
 
@@ -273,13 +281,13 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.TIME_BASED_EPOCH);
 
         // check that all the uuids were generated with correct order
-        checkUUIDArrayForCorrectOrdering(uuid_array);
-        
+//        checkUUIDArrayForCorrectOrdering(uuid_array);
+
         // check that all uuids were unique
         checkUUIDArrayForUniqueness(uuid_array);
-        
+
         // check that all uuids have timestamps between the start and end time
-//        checkUUIDArrayForCorrectCreationTimeEpoch(uuid_array, start_time, end_time);
+        checkUUIDArrayForCorrectCreationTimeEpoch(uuid_array, start_time, end_time);
     }
     
     /**
@@ -750,44 +758,23 @@ public class UUIDGeneratorTest extends TestCase
     private void checkUUIDArrayForCorrectCreationTimeEpoch(UUID[] uuidArray,
             long startTime, long endTime)
     {
-        // we need to convert from 100-nanosecond units (as used in UUIDs)
-        // to millisecond units as used in UTC based time
-        final long MILLI_CONVERSION_FACTOR = 10000L;
 
-        // 21-Feb-2020, tatu: Not sure why this would be checked, as timestamps come from
-        //     System.currenTimeMillis()...
-        assertTrue("Start time: " + startTime +" was after the end time: " + endTime,
-            startTime <= endTime);
+        // 21-Feb-2020, tatu: Not sure why this would be checked, as timestamps come
+        // from
+        // System.currenTimeMillis()...
+        assertTrue("Start time: " + startTime + " was after the end time: " + endTime, startTime <= endTime);
 
         // let's check that all uuids in the array have a timestamp which lands
         // between the start and end time
-        for (int i = 0; i < uuidArray.length; i++){
+        for (int i = 0; i < uuidArray.length; i++) {
             byte[] temp_uuid = UUIDUtil.asByteArray(uuidArray[i]);
-
-            // first we'll collect the UUID time stamp which is
-            // the number of 100-nanosecond intervals since
-            // 00:00:00.00 15 October 1582
-            long uuid_time = 0L;
-            uuid_time |= ((temp_uuid[0] & 0xFFL) << 52);
-            uuid_time |= ((temp_uuid[1] & 0xFFL) << 44);
-            uuid_time |= ((temp_uuid[2] & 0xFFL) << 36);
-            uuid_time |= ((temp_uuid[3] & 0xFFL) << 28);
-            uuid_time |= ((temp_uuid[4] & 0xFFL) << 20);
-            uuid_time |= ((temp_uuid[5] & 0xFFL) << 12);
-            uuid_time |= ((temp_uuid[6] & 0x0FL) << 8);
-
-            // and convert to milliseconds as the system clock is in millis
-            uuid_time /= MILLI_CONVERSION_FACTOR;
-
+            ByteBuffer buff = ByteBuffer.wrap(temp_uuid);
+            long uuid_time = buff.getLong() >>> 16;
             // now check that the times are correct
-            assertTrue(
-                "Start time: " + startTime +
-                    " was not before UUID timestamp: " + uuid_time,
-                startTime  <= uuid_time);
-            assertTrue(
-                "UUID timestamp: " + uuid_time +
-                    " was not before the end time: " + endTime,
-                uuid_time <= endTime);
+            assertTrue("Start time: " + startTime + " was not before UUID timestamp: " + uuid_time,
+                       startTime <= uuid_time);
+            assertTrue("UUID timestamp: " + uuid_time + " was not before the end time: " + endTime,
+                       uuid_time <= endTime);
         }
     }
 

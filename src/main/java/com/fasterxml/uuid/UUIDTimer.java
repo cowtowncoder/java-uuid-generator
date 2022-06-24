@@ -240,26 +240,7 @@ public class UUIDTimer
      *
      * @return 64-bit timestamp to use for constructing UUID
      */
-    public long getTimestamp()
-    {
-        return getTimestamp(kClockOffset);
-    }
-
-    /**
-     * Method that constructs unique timestamp suitable for use for
-     * constructing UUIDs of version 7. Default implementation is fully synchronized;
-     * sub-classes may choose to implemented alternate strategies
-     *
-     * @return 64-bit timestamp to use for constructing UUID, derived from the Unix Epoch
-     * timestamp source - the number of milliseconds seconds since midnight 1 Jan 1970 UTC,
-     * leap seconds excluded
-     */
-    public long getTimestampV7()
-    {
-        return getTimestamp(0);
-    }
-    
-    protected synchronized long getTimestamp(long offset)
+    public synchronized long getTimestamp()
     {
         long systime = _clock.currentTimeMillis();
         /* Let's first verify that the system time is not going backwards;
@@ -330,7 +311,7 @@ public class UUIDTimer
          * unit offset from the beginning of Gregorian calendar...
          */
         systime *= kClockMultiplierL;
-        systime += offset;
+        systime += kClockOffset;
 
         // Plus add the clock counter:
         systime += _clockCounter;

@@ -1,12 +1,12 @@
 package com.fasterxml.uuid.impl;
 
-import static com.fasterxml.uuid.impl.RandomBasedGenerator._toLong;
+
+import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.UUID;
 
-import com.fasterxml.uuid.NoArgGenerator;
-import com.fasterxml.uuid.UUIDTimer;
+import com.fasterxml.uuid.NoArgGenerator; 
 import com.fasterxml.uuid.UUIDType;
 import com.fasterxml.uuid.impl.RandomBasedGenerator.LazyRandom;
 
@@ -26,24 +26,11 @@ import com.fasterxml.uuid.impl.RandomBasedGenerator.LazyRandom;
 public class TimeBasedEpochGenerator extends NoArgGenerator
 {
     
-    public static int BYTE_OFFSET_TIME_HIGH = 0;
-    public static int BYTE_OFFSET_TIME_MID = 4;
-    public static int BYTE_OFFSET_TIME_LOW = 7;
-    
     /*
     /**********************************************************************
     /* Configuration
     /**********************************************************************
      */
-
-    /**
-     * Object used for synchronizing access to timestamps, to guarantee
-     * that timestamps produced by this generator are unique and monotonically increasings.
-     * Some implementations offer even stronger guarantees, for example that
-     * same guarantee holds between instances running on different JVMs (or
-     * with native code).
-     */
-    protected final UUIDTimer _timer;
 
 
     /**
@@ -64,13 +51,12 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
      *   {@link SecureRandom}.
      */
     
-    public TimeBasedEpochGenerator(UUIDTimer timer, Random rnd)
+    public TimeBasedEpochGenerator(Random rnd)
     {
         if (rnd == null) {
             rnd = LazyRandom.sharedSecureRandom(); 
         }
         _random = rnd;
-        _timer = timer;
     }
     
     /*
@@ -88,34 +74,18 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
     /**********************************************************************
      */
     
-    /* As timer is not synchronized (nor _uuidBytes), need to sync; but most
-     * importantly, synchronize on timer which may also be shared between
-     * multiple instances
-     */
     @Override
     public UUID generate()
     {
-        final long rawTimestamp = _timer.getTimestampV7();
-        // Time field components are kind of shuffled, need to slice:
-        int clockHi = (int) (rawTimestamp >>> 32);
-        int clockLo = (int) rawTimestamp;
-        // and dice
-        int midhi = (clockHi << 16) | (clockHi >>> 16); 
+        ByteBuffer buff = ByteBuffer.allocate(2 * 8);
+        final long rawTimestamp = System.currentTimeMillis();
         final byte[] buffer = new byte[10];
         _random.nextBytes(buffer);
-        midhi = midhi | (((buffer[0] & 0xFF) << 8) + (buffer[1] & 0xFF)); 
-        // need to squeeze in type (4 MSBs in byte 6, clock hi)
-        midhi &= ~0xF000; // remove high nibble of 6th byte
-        midhi |= 0x7000; // type 7
-        long midhiL = (long) midhi;
-        midhiL = ((midhiL << 32) >>> 32); // to get rid of sign extension
-        // and reconstruct
-        long l1 = (((long) clockLo) << 32) | midhiL;
-        // last detail: must force 2 MSB to be '10'
-        byte b = (byte) (buffer[2] & 0x3F); // remove 2 MSB
-        b |= 0x80; // set as '10'
-        buffer[2] = (byte) b;
-        long _uuidL2 = _toLong(buffer, 2); 
-        return new UUID(l1, _uuidL2);
+        buff.position(6);
+        buff.put(buffer);
+        buff.position(0);
+        buff.putLong(rawTimestamp << 16);
+        buff.flip();
+        return UUIDUtil.constructUUID(UUIDType.TIME_BASED_EPOCH, buff.array());
     }
 }
