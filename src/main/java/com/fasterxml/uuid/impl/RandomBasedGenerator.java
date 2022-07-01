@@ -76,9 +76,9 @@ public class RandomBasedGenerator extends NoArgGenerator
     @Override
     public UUID generate()
     {
-        /* 14-Oct-2010, tatu: Surprisingly, variant for reading byte array is
-         *   tad faster for SecureRandom... so let's use that then
-         */
+        // 14-Oct-2010, tatu: Surprisingly, variant for reading byte array is
+        //   tad faster for SecureRandom... so let's use that then
+
         long r1, r2;
 
         if (_secureRandom) {
@@ -99,7 +99,7 @@ public class RandomBasedGenerator extends NoArgGenerator
     /**********************************************************************
      */
 
-    private final static long _toLong(byte[] buffer, int offset)
+    protected final static long _toLong(byte[] buffer, int offset)
     {
         long l1 = _toInt(buffer, offset);
         long l2 = _toInt(buffer, offset+4);
@@ -113,25 +113,5 @@ public class RandomBasedGenerator extends NoArgGenerator
             + ((buffer[++offset] & 0xFF) << 16)
             + ((buffer[++offset] & 0xFF) << 8)
             + (buffer[++offset] & 0xFF);
-    }
-
-    /*
-    /**********************************************************************
-    /* Helper classes
-    /**********************************************************************
-     */
-
-    /**
-     * Trivial helper class that uses class loading as synchronization
-     * mechanism for lazy instantiation of the shared secure random
-     * instance.
-     */
-    private final static class LazyRandom
-    {
-        private final static SecureRandom shared = new SecureRandom();
-
-        public static SecureRandom sharedSecureRandom() {
-            return shared;
-        }
     }
 }

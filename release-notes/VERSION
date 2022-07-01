@@ -8,6 +8,8 @@ Releases
 
 #41: Add support for Proposed type v6 (reordered timestamp)
  (contributed by Hal H)
+#46: Add support for Proposed type v7 (epoch-based time uuid)
+ (contributed by Hal H)
 #52: Add `Generators.egressTimeBasedGenerator()` method that constructs `TimedBasedGenerator`
   with a sensible choice of interface
  (contributed by Paul G)
