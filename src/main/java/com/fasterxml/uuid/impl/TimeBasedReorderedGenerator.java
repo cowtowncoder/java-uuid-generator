@@ -15,15 +15,14 @@ import com.fasterxml.uuid.*;
  * {@link com.fasterxml.uuid.ext.FileBasedTimestampSynchronizer} (or
  * equivalent).
  *
- * @since 3.1
+ * @since 4.1
  */
 public class TimeBasedReorderedGenerator extends NoArgGenerator
 {
-    
     public static int BYTE_OFFSET_TIME_HIGH = 0;
     public static int BYTE_OFFSET_TIME_MID = 4;
     public static int BYTE_OFFSET_TIME_LOW = 7;
-    
+
     /*
     /**********************************************************************
     /* Configuration
