@@ -27,6 +27,7 @@ public class EgressDiagnostics {
     public static void showProperty(String key) {
         System.out.println(key + ": " + System.getProperty(key));
     }
+
     public static void tryRemote(InetSocketAddress remote) {
         DatagramSocket socket = null;
         try {
