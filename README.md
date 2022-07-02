@@ -128,13 +128,15 @@ it is rather slower than JUG version: for more information, read
 
 ### Using JUG as CLI
 
-JUG jar built under `target/` like:
+JUG jar built under `target/`:
 
 ```
 target/java-uuid-generator-4.1.1-SNAPSHOT.jar
 ```
 
-can be invoked directly. To see usage you can do something like:
+can also be used as a simple Command-line UUID generation tool.
+
+To see usage you can do something like:
 
     java -jar target/java-uuid-generator-4.1.1-SNAPSHOT.jar
 
@@ -143,6 +145,11 @@ and get full instructions, but to generate 5 Random-based UUIDs, you would use:
     java -jar target/java-uuid-generator-4.1.1-SNAPSHOT.jar -c 5 r
 
 (where `-c` (or `--count`) means number of UUIDs to generate, and `r` means Random-based variant)
+
+NOTE: this functionality is included as of JUG 4.1 -- with earlier versions you would need a bit longer invocation as Jar metadata did not specify "Main-Class".
+If so, you would need to use
+
+    java -cp target/java-uuid-generator-4.1.1-SNAPSHOT.jar com.fasterxml.uuid.Jug -c 5 r
 
 ## Compatibility
 
