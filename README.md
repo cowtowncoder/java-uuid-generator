@@ -26,7 +26,7 @@ JUG is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENS
 JUG can be used as a command-line tool (via class `com.fasterxml.uuid.Jug`),
 or as a pluggable component.
 
-### Via Maven
+### Maven Dependency
 
 Maven coordinates are:
 
@@ -38,7 +38,7 @@ Maven coordinates are:
 </dependency>
 ```
 
-#### Dependencies
+#### Third-party Dependencies by JUG
 
 The only dependency for JUG is the logging library:
 
@@ -53,7 +53,7 @@ Since version `3.2.0`, JUG defines JDK9+ compatible `module-info.class`, with mo
 
 For direct downloads, check out [Project Wiki](../../wiki).
 
-### Using JUG
+### Using JUG as Library
 
 #### Generating UUIDs
 
@@ -125,6 +125,31 @@ UUID uuidFromStr = UUID.fromString("ebb8e8fe-b1b1-11d7-8adb-00b0d078fa18");
 
 it is rather slower than JUG version: for more information, read
 [Measuring performance of Java UUID.fromString()](https://cowtowncoder.medium.com/measuring-performance-of-java-uuid-fromstring-or-lack-thereof-d16a910fa32a).
+
+### Using JUG as CLI
+
+JUG jar built under `target/`:
+
+```
+target/java-uuid-generator-4.1.1-SNAPSHOT.jar
+```
+
+can also be used as a simple Command-line UUID generation tool.
+
+To see usage you can do something like:
+
+    java -jar target/java-uuid-generator-4.1.1-SNAPSHOT.jar
+
+and get full instructions, but to generate 5 Random-based UUIDs, you would use:
+
+    java -jar target/java-uuid-generator-4.1.1-SNAPSHOT.jar -c 5 r
+
+(where `-c` (or `--count`) means number of UUIDs to generate, and `r` means Random-based variant)
+
+NOTE: this functionality is included as of JUG 4.1 -- with earlier versions you would need a bit longer invocation as Jar metadata did not specify "Main-Class".
+If so, you would need to use
+
+    java -cp target/java-uuid-generator-4.1.1-SNAPSHOT.jar com.fasterxml.uuid.Jug -c 5 r
 
 ## Compatibility
 

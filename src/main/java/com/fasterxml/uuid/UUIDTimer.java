@@ -18,10 +18,8 @@ package com.fasterxml.uuid;
 import java.io.*;
 import java.util.*;
 
+import com.fasterxml.uuid.impl.LoggerFacade;
 import com.fasterxml.uuid.impl.UUIDUtil;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * UUIDTimer produces the time stamps required for time-based UUIDs.
@@ -75,9 +73,8 @@ import org.slf4j.LoggerFactory;
  */
 public class UUIDTimer
 {
+    private final LoggerFacade _logger = LoggerFacade.getLogger(getClass());
 
-    private static final Logger logger = LoggerFactory.getLogger(UUIDTimer.class);
-    
     // // // Constants
 
     /**
@@ -247,7 +244,8 @@ public class UUIDTimer
          * independent of whether we can use it:
          */
         if (systime < _lastSystemTimestamp) {
-            logger.warn("System time going backwards! (got value {}, last {})", systime, _lastSystemTimestamp);
+            _logger.warn("System time going backwards! (got value %d, last %d)",
+                    systime, _lastSystemTimestamp);
             // Let's write it down, still
             _lastSystemTimestamp = systime;
         }
@@ -267,7 +265,7 @@ public class UUIDTimer
                 long origTime = systime;
                 systime = _lastUsedTimestamp + 1L;
 
-                logger.warn("Timestamp over-run: need to reinitialize random sequence");
+                _logger.warn("Timestamp over-run: need to reinitialize random sequence");
 
                 /* Clock counter is now at exactly the multiplier; no use
                  * just anding its value. So, we better get some random
@@ -371,7 +369,7 @@ public class UUIDTimer
      * @param actDiff Number of milliseconds to wait for from current 
      *    time point, to catch up
      */
-    protected static void slowDown(long startTime, long actDiff)
+    protected void slowDown(long startTime, long actDiff)
     {
         /* First, let's determine how long we'd like to wait.
          * This is based on how far ahead are we as of now.
@@ -388,7 +386,7 @@ public class UUIDTimer
         } else {
             delay = 5L;
         }
-        logger.warn("Need to wait for {} milliseconds; virtual clock advanced too far in the future", delay);
+        _logger.warn("Need to wait for %d milliseconds; virtual clock advanced too far in the future", delay);
         long waitUntil = startTime + delay;
         int counter = 0;
         do {
