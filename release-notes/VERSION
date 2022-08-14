@@ -13,6 +13,7 @@ Releases
 #52: Add `Generators.egressTimeBasedGenerator()` method that constructs `TimedBasedGenerator`
   with a sensible choice of interface
  (contributed by Paul G)
+ #55: Add `Main-Class` manifest to make jar invoke `Jug` class
 - Fix a minor issue with argument validation for `Jug` tool class
 - Update junit dependency (via oss-parent:41)
 - Update slf4j-api to 1.7.36

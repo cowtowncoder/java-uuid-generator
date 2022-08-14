@@ -148,6 +148,7 @@ https://stackoverflow.com/questions/37958104/maven-javadoc-no-source-files-for-p
                 org.slf4j;version="[${slf4j.version},2)"
               </Import-Package>
               <Private-Package />
+	      <Main-Class>com.fasterxml.uuid.Jug</Main-Class>
             </instructions>
           </configuration>
        </plugin>
