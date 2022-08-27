@@ -325,7 +325,7 @@ public class EthernetAddress
         String roots = "abcdefghijklm";
         int index = new Random().nextInt(roots.length());
         String name = roots.charAt(index) + ".root-servers.net";
-        InetSocketAddress externalAddress = new InetSocketAddress(name, 0);
+        InetSocketAddress externalAddress = new InetSocketAddress(name, 53);
         if (externalAddress.isUnresolved()) {
             externalAddress = new InetSocketAddress("1.1.1.1", 0);
         }
