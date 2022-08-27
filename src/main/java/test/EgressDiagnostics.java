@@ -39,7 +39,7 @@ public class EgressDiagnostics {
             System.out.println("local: " + local);
             NetworkInterface ni = NetworkInterface.getByInetAddress(local);
             System.out.println("interface: " + ni);
-            System.out.println("hardware: " + (ni == null ? null : ni.getHardwareAddress().toString().substring(3)));
+            System.out.println("hardware: " + (ni == null ? null : macBytesToHex(ni.getHardwareAddress())));
         } catch (Throwable t) {
             System.out.println(t);
             t.printStackTrace();
@@ -48,5 +48,13 @@ public class EgressDiagnostics {
                 socket.close();
             }
         }
+    }
+
+    public static String macBytesToHex(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < bytes.length; i++) {
+            sb.append(String.format("%02X%s", bytes[i], (i < bytes.length - 1) ? "-" : ""));
+        }
+        return sb.toString();
     }
 }
