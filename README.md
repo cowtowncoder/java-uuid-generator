@@ -76,7 +76,8 @@ UUID anotherUuid = gen.generate();
 If your machine has a standard IP networking setup, the `Generators.egressTimeBasedGenerator` (added in JUG 4.1) 
 factory method will try to determine which network interface corresponds to the default route for 
 all outgoing network traffic, and use that for creating a time based generator.
-This is likely a  good choice for common usage scenarios if you want a version 1 UUID generator:
+This is likely a good choice for common usage scenarios if you want a version 1 UUID generator, but unfortunately
+is known not to work reliably on some platforms.
 
 ```java
 TimeBasedGenerator gen = Generators.egressTimeBasedGenerator();
