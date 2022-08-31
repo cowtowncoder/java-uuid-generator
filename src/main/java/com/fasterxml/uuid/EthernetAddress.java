@@ -325,7 +325,10 @@ public class EthernetAddress
         String roots = "abcdefghijklm";
         int index = new Random().nextInt(roots.length());
         String name = roots.charAt(index) + ".root-servers.net";
-        InetSocketAddress externalAddress = new InetSocketAddress(name, 0);
+        // Specify standard/default port DNS uses; more robust on some platforms
+        // (MacOS/JDK 17), see:
+        // https://github.com/cowtowncoder/java-uuid-generator/pull/59
+        InetSocketAddress externalAddress = new InetSocketAddress(name, 53);
         if (externalAddress.isUnresolved()) {
             externalAddress = new InetSocketAddress("1.1.1.1", 0);
         }
