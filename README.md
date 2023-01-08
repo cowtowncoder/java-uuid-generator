@@ -61,8 +61,12 @@ The original use case for JUG was generation of UUID values. This is done by fir
 For example:
 
 ```java
-UUID uuid = Generators.randomBasedGenerator().generate();
-UUID uuid = Generators.timeBasedGenerator().generate();
+UUID uuid = Generators.timeBasedGenerator().generate(); // Variant 1
+UUID uuid = Generators.randomBasedGenerator().generate(); // Variant 4
+UUID uuid = Generators.nameBasedgenerator().generate("string to hash"); // Variant 5
+// With JUG 4.1+:
+UUID uuid = Generators.timeBasedReorderedGenerator().generate(); // Variant 6
+UUID uuid = Generators.timeBasedEpochGenerator().generate(); // Variant 7
 ```
 
 If you want customize generators, you may also just want to hold on to generator instance:
@@ -187,9 +191,9 @@ There are many other publicly available UUID generators. For example:
 * JDK has included `java.util.UUID` since 1.4, but omits generation methods (esp. time/location based ones), has sub-standard performance for many operations and implements comparison in useless way
 * [ohannburkard.de UUID generator](http://johannburkard.de/software/uuid/)
 
-Note that although some packages claim to be faster than others, it is not clear whether:
+Note that although some packages claim to be faster than others, it is not clear:
 
-1. Claims have been properly verified (or, if they have, can be independently verified), AND
-2. It is not likely that performance differences truly matter: JUG, for example, can generate a millions of UUID per second per core (sometimes hitting the theoretical limit of 10 million per second) -- and it seems unlikely that generation will be bottleneck for about any use case
+1. whether laims have been properly verified (or, if they have, can be independently verified), OR
+2. whether performance differences truly matter: JUG, for example, can generate millions of UUID per second per core (sometimes hitting the theoretical limit of 10 million per second) -- and it seems unlikely that generation will be bottleneck for any actual use case
 
 so it is often best to choose based on stability of packages and API.
