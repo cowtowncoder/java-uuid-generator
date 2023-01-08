@@ -16,7 +16,7 @@ JUG is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENS
 | ---- | ------ |
 | Build (CI) | [![Build (github)](https://github.com/cowtowncoder/java-uuid-generator/actions/workflows/main.yml/badge.svg)](https://github.com/cowtowncoder/java-uuid-generator/actions/workflows/main.yml) |
 | Artifact |  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.fasterxml.uuid/java-uuid-generator/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.fasterxml.uuid/java-uuid-generator/) |
-| OSS Sponsorship | None yet |
+| OSS Sponsorship | [![Tidelift](https://tidelift.com/badges/package/maven/com.fasterxml.uuid:java-uuid-generator)](https://tidelift.com/subscription/pkg/maven-com-fasterxml-uuid-java-uuid-generator?utm_source=maven-com-fasterxml-uuid-java-uuid-generator&utm_medium=referral&utm_campaign=readme) |
 | Javadocs | [![Javadoc](https://javadoc.io/badge/com.fasterxml.uuid/java-uuid-generator.svg)](http://www.javadoc.io/doc/com.fasterxml.uuid/java-uuid-generator)
 | Code coverage (6.x) | [![codecov.io](https://codecov.io/github/cowtowncoder/java-uuid-generator/coverage.svg?branch=master)](https://codecov.io/github/cowtowncoder/java-uuid-generator?branch=master) |
 | CodeQ (LGTM.com) | [![LGTM alerts](https://img.shields.io/lgtm/alerts/g/cowtowncoder/java-uuid-generator.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cowtowncoder/java-uuid-generator/alerts/) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/cowtowncoder/java-uuid-generator.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cowtowncoder/java-uuid-generator/context:java) |
