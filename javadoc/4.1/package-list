@@ -1,0 +1,5 @@
+com.fasterxml.uuid
+com.fasterxml.uuid.ext
+com.fasterxml.uuid.impl
+perf
+test
