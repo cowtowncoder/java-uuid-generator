@@ -6,10 +6,13 @@
   <parent>
       <groupId>com.fasterxml</groupId>
       <artifactId>oss-parent</artifactId>
-      <version>45</version>
+      <version>49</version>
   </parent>
   <groupId>com.fasterxml.uuid</groupId>
   <artifactId>java-uuid-generator</artifactId>
+  <!-- 07-Jan-2022, tatu: wrt [#65] SHOULD be able to use "jar" but somehow
+         that won't work (unlike with Jackson).
+    -->
   <packaging>bundle</packaging>
   <name>Java UUID Generator</name>
   <version>4.1.0-SNAPSHOT</version>
@@ -41,6 +44,8 @@ JUG supports all 3 official UUID generation methods.
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j.version>1.7.36</slf4j.version>
+
+    <project.build.outputTimestamp>2023-01-07T12:00:00Z</project.build.outputTimestamp>
   </properties>
   <licenses>
     <license>

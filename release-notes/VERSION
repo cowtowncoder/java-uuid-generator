@@ -12,6 +12,7 @@ Releases
  (contributed by Hal H)
 #55: Add `Main-Class` manifest to make jar invoke `Jug` class
 #57: Add constants for "Nil UUID", "Max UUID" (from draft "new UUID" spec) in `UUIDUtil`
+#65: Enable "Reproducible Build"
 - Fix a minor issue with argument validation for `Jug` tool class
 - Update junit dependency (via oss-parent:41)
 - Update slf4j-api to 1.7.36
