@@ -10,7 +10,10 @@
   </parent>
   <groupId>com.fasterxml.uuid</groupId>
   <artifactId>java-uuid-generator</artifactId>
-  <packaging>jar</packaging>
+  <!-- 07-Jan-2022, tatu: wrt [#65] SHOULD be able to use "jar" but somehow
+         that won't work (unlike with Jackson).
+    -->
+  <packaging>bundle</packaging>
   <name>Java UUID Generator</name>
   <version>4.1.0-SNAPSHOT</version>
   <description>
