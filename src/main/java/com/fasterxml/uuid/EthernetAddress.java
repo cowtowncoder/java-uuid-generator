@@ -275,9 +275,9 @@ public class EthernetAddress
             while (en.hasMoreElements()) {
                 NetworkInterface nint = en.nextElement();
                 if (!nint.isLoopback()) {
-                    EthernetAddress addr = fromInterface(nint);
-                    if (addr != null) {
-                        return addr;
+                    byte[] data = nint.getHardwareAddress();
+                    if ((data != null) && (data.length == 6)) {
+                        return new EthernetAddress(data);
                     }
                 }
             }
@@ -285,83 +285,6 @@ public class EthernetAddress
             // fine, let's take is as signal of not having any interfaces
         }
         return null;
-    }
-
-    /**
-     * A factory method to return the ethernet address of a specified network interface.
-     *
-     * @since 4.1
-     */
-    public static EthernetAddress fromInterface(NetworkInterface nint) 
-    {
-        if (nint != null) {
-            try {
-                byte[] data = nint.getHardwareAddress();
-                if (data != null && data.length == 6) {
-                    return new EthernetAddress(data);
-                }
-            } catch (SocketException e) {
-                // could not get address
-            }
-        }
-        return null;
-    }
-
-    /**
-     * A factory method that will try to determine the ethernet address of
-     * the network interface that connects to the default network gateway.
-     * To do this it will try to open a connection to one of the root DNS
-     * servers, or barring that, to address 1.1.1.1, or finally if that also
-     * fails then to IPv6 address "1::1".  If a connection can be opened then
-     * the interface through which that connection is routed is determined
-     * to be the default egress interface, and the corresponding address of
-     * that interface will be returned.  If all attempts are unsuccessful,
-     * null will be returned.
-     *
-     * @since 4.1
-     */
-    public static EthernetAddress fromEgressInterface() 
-    {
-        String roots = "abcdefghijklm";
-        int index = new Random().nextInt(roots.length());
-        String name = roots.charAt(index) + ".root-servers.net";
-        // Specify standard/default port DNS uses; more robust on some platforms
-        // (MacOS/JDK 17), see:
-        // https://github.com/cowtowncoder/java-uuid-generator/pull/59
-        InetSocketAddress externalAddress = new InetSocketAddress(name, 53);
-        if (externalAddress.isUnresolved()) {
-            externalAddress = new InetSocketAddress("1.1.1.1", 0);
-        }
-        EthernetAddress ifAddr = fromEgressInterface(externalAddress);
-        if (ifAddr == null) {
-            return fromEgressInterface(new InetSocketAddress("1::1", 0));
-        } else {
-            return ifAddr;
-        }
-    }
-
-    /**
-     * A factory method to return the address of the interface used to route
-     * traffic to the specified IP address.
-     *
-     * @since 4.1
-     */
-    public static EthernetAddress fromEgressInterface(InetSocketAddress externalSocketAddress) 
-    {
-        DatagramSocket socket = null;
-        try {
-            socket = new DatagramSocket();
-            socket.connect(externalSocketAddress);
-            InetAddress localAddress = socket.getLocalAddress();
-            NetworkInterface egressIf = NetworkInterface.getByInetAddress(localAddress);
-            return fromInterface(egressIf);
-        } catch (SocketException e) {
-            return null;
-        } finally {
-            if (socket != null) {
-                socket.close();
-            }
-        }
     }
 
     /**
