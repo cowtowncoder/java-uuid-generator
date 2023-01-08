@@ -4,13 +4,14 @@ Project: java-uuid-generator
 Releases
 ============================================================================
 
-4.1.0 (not yet released)
+4.1.0 (07-Jan-2023)
 
 #41: Add support for Proposed type v6 (reordered timestamp)
  (contributed by Hal H)
 #46: Add support for Proposed type v7 (epoch-based time uuid)
  (contributed by Hal H)
 #55: Add `Main-Class` manifest to make jar invoke `Jug` class
+#57: Add constants for "Nil UUID", "Max UUID" (from draft "new UUID" spec) in `UUIDUtil`
 - Fix a minor issue with argument validation for `Jug` tool class
 - Update junit dependency (via oss-parent:41)
 - Update slf4j-api to 1.7.36

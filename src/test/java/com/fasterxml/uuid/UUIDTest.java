@@ -34,7 +34,7 @@ import com.fasterxml.uuid.impl.UUIDUtil;
  */
 public class UUIDTest extends TestCase
 {
-    final static UUID nullUUID = new UUID(0L, 0L);
+    final static UUID nullUUID = UUIDUtil.nilUUID();
     
     public UUIDTest(java.lang.String testName)
     {
@@ -51,10 +51,11 @@ public class UUIDTest extends TestCase
     {
         TestRunner.run(suite());
     }
-    
+
     /**************************************************************************
      * Begin constructor tests
      *************************************************************************/
+
     /**
      * Test of UUID() constructor, of class com.fasterxml.uuid.UUID.
      */

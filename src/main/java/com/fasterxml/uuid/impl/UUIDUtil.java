@@ -16,7 +16,17 @@ public class UUIDUtil
     // similarly, clock sequence and variant are multiplexed
     public final static int BYTE_OFFSET_CLOCK_SEQUENCE = 8;
     public final static int BYTE_OFFSET_VARIATION = 8;
-	
+
+    /**
+     * @since 4.1
+     */
+    private final static UUID NIL_UUID = new UUID(0L, 0L);
+
+    /**
+     * @since 4.1
+     */
+    private final static UUID MAX_UUID = new UUID(-1L, -1L);
+
     /*
     /**********************************************************************
     /* Construction (can instantiate, although usually not necessary)
@@ -26,6 +36,38 @@ public class UUIDUtil
     // note: left public just for convenience; all functionality available
     // via static methods
     public UUIDUtil() { }
+
+    /*
+    /**********************************************************************
+    /* Static UUID instances
+    /**********************************************************************
+     */
+
+    /**
+     * Accessor for so-call "Nil UUID" (see
+     * <a href="https://www.rfc-editor.org/rfc/rfc4122#section-4.1.7">RFC 4122/4.1.7</a>;
+     * one that is all zeroes.
+     *
+     * @since 4.1
+     *
+     * @return "Nil" UUID instance
+     */
+    public static UUID nilUUID() {
+        return NIL_UUID;
+    }
+
+    /**
+     * Accessor for so-call "Max UUID" (see
+     * <a href="https://www.ietf.org/archive/id/draft-peabody-dispatch-new-uuid-format-04.html#name-max-uuid">UUID 6 draft</a>;
+     * one that is all one bits
+     *
+     * @since 4.1
+     *
+     * @return "Nil" UUID instance
+     */
+    public static UUID maxUUID() {
+        return MAX_UUID;
+    }
 
     /*
     /**********************************************************************
