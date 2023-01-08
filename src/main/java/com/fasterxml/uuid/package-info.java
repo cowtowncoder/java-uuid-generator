@@ -1,4 +1,4 @@
-/*
+/**
 Package that contains core (non-optional) Java UUID Generator API classes.
 Implementation classes can be found from under {@link com.fasterxml.uuid.impl}.
 <p>
