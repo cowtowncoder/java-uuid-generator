@@ -34,7 +34,7 @@ Maven coordinates are:
 <dependency>
   <groupId>com.fasterxml.uuid</groupId>
   <artifactId>java-uuid-generator</artifactId>
-  <version>4.0.1</version>
+  <version>4.1.0</version>
 </dependency>
 ```
 
@@ -64,7 +64,7 @@ For example:
 UUID uuid = Generators.timeBasedGenerator().generate(); // Variant 1
 UUID uuid = Generators.randomBasedGenerator().generate(); // Variant 4
 UUID uuid = Generators.nameBasedgenerator().generate("string to hash"); // Variant 5
-// With JUG 4.1+:
+// With JUG 4.1+: support for https://github.com/uuid6/uuid6-ietf-draft variants 6 and 7:
 UUID uuid = Generators.timeBasedReorderedGenerator().generate(); // Variant 6
 UUID uuid = Generators.timeBasedEpochGenerator().generate(); // Variant 7
 ```
