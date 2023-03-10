@@ -55,7 +55,7 @@ Name-based:	1 million/second (depends on length, namespace etc; this with MD5)
 
 So with default settings, time-based algorithm is by far the fastest;
 usually followed by name/hash based alternative (for short/medium
-names at least), and random-based variant being slowest.
+names at least), and random-based version being slowest.
 
 Finally, if performance _really_ is very important for you, there
 is a further complication when using time-based algorithm; Java's
@@ -95,7 +95,7 @@ native uuidgen), using random-based method may be the best option;
 although there is a file-locking base synchronizer available for
 time-based generation. This works with multiple JVMs, but may not
 be applicable to synchronize with non-Java generators.
-Random-number based variant should be safe to use, as long as the
+Random-number based version should be safe to use, as long as the
 underlying random number generator is good (which SecureRandom by
 JDK should be).
 

@@ -31,8 +31,8 @@ public class Jug
         TYPES.put("time-based", "t");
         TYPES.put("random-based", "r");
         TYPES.put("name-based", "n");
-        TYPES.put("reordered-time-based", "o"); // Variant 6
-        TYPES.put("epoch-time-based", "e"); // Variant 7
+        TYPES.put("reordered-time-based", "o"); // Version 6
+        TYPES.put("epoch-time-based", "e"); // Version 7
     }
 
     protected final static HashMap<String,String> OPTIONS = new HashMap<String,String>();
@@ -227,7 +227,7 @@ public class Jug
 
         switch (typeC) {
         case 't': // time-based
-        case 'o': // reordered-time-based (Variant 6)
+        case 'o': // reordered-time-based (Version 6)
             // 30-Jun-2022, tatu: Is this true? My former self must have had his
             //    reasons so leaving as is but... odd.
             usesRnd = true;

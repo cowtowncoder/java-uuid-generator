@@ -4,7 +4,7 @@ import java.util.UUID;
 
 /**
  * Intermediate base class for UUID generators that do not take arguments for individual
- * calls. This includes random and time-based variants, but not name-based ones.
+ * calls. This includes random and time-based versions, but not name-based ones.
  * 
  * @since 3.0
  */

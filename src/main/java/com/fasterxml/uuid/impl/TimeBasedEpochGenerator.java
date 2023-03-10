@@ -11,7 +11,7 @@ import com.fasterxml.uuid.UUIDType;
  * Implementation of UUID generator that uses time/location based generation
  * method field from the Unix Epoch timestamp source - the number of 
  * milliseconds seconds since midnight 1 Jan 1970 UTC, leap seconds excluded.
- * This is usually referred to as "Variant 7".
+ * This is usually referred to as "Version 7".
  * <p>
  * As all JUG provided implementations, this generator is fully thread-safe.
  * Additionally it can also be made externally synchronized with other instances
