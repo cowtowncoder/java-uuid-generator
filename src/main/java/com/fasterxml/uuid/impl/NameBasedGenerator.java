@@ -9,7 +9,7 @@ import com.fasterxml.uuid.UUIDType;
 
 /**
  * Implementation of UUID generator that uses one of name-based generation methods
- * (variants 3 (MD5) and 5 (SHA1)).
+ * (versions 3 (MD5) and 5 (SHA1)).
  *<p>
  * As all JUG provided implementations, this generator is fully thread-safe; access
  * to digester is synchronized as necessary.

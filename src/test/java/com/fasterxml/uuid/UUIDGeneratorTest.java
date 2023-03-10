@@ -703,7 +703,7 @@ public class UUIDGeneratorTest extends TestCase
         }
     }
 
-    // Modified version for Variant 6 (reordered timestamps)
+    // Modified version for Version 6 (reordered timestamps)
     private void checkUUIDArrayForCorrectCreationTimeReorder(UUID[] uuidArray,
             long startTime, long endTime)
     {
@@ -757,7 +757,7 @@ public class UUIDGeneratorTest extends TestCase
         }
     }
 
-    // Modified version for Variant 7 (Unix Epoch timestamps)
+    // Modified version for Version 7 (Unix Epoch timestamps)
     private void checkUUIDArrayForCorrectCreationTimeEpoch(UUID[] uuidArray,
             long startTime, long endTime)
     {
