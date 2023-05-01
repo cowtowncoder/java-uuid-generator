@@ -3,8 +3,10 @@ package com.fasterxml.uuid.impl;
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-import com.fasterxml.uuid.NoArgGenerator; 
+import com.fasterxml.uuid.NoArgGenerator;
 import com.fasterxml.uuid.UUIDType;
 
 /**
@@ -22,7 +24,9 @@ import com.fasterxml.uuid.UUIDType;
  * @since 4.1
  */
 public class TimeBasedEpochGenerator extends NoArgGenerator
-{
+{ 
+    private static final int ENTROPY_BYTE_LENGTH = 10;
+
     /*
     /**********************************************************************
     /* Configuration
@@ -33,6 +37,9 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
      * Random number generator that this generator uses.
      */
     protected final Random _random;
+    private long _lastTimestamp = -1;
+    private final byte[] _lastEntropy  = new byte[ENTROPY_BYTE_LENGTH];
+    private final Lock lock = new ReentrantLock();
 
     /*
     /**********************************************************************
@@ -69,25 +76,34 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
     /* UUID generation
     /**********************************************************************
      */
-
+    
     @Override
     public UUID generate()
     {
-        final long rawTimestamp = System.currentTimeMillis();
-        final byte[] rnd = new byte[10];
-        _random.nextBytes(rnd);
-
-        // Use only 48 lowest bits as per spec, next 16 bit from random
-        // (note: UUIDUtil.constuctUUID will add "version" so it's only 12
-        // actual random bits)
-        long l1 = (rawTimestamp << 16) | _toShort(rnd, 8);
-
-        // And then the other 64 bits of random; likewise UUIDUtil.constructUUID
-        // will overwrite first 2 random bits so it's "only" 62 bits
-        long l2 = _toLong(rnd, 0);
-
-        // and as per above, this call fills in "variant" and "version" bits
-        return UUIDUtil.constructUUID(UUIDType.TIME_BASED_EPOCH, l1, l2);
+        lock.lock();
+        try { 
+            long rawTimestamp = System.currentTimeMillis();
+            if (rawTimestamp == _lastTimestamp) {
+                boolean c = true;
+                for (int i = ENTROPY_BYTE_LENGTH - 1; i >= 0; i--) {
+                    if (c) {
+                        byte temp = _lastEntropy[i];
+                        temp = (byte) (temp + 0x01);
+                        c = _lastEntropy[i] == (byte) 0xff && c;
+                        _lastEntropy[i] = temp;
+                    }
+                }
+                if (c) {
+                    throw new IllegalStateException("overflow on same millisecond");
+                }
+            } else {
+                _lastTimestamp = rawTimestamp;
+                _random.nextBytes(_lastEntropy);
+            }
+            return UUIDUtil.constructUUID(UUIDType.TIME_BASED_EPOCH, (rawTimestamp << 16) | _toShort(_lastEntropy, 0), _toLong(_lastEntropy, 2));
+        } finally {
+            lock.unlock();
+        }
     }
 
     /*

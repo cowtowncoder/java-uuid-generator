@@ -128,10 +128,8 @@ public class Generators
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 7 (time+random based), using specified Ethernet address
-     * as the location part of UUID.
-     * No additional external synchronization is used.
-     */
+     * variant 7 (Unix Epoch time+random based).
+    */
     public static TimeBasedEpochGenerator timeBasedEpochGenerator(Random random)
     {
         return new TimeBasedEpochGenerator(random);
