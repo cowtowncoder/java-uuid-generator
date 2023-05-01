@@ -8,12 +8,12 @@ import com.fasterxml.uuid.impl.TimeBasedGenerator;
 
 /**
  * Simple micro-benchmark for evaluating performance of various UUID generation
- * techniques, including JDK's method as well as JUG's variants.
+ * techniques, including JDK's method as well as JUG's versions.
  *<p>
- * Notes: for name-based variant we will pass plain Strings, assuming this is the
+ * Notes: for name-based version we will pass plain Strings, assuming this is the
  * most common use case; even though it is possible to also pass raw byte arrays.
  * JDK and Jug implementations have similar performance so this only changes
- * relative speeds of name- vs time-based variants.
+ * relative speeds of name- vs time-based versions.
  *
  * @since 3.1
  */

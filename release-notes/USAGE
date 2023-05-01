@@ -49,7 +49,7 @@ the way a new JVM is usually instantiated between calls:
 
 * Generating the first UUID can be remarkably slow. This is because
   a new secure random number generator is initialized at that time (if
-  using random number based variant)
+  using random number based version)
   Subsequent calls are faster, but this has to be done using --count
   command-line argument, to create multiple UUIDs with same invocation.
 * Generating time-based UUIDs is not as secure due to JVM being re-initialized

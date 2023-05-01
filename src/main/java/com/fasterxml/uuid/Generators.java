@@ -119,7 +119,7 @@ public class Generators
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 7 (Unix Epoch time+random based).
+     * version 7 (Unix Epoch time+random based).
     */
     public static TimeBasedEpochGenerator timeBasedEpochGenerator()
     {
@@ -139,7 +139,7 @@ public class Generators
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 1 (time+location based).
+     * version 1 (time+location based).
      * Since no Ethernet address is passed, a bogus broadcast address will be
      * constructed for purpose of UUID generation; usually it is better to
      * instead access one of host's NIC addresses using
@@ -153,7 +153,7 @@ public class Generators
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 1 (time+location based), using specified Ethernet address
+     * version 1 (time+location based), using specified Ethernet address
      * as the location part of UUID.
      * No additional external synchronization is used.
      */
@@ -164,7 +164,7 @@ public class Generators
     
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 1 (time+location based), using specified Ethernet address
+     * version 1 (time+location based), using specified Ethernet address
      * as the location part of UUID, and specified synchronizer (which may add
      * additional restrictions to guarantee system-wide uniqueness).
      * 
@@ -187,7 +187,7 @@ public class Generators
     
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 1 (time+location based), using specified Ethernet address
+     * version 1 (time+location based), using specified Ethernet address
      * as the location part of UUID, and specified {@link UUIDTimer} instance
      * (which includes embedded synchronizer that defines synchronization behavior).
      */
@@ -204,7 +204,7 @@ public class Generators
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 6 (time+location based, reordered for DB locality). Since no Ethernet
+     * version 6 (time+location based, reordered for DB locality). Since no Ethernet
      * address is passed, a bogus broadcast address will be constructed for purpose
      * of UUID generation; usually it is better to instead access one of host's NIC
      * addresses using {@link EthernetAddress#fromInterface} which will use one of
@@ -217,7 +217,7 @@ public class Generators
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 6 (time+location based, reordered for DB locality), using specified
+     * version 6 (time+location based, reordered for DB locality), using specified
      * Ethernet address as the location part of UUID. No additional external
      * synchronization is used.
      */
@@ -228,7 +228,7 @@ public class Generators
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 6 (time+location based, reordered for DB locality), using specified
+     * version 6 (time+location based, reordered for DB locality), using specified
      * Ethernet address as the location part of UUID, and specified
      * {@link UUIDTimer} instance (which includes embedded synchronizer that defines
      * synchronization behavior).

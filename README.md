@@ -61,12 +61,12 @@ The original use case for JUG was generation of UUID values. This is done by fir
 For example:
 
 ```java
-UUID uuid = Generators.timeBasedGenerator().generate(); // Variant 1
-UUID uuid = Generators.randomBasedGenerator().generate(); // Variant 4
-UUID uuid = Generators.nameBasedgenerator().generate("string to hash"); // Variant 5
-// With JUG 4.1+: support for https://github.com/uuid6/uuid6-ietf-draft variants 6 and 7:
-UUID uuid = Generators.timeBasedReorderedGenerator().generate(); // Variant 6
-UUID uuid = Generators.timeBasedEpochGenerator().generate(); // Variant 7
+UUID uuid = Generators.timeBasedGenerator().generate(); // Version 1
+UUID uuid = Generators.randomBasedGenerator().generate(); // Version 4
+UUID uuid = Generators.nameBasedgenerator().generate("string to hash"); // Version 5
+// With JUG 4.1+: support for https://github.com/uuid6/uuid6-ietf-draft versions 6 and 7:
+UUID uuid = Generators.timeBasedReorderedGenerator().generate(); // Version 6
+UUID uuid = Generators.timeBasedEpochGenerator().generate(); // Version 7
 ```
 
 If you want customize generators, you may also just want to hold on to generator instance:
@@ -137,7 +137,7 @@ and get full instructions, but to generate 5 Random-based UUIDs, you would use:
 
     java -jar target/java-uuid-generator-4.1.1-SNAPSHOT.jar -c 5 r
 
-(where `-c` (or `--count`) means number of UUIDs to generate, and `r` means Random-based variant)
+(where `-c` (or `--count`) means number of UUIDs to generate, and `r` means Random-based version)
 
 NOTE: this functionality is included as of JUG 4.1 -- with earlier versions you would need a bit longer invocation as Jar metadata did not specify "Main-Class".
 If so, you would need to use

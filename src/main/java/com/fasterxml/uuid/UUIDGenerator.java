@@ -42,7 +42,7 @@ public abstract class UUIDGenerator
      */
 
     /**
-     * Accessor for determining type of UUIDs (variant) that this
+     * Accessor for determining type of UUIDs (version) that this
      * generator instance will produce.
      */
     public abstract UUIDType getType();

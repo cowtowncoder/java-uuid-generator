@@ -4,6 +4,12 @@ Project: java-uuid-generator
 Releases
 ============================================================================
 
+Not yet released:
+
+#67: Ensure correct distinction between variant and version in documentation
+ (requested by @mindloaf)
+ (contributed by @mukham12)
+
 4.1.0 (07-Jan-2023)
 
 #41: Add support for Proposed type v6 (reordered timestamp)
