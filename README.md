@@ -19,7 +19,6 @@ JUG is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENS
 | OSS Sponsorship | [![Tidelift](https://tidelift.com/badges/package/maven/com.fasterxml.uuid:java-uuid-generator)](https://tidelift.com/subscription/pkg/maven-com-fasterxml-uuid-java-uuid-generator?utm_source=maven-com-fasterxml-uuid-java-uuid-generator&utm_medium=referral&utm_campaign=readme) |
 | Javadocs | [![Javadoc](https://javadoc.io/badge/com.fasterxml.uuid/java-uuid-generator.svg)](http://www.javadoc.io/doc/com.fasterxml.uuid/java-uuid-generator)
 | Code coverage (6.x) | [![codecov.io](https://codecov.io/github/cowtowncoder/java-uuid-generator/coverage.svg?branch=master)](https://codecov.io/github/cowtowncoder/java-uuid-generator?branch=master) |
-| CodeQ (LGTM.com) | [![LGTM alerts](https://img.shields.io/lgtm/alerts/g/cowtowncoder/java-uuid-generator.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cowtowncoder/java-uuid-generator/alerts/) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/cowtowncoder/java-uuid-generator.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cowtowncoder/java-uuid-generator/context:java) |
 
 ## Usage
 
@@ -34,7 +33,7 @@ Maven coordinates are:
 <dependency>
   <groupId>com.fasterxml.uuid</groupId>
   <artifactId>java-uuid-generator</artifactId>
-  <version>4.1.0</version>
+  <version>4.1.1</version>
 </dependency>
 ```
 
@@ -124,25 +123,25 @@ it is rather slower than JUG version: for more information, read
 JUG jar built under `target/`:
 
 ```
-target/java-uuid-generator-4.1.1-SNAPSHOT.jar
+target/java-uuid-generator-4.1.2-SNAPSHOT.jar
 ```
 
 can also be used as a simple Command-line UUID generation tool.
 
 To see usage you can do something like:
 
-    java -jar target/java-uuid-generator-4.1.1-SNAPSHOT.jar
+    java -jar target/java-uuid-generator-4.1.2-SNAPSHOT.jar
 
 and get full instructions, but to generate 5 Random-based UUIDs, you would use:
 
-    java -jar target/java-uuid-generator-4.1.1-SNAPSHOT.jar -c 5 r
+    java -jar target/java-uuid-generator-4.1.2-SNAPSHOT.jar -c 5 r
 
 (where `-c` (or `--count`) means number of UUIDs to generate, and `r` means Random-based version)
 
 NOTE: this functionality is included as of JUG 4.1 -- with earlier versions you would need a bit longer invocation as Jar metadata did not specify "Main-Class".
 If so, you would need to use
 
-    java -cp target/java-uuid-generator-4.1.1-SNAPSHOT.jar com.fasterxml.uuid.Jug -c 5 r
+    java -cp target/java-uuid-generator-4.1.2-SNAPSHOT.jar com.fasterxml.uuid.Jug -c 5 r
 
 ## Compatibility
 
@@ -193,7 +192,7 @@ There are many other publicly available UUID generators. For example:
 
 Note that although some packages claim to be faster than others, it is not clear:
 
-1. whether laims have been properly verified (or, if they have, can be independently verified), OR
+1. whether claims have been properly verified (or, if they have, can be independently verified), OR
 2. whether performance differences truly matter: JUG, for example, can generate millions of UUID per second per core (sometimes hitting the theoretical limit of 10 million per second) -- and it seems unlikely that generation will be bottleneck for any actual use case
 
 so it is often best to choose based on stability of packages and API.
