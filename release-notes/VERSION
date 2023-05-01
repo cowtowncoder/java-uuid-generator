@@ -4,11 +4,15 @@ Project: java-uuid-generator
 Releases
 ============================================================================
 
-Not yet released:
+
+4.1.1 (01-May-2023)
 
 #67: Ensure correct distinction between variant and version in documentation
  (requested by @mindloaf)
  (contributed by @mukham12)
+#69: UUID version 7 implementation sorting incorrect?
+ (reported by Dirk-Jan R)
+ (fix contributed by Hal H)
 
 4.1.0 (07-Jan-2023)
 

@@ -120,7 +120,7 @@ public class Generators
     /**
      * Factory method for constructing UUID generator that generates UUID using
      * version 7 (Unix Epoch time+random based).
-    */
+     */
     public static TimeBasedEpochGenerator timeBasedEpochGenerator()
     {
         return timeBasedEpochGenerator(null);
@@ -128,8 +128,10 @@ public class Generators
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 7 (Unix Epoch time+random based).
-    */
+     * version 7 (time+random based), using specified Ethernet address
+     * as the location part of UUID.
+     * No additional external synchronization is used.
+     */
     public static TimeBasedEpochGenerator timeBasedEpochGenerator(Random random)
     {
         return new TimeBasedEpochGenerator(random);
@@ -145,7 +147,7 @@ public class Generators
      * instead access one of host's NIC addresses using
      * {@link EthernetAddress#fromInterface} which will use one of available
      * MAC (Ethernet) addresses available.
-    */
+     */
     public static TimeBasedGenerator timeBasedGenerator()
     {
         return timeBasedGenerator(null);
