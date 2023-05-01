@@ -14,7 +14,13 @@
  */
 package com.fasterxml.uuid;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 import java.util.UUID;
+
+import com.fasterxml.uuid.impl.TimeBasedEpochGenerator;
 
 import junit.framework.TestCase;
 
@@ -97,6 +103,26 @@ public class UUIDComparatorTest
             int y = comp.compare(u2, u1);
             if (y <= 0) {
                 fail("Entry #"+i+" should have value > 0, had "+y);
+            }
+        }
+    }
+
+    public void testSortingMV7() throws Exception {
+        final int count = 10000000;
+        Random entropy = new Random(0x666); 
+        final TimeBasedEpochGenerator generator = Generators.timeBasedEpochGenerator(entropy);
+        List<UUID> created = new ArrayList<UUID>(count);
+        for (int i = 0; i < count; i++) {
+            created.add(generator.generate());
+        }
+        List<UUID> sortedUUID = new ArrayList<UUID>(created);
+        sortedUUID.sort(new UUIDComparator());
+        HashSet<UUID> unique = new HashSet<UUID>(count);
+        
+        for (int i = 0; i < created.size(); i++) {
+            assertEquals("Error at: " + i, created.get(i), sortedUUID.get(i));
+            if (!unique.add(created.get(i))) {
+                System.out.println("Duplicate at: " + i);
             }
         }
     }
