@@ -1,9 +1,9 @@
-/*
-Package that contains core (non-optional) Java UUID Generator API classes.
+/**
+Package that contains classes that define Java UUID Generator API.
 Implementation classes can be found from under {@link com.fasterxml.uuid.impl}.
 <p>
-The primary point is {@link com.fasterxml.uuid.Generators}, used to construct actual
-generators, based on method to use and some optional arguments.
+The primary API entrypoint is {@link com.fasterxml.uuid.Generators},
+used to construct actual generators to use for UUID generation.
 */
 
 package com.fasterxml.uuid;

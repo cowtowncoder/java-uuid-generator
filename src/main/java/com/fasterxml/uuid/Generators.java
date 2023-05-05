@@ -42,11 +42,6 @@ public class Generators
      */
     protected static UUIDTimer _sharedTimer;
 
-    /**
-     * The hardware address of the egress network interface.
-     */
-    protected static EthernetAddress _egressIfAddr = null;
-    
     // // Random-based generation
     
     /**
@@ -124,8 +119,8 @@ public class Generators
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 7 (Unix Epoch time+random based).
-    */
+     * version 7 (Unix Epoch time+random based).
+     */
     public static TimeBasedEpochGenerator timeBasedEpochGenerator()
     {
         return timeBasedEpochGenerator(null);
@@ -133,7 +128,7 @@ public class Generators
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 7 (time+random based), using specified Ethernet address
+     * version 7 (time+random based), using specified Ethernet address
      * as the location part of UUID.
      * No additional external synchronization is used.
      */
@@ -145,31 +140,14 @@ public class Generators
     // // Time+location-based generation
 
     /**
-     * Factory method for constructing UUID generator that generates UUID using variant 1
-     * (time+location based). This method will use the ethernet address of the interface
-     * that routes to the default gateway. For most simple and common networking configurations
-     * this will be the most appropriate address to use. The default interface is determined
-     * by the calling {@link EthernetAddress#fromEgressInterface()}.  Note that this will only
-     * identify the egress interface once: if you have a complex network setup where your
-     * outbound routes/interfaces may change dynamically, and you want your UUIDs to
-     * accurately reflect which interface is being actively used, this method is not for you.
-     *
-     * @since 4.1
-     */
-    public static TimeBasedGenerator egressTimeBasedGenerator()
-    {
-        return timeBasedGenerator(egressInterfaceAddress());
-    }
-
-    /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 1 (time+location based).
+     * version 1 (time+location based).
      * Since no Ethernet address is passed, a bogus broadcast address will be
      * constructed for purpose of UUID generation; usually it is better to
      * instead access one of host's NIC addresses using
      * {@link EthernetAddress#fromInterface} which will use one of available
      * MAC (Ethernet) addresses available.
-    */
+     */
     public static TimeBasedGenerator timeBasedGenerator()
     {
         return timeBasedGenerator(null);
@@ -177,7 +155,7 @@ public class Generators
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 1 (time+location based), using specified Ethernet address
+     * version 1 (time+location based), using specified Ethernet address
      * as the location part of UUID.
      * No additional external synchronization is used.
      */
@@ -188,7 +166,7 @@ public class Generators
     
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 1 (time+location based), using specified Ethernet address
+     * version 1 (time+location based), using specified Ethernet address
      * as the location part of UUID, and specified synchronizer (which may add
      * additional restrictions to guarantee system-wide uniqueness).
      * 
@@ -211,7 +189,7 @@ public class Generators
     
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 1 (time+location based), using specified Ethernet address
+     * version 1 (time+location based), using specified Ethernet address
      * as the location part of UUID, and specified {@link UUIDTimer} instance
      * (which includes embedded synchronizer that defines synchronization behavior).
      */
@@ -228,7 +206,7 @@ public class Generators
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 6 (time+location based, reordered for DB locality). Since no Ethernet
+     * version 6 (time+location based, reordered for DB locality). Since no Ethernet
      * address is passed, a bogus broadcast address will be constructed for purpose
      * of UUID generation; usually it is better to instead access one of host's NIC
      * addresses using {@link EthernetAddress#fromInterface} which will use one of
@@ -241,7 +219,7 @@ public class Generators
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 6 (time+location based, reordered for DB locality), using specified
+     * version 6 (time+location based, reordered for DB locality), using specified
      * Ethernet address as the location part of UUID. No additional external
      * synchronization is used.
      */
@@ -252,7 +230,7 @@ public class Generators
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * variant 6 (time+location based, reordered for DB locality), using specified
+     * version 6 (time+location based, reordered for DB locality), using specified
      * Ethernet address as the location part of UUID, and specified
      * {@link UUIDTimer} instance (which includes embedded synchronizer that defines
      * synchronization behavior).
@@ -283,12 +261,4 @@ public class Generators
         }
         return _sharedTimer;
     }
-
-    private static synchronized EthernetAddress egressInterfaceAddress() 
-    {
-    	  if (_egressIfAddr == null) {
-    	      _egressIfAddr = EthernetAddress.fromEgressInterface();
-    	  }
-    	  return _egressIfAddr;
-  	}
 }

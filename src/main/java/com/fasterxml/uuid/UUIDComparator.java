@@ -6,13 +6,13 @@ import java.util.UUID;
 /**
  * Default {@link java.util.UUID} comparator is not very useful, since
  * it just does blind byte-by-byte comparison which does not work well
- * for time+location - based UUIDs. Additionally it also uses signed
+ * for time+location - based UUIDs. Additionally, it also uses signed
  * comparisons for longs which can lead to unexpected behavior
  * This comparator does implement proper lexical ordering: starting with
  * type (different types are collated
  * separately), followed by time and location (for time/location based),
  * and simple lexical (byte-by-byte) ordering for name/hash and random
- * variants.
+ * versions.
  * 
  * @author tatu
  */
@@ -36,7 +36,7 @@ public class UUIDComparator implements Comparator<UUID>
         if (diff != 0) {
             return diff;
         }
-        // Second: for time-based variant, order by time stamp:
+        // Second: for time-based version, order by time stamp:
         if (type == UUIDType.TIME_BASED.raw()) {
             diff = compareULongs(u1.timestamp(), u2.timestamp());
             if (diff == 0) {

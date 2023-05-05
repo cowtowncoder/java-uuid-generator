@@ -6,8 +6,8 @@ import com.fasterxml.uuid.*;
 
 /**
  * Implementation of UUID generator that uses time/location based generation
- * method field compatible with UUIDv1, reorderd for improved DB locality
- * (variant 6).
+ * method field compatible with UUIDv1, reorderd for improved DB locality.
+ * This is usually referred to as "Version 6".
  * <p>
  * As all JUG provided implementations, this generator is fully thread-safe.
  * Additionally it can also be made externally synchronized with other instances

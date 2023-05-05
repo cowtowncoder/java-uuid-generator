@@ -120,7 +120,9 @@ Hal Hildebrand (Hellblazer@github)
   [4.1.0]
   * Contributed #46: Add support for Proposed type v7 (epoch-based time uuid)
   [4.1.0]
+  * Contributed fix fox #69: UUID version 7 implementation sorting incorrect?
+  [4.1.1]
 
-Paul Galbraith (pgalbraith@github)
-  * Contributed #52: Add `Generators.egressTimeBasedGenerator()` method that constructs
-    `TimedBasedGenerator` with a sensible choice of interface
+Dirk-Jan Rutten (excitement-engineer@github)
+  * Reported #69: UUID version 7 implementation sorting incorrect?
+  [4.1.1]

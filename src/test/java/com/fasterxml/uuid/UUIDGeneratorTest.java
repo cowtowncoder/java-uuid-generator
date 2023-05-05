@@ -250,13 +250,15 @@ public class UUIDGeneratorTest extends TestCase
      * Test of generateTimeBasedEpochUUID() method,
      * of class com.fasterxml.uuid.UUIDGenerator.
      */
-    public void testGenerateTimeBasedEpochUUID()
+    public void testGenerateTimeBasedEpochUUID() throws Exception
     {
         // this test will attempt to check for reasonable behavior of the
         // generateTimeBasedUUID method
+        
+        Random entropy = new Random(0x666);
 
         // we need a instance to use
-        TimeBasedEpochGenerator uuid_gen = Generators.timeBasedEpochGenerator();
+        TimeBasedEpochGenerator uuid_gen = Generators.timeBasedEpochGenerator(entropy);
 
         // first check that given a number of calls to generateTimeBasedEpochUUID,
         // all returned UUIDs order after the last returned UUID
@@ -268,14 +270,16 @@ public class UUIDGeneratorTest extends TestCase
 
         // before we generate all the uuids, lets get the start time
         long start_time = System.currentTimeMillis();
+        Thread.sleep(2);  // Clean start time
 
         // now create the array of uuids
         for (int i = 0; i < uuid_array.length; i++) {
             uuid_array[i] = uuid_gen.generate();
         }
-
+ 
         // now capture the end time
         long end_time = System.currentTimeMillis();
+        Thread.sleep(2);  // Clean end time
 
         // check that none of the UUIDs are null
         checkUUIDArrayForNonNullUUIDs(uuid_array);
@@ -284,7 +288,7 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.TIME_BASED_EPOCH);
 
         // check that all the uuids were generated with correct order
-//        checkUUIDArrayForCorrectOrdering(uuid_array);
+        checkUUIDArrayForCorrectOrdering(uuid_array);
 
         // check that all uuids were unique
         checkUUIDArrayForUniqueness(uuid_array);
@@ -703,7 +707,7 @@ public class UUIDGeneratorTest extends TestCase
         }
     }
 
-    // Modified version for Variant 6 (reordered timestamps)
+    // Modified version for Version 6 (reordered timestamps)
     private void checkUUIDArrayForCorrectCreationTimeReorder(UUID[] uuidArray,
             long startTime, long endTime)
     {
@@ -757,14 +761,10 @@ public class UUIDGeneratorTest extends TestCase
         }
     }
 
-    // Modified version for Variant 7 (Unix Epoch timestamps)
+    // Modified version for Variant 7 (Unix Epoch monotonic timestamps)
     private void checkUUIDArrayForCorrectCreationTimeEpoch(UUID[] uuidArray,
             long startTime, long endTime)
     {
-
-        // 21-Feb-2020, tatu: Not sure why this would be checked, as timestamps come
-        // from
-        // System.currenTimeMillis()...
         assertTrue("Start time: " + startTime + " was after the end time: " + endTime, startTime <= endTime);
 
         // let's check that all uuids in the array have a timestamp which lands
@@ -772,11 +772,11 @@ public class UUIDGeneratorTest extends TestCase
         for (int i = 0; i < uuidArray.length; i++) {
             byte[] temp_uuid = UUIDUtil.asByteArray(uuidArray[i]);
             ByteBuffer buff = ByteBuffer.wrap(temp_uuid);
-            long uuid_time = buff.getLong() >>> 16;
+            final long uuid_time = buff.getLong() >>> 16; 
             // now check that the times are correct
             assertTrue("Start time: " + startTime + " was not before UUID timestamp: " + uuid_time,
                        startTime <= uuid_time);
-            assertTrue("UUID timestamp: " + uuid_time + " was not before the end time: " + endTime,
+            assertTrue("UUID: " + i + " timestamp: " + uuid_time + " was not before the end time: " + endTime,
                        uuid_time <= endTime);
         }
     }

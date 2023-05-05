@@ -16,10 +16,9 @@ JUG is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENS
 | ---- | ------ |
 | Build (CI) | [![Build (github)](https://github.com/cowtowncoder/java-uuid-generator/actions/workflows/main.yml/badge.svg)](https://github.com/cowtowncoder/java-uuid-generator/actions/workflows/main.yml) |
 | Artifact |  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.fasterxml.uuid/java-uuid-generator/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.fasterxml.uuid/java-uuid-generator/) |
-| OSS Sponsorship | None yet |
+| OSS Sponsorship | [![Tidelift](https://tidelift.com/badges/package/maven/com.fasterxml.uuid:java-uuid-generator)](https://tidelift.com/subscription/pkg/maven-com-fasterxml-uuid-java-uuid-generator?utm_source=maven-com-fasterxml-uuid-java-uuid-generator&utm_medium=referral&utm_campaign=readme) |
 | Javadocs | [![Javadoc](https://javadoc.io/badge/com.fasterxml.uuid/java-uuid-generator.svg)](http://www.javadoc.io/doc/com.fasterxml.uuid/java-uuid-generator)
 | Code coverage (6.x) | [![codecov.io](https://codecov.io/github/cowtowncoder/java-uuid-generator/coverage.svg?branch=master)](https://codecov.io/github/cowtowncoder/java-uuid-generator?branch=master) |
-| CodeQ (LGTM.com) | [![LGTM alerts](https://img.shields.io/lgtm/alerts/g/cowtowncoder/java-uuid-generator.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cowtowncoder/java-uuid-generator/alerts/) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/cowtowncoder/java-uuid-generator.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cowtowncoder/java-uuid-generator/context:java) |
 
 ## Usage
 
@@ -34,7 +33,7 @@ Maven coordinates are:
 <dependency>
   <groupId>com.fasterxml.uuid</groupId>
   <artifactId>java-uuid-generator</artifactId>
-  <version>4.0.1</version>
+  <version>4.1.1</version>
 </dependency>
 ```
 
@@ -61,26 +60,18 @@ The original use case for JUG was generation of UUID values. This is done by fir
 For example:
 
 ```java
-UUID uuid = Generators.randomBasedGenerator().generate();
-UUID uuid = Generators.timeBasedGenerator().generate();
+UUID uuid = Generators.timeBasedGenerator().generate(); // Version 1
+UUID uuid = Generators.randomBasedGenerator().generate(); // Version 4
+UUID uuid = Generators.nameBasedgenerator().generate("string to hash"); // Version 5
+// With JUG 4.1+: support for https://github.com/uuid6/uuid6-ietf-draft versions 6 and 7:
+UUID uuid = Generators.timeBasedReorderedGenerator().generate(); // Version 6
+UUID uuid = Generators.timeBasedEpochGenerator().generate(); // Version 7
 ```
 
 If you want customize generators, you may also just want to hold on to generator instance:
 
 ```java
 TimeBasedGenerator gen = Generators.timeBasedGenerator(EthernetAddress.fromInterface());
-UUID uuid = gen.generate();
-UUID anotherUuid = gen.generate();
-```
-
-If your machine has a standard IP networking setup, the `Generators.egressTimeBasedGenerator` (added in JUG 4.1) 
-factory method will try to determine which network interface corresponds to the default route for 
-all outgoing network traffic, and use that for creating a time based generator.
-This is likely a good choice for common usage scenarios if you want a version 1 UUID generator, but unfortunately
-is known not to work reliably on some platforms (MacOS seems to have some issues).
-
-```java
-TimeBasedGenerator gen = Generators.egressTimeBasedGenerator();
 UUID uuid = gen.generate();
 UUID anotherUuid = gen.generate();
 ```
@@ -132,25 +123,25 @@ it is rather slower than JUG version: for more information, read
 JUG jar built under `target/`:
 
 ```
-target/java-uuid-generator-4.1.1-SNAPSHOT.jar
+target/java-uuid-generator-4.1.2-SNAPSHOT.jar
 ```
 
 can also be used as a simple Command-line UUID generation tool.
 
 To see usage you can do something like:
 
-    java -jar target/java-uuid-generator-4.1.1-SNAPSHOT.jar
+    java -jar target/java-uuid-generator-4.1.2-SNAPSHOT.jar
 
 and get full instructions, but to generate 5 Random-based UUIDs, you would use:
 
-    java -jar target/java-uuid-generator-4.1.1-SNAPSHOT.jar -c 5 r
+    java -jar target/java-uuid-generator-4.1.2-SNAPSHOT.jar -c 5 r
 
-(where `-c` (or `--count`) means number of UUIDs to generate, and `r` means Random-based variant)
+(where `-c` (or `--count`) means number of UUIDs to generate, and `r` means Random-based version)
 
 NOTE: this functionality is included as of JUG 4.1 -- with earlier versions you would need a bit longer invocation as Jar metadata did not specify "Main-Class".
 If so, you would need to use
 
-    java -cp target/java-uuid-generator-4.1.1-SNAPSHOT.jar com.fasterxml.uuid.Jug -c 5 r
+    java -cp target/java-uuid-generator-4.1.2-SNAPSHOT.jar com.fasterxml.uuid.Jug -c 5 r
 
 ## Compatibility
 
@@ -199,9 +190,9 @@ There are many other publicly available UUID generators. For example:
 * JDK has included `java.util.UUID` since 1.4, but omits generation methods (esp. time/location based ones), has sub-standard performance for many operations and implements comparison in useless way
 * [ohannburkard.de UUID generator](http://johannburkard.de/software/uuid/)
 
-Note that although some packages claim to be faster than others, it is not clear whether:
+Note that although some packages claim to be faster than others, it is not clear:
 
-1. Claims have been properly verified (or, if they have, can be independently verified), AND
-2. It is not likely that performance differences truly matter: JUG, for example, can generate a millions of UUID per second per core (sometimes hitting the theoretical limit of 10 million per second) -- and it seems unlikely that generation will be bottleneck for about any use case
+1. whether claims have been properly verified (or, if they have, can be independently verified), OR
+2. whether performance differences truly matter: JUG, for example, can generate millions of UUID per second per core (sometimes hitting the theoretical limit of 10 million per second) -- and it seems unlikely that generation will be bottleneck for any actual use case
 
 so it is often best to choose based on stability of packages and API.

@@ -4,16 +4,25 @@ Project: java-uuid-generator
 Releases
 ============================================================================
 
-4.1.0 (not yet released)
+
+4.1.1 (01-May-2023)
+
+#67: Ensure correct distinction between variant and version in documentation
+ (requested by @mindloaf)
+ (contributed by @mukham12)
+#69: UUID version 7 implementation sorting incorrect?
+ (reported by Dirk-Jan R)
+ (fix contributed by Hal H)
+
+4.1.0 (07-Jan-2023)
 
 #41: Add support for Proposed type v6 (reordered timestamp)
  (contributed by Hal H)
 #46: Add support for Proposed type v7 (epoch-based time uuid)
  (contributed by Hal H)
-#52: Add `Generators.egressTimeBasedGenerator()` method that constructs `TimedBasedGenerator`
-  with a sensible choice of interface
- (contributed by Paul G)
- #55: Add `Main-Class` manifest to make jar invoke `Jug` class
+#55: Add `Main-Class` manifest to make jar invoke `Jug` class
+#57: Add constants for "Nil UUID", "Max UUID" (from draft "new UUID" spec) in `UUIDUtil`
+#65: Enable "Reproducible Build"
 - Fix a minor issue with argument validation for `Jug` tool class
 - Update junit dependency (via oss-parent:41)
 - Update slf4j-api to 1.7.36

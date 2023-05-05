@@ -6,10 +6,10 @@ import com.fasterxml.uuid.*;
 
 /**
  * Implementation of UUID generator that uses time/location based generation
- * method (variant 1).
+ * method (version 1).
  *<p>
  * As all JUG provided implementations, this generator is fully thread-safe.
- * Additionally it can also be made externally synchronized with other
+ * Additionally, it can also be made externally synchronized with other
  * instances (even ones running on other JVMs); to do this,
  * use {@link com.fasterxml.uuid.ext.FileBasedTimestampSynchronizer}
  * (or equivalent).
