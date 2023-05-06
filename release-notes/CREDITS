@@ -126,3 +126,7 @@ Hal Hildebrand (Hellblazer@github)
 Dirk-Jan Rutten (excitement-engineer@github)
   * Reported #69: UUID version 7 implementation sorting incorrect?
   [4.1.1]
+
+Paul Galbraith (pgalbraith@github)
+  * Contributed #52: Add `Generators.egressTimeBasedGenerator()` method that constructs
+    `TimedBasedGenerator` with a sensible choice of interface
