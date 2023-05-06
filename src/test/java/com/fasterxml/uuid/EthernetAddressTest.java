@@ -17,22 +17,21 @@
 
 package com.fasterxml.uuid;
 
-import java.util.Arrays;
-import java.util.Random;
-
 import com.fasterxml.uuid.impl.TimeBasedGenerator;
-
+import java.net.InetSocketAddress;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+
+import java.util.Arrays;
+import java.util.Random;
 
 /**
  * JUnit Test class for the com.fasterxml.uuid.EthernetAddress class.
  *
  * @author Eric Bie
  * @author Tatu Saloranta (changes for version 3.0)
- * @author Paul Galbraith (egress-related tests)
  */
 public class EthernetAddressTest extends TestCase
 {
@@ -1310,9 +1309,6 @@ public class EthernetAddressTest extends TestCase
         assertNotNull(addr.toString());
     }
 
-    // 20-Jun-2022, tatu: Not sure why @Ignore didn't work but
-    //   need to comment out until [#52] is fully resolved
-/*
     public void testFromEgressInterfaceRoot() throws Exception
     {
         InetSocketAddress extAddr = new InetSocketAddress("a.root-servers.net", 0);
@@ -1327,7 +1323,6 @@ public class EthernetAddressTest extends TestCase
         assertNotNull(ifAddr);
         assertNotNull(ifAddr.toString());
     }
-    */
 
     public void testDefaultTimeBasedGenerator()
     {
