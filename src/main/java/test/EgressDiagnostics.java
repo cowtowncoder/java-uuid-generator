@@ -1,5 +1,6 @@
 package test;
 
+import java.io.IOException;
 import java.net.*;
 
 public class EgressDiagnostics {
@@ -29,23 +30,36 @@ public class EgressDiagnostics {
     }
 
     public static void tryRemote(InetSocketAddress remote) {
-        DatagramSocket socket = null;
+        DatagramSocket ds = null;
+        Socket socket = null;
         try {
             System.out.println("\nremote: " + remote);
             System.out.println("reachable: " + remote.getAddress().isReachable(3000));
-            socket = new DatagramSocket();
-            socket.connect(remote);
-            InetAddress local = socket.getLocalAddress();
-            System.out.println("local: " + local);
+            ds = new DatagramSocket();
+            ds.connect(remote);
+            InetAddress local = ds.getLocalAddress();
+            System.out.println("ds local: " + local);
+            if (local.equals(InetAddress.getByName("0.0.0.0"))) {
+                socket = new Socket();
+                socket.connect(remote, 3000);
+                local = socket.getLocalAddress();
+                System.out.println("socket local: " + local);
+            }
             NetworkInterface ni = NetworkInterface.getByInetAddress(local);
             System.out.println("interface: " + ni);
             System.out.println("hardware: " + (ni == null ? null : macBytesToHex(ni.getHardwareAddress())));
         } catch (Throwable t) {
             System.out.println(t);
-            t.printStackTrace();
         } finally {
+            if (ds != null) {
+                ds.close();
+            }
             if (socket != null) {
-                socket.close();
+                try {
+                    socket.close();
+                } catch (IOException ioe) {
+                    System.out.println(ioe);
+                }
             }
         }
     }

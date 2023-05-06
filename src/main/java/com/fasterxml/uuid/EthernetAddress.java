@@ -15,12 +15,9 @@
 
 package com.fasterxml.uuid;
 
+import java.io.IOException;
 import java.io.Serializable;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
+import java.net.*;
 import java.security.SecureRandom;
 import java.util.Enumeration;
 import java.util.Random;
@@ -348,18 +345,32 @@ public class EthernetAddress
      */
     public static EthernetAddress fromEgressInterface(InetSocketAddress externalSocketAddress) 
     {
-        DatagramSocket socket = null;
+        DatagramSocket ds = null;
+        Socket socket = null;
         try {
-            socket = new DatagramSocket();
-            socket.connect(externalSocketAddress);
-            InetAddress localAddress = socket.getLocalAddress();
+            ds = new DatagramSocket();
+            ds.connect(externalSocketAddress);
+            InetAddress localAddress = ds.getLocalAddress();
+            if (localAddress.equals(InetAddress.getByName("0.0.0.0"))) {
+                // try using Socket instead, especially for MacOS
+                socket = new Socket();
+                socket.connect(externalSocketAddress, 3000);
+                localAddress = socket.getLocalAddress();
+            }
             NetworkInterface egressIf = NetworkInterface.getByInetAddress(localAddress);
             return fromInterface(egressIf);
-        } catch (SocketException e) {
+        } catch (Exception e) {
             return null;
         } finally {
+            if (ds != null) {
+                ds.close();
+            }
             if (socket != null) {
-                socket.close();
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    // ignore;
+                }
             }
         }
     }
