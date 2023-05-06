@@ -15,6 +15,8 @@
 
 package com.fasterxml.uuid;
 
+import com.fasterxml.uuid.EgressInterfaceFinder.EgressResolutionException;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.*;
@@ -287,7 +289,7 @@ public class EthernetAddress
     /**
      * A factory method to return the ethernet address of a specified network interface.
      *
-     * @since 4.1
+     * @since 4.2
      */
     public static EthernetAddress fromInterface(NetworkInterface nint) 
     {
@@ -305,6 +307,31 @@ public class EthernetAddress
     }
 
     /**
+     * Factory method that locates a network interface that has
+     * a suitable mac address (ethernet cards, and things that
+     * emulate one), and return that address. It will first try to
+     * identify an egress interface, and failing that, it will select
+     * indeterminately from all non-loopback interfaces found.
+     * Method is meant for accessing an address needed to construct
+     * generator for time+location based UUID generation method.
+     *
+     * @return Ethernet address of one of interfaces system has;
+     *    not including local or loopback addresses; if one exists,
+     *    null if no such interfaces are found.
+     *
+     * @since 4.2
+     */
+    public static EthernetAddress fromPreferredInterface()
+    {
+        EthernetAddress egressIfAddress = fromEgressInterface();
+        if (egressIfAddress == null) {
+            return fromInterface();
+        } else {
+            return egressIfAddress;
+        }
+    }
+
+    /**
      * A factory method that will try to determine the ethernet address of
      * the network interface that connects to the default network gateway.
      * To do this it will try to open a connection to one of the root DNS
@@ -315,63 +342,15 @@ public class EthernetAddress
      * that interface will be returned.  If all attempts are unsuccessful,
      * null will be returned.
      *
-     * @since 4.1
+     * @since 4.2
      */
-    public static EthernetAddress fromEgressInterface() 
+    public static EthernetAddress fromEgressInterface()
     {
-        String roots = "abcdefghijklm";
-        int index = new Random().nextInt(roots.length());
-        String name = roots.charAt(index) + ".root-servers.net";
-        // Specify standard/default port DNS uses; more robust on some platforms
-        // (MacOS/JDK 17), see:
-        // https://github.com/cowtowncoder/java-uuid-generator/pull/59
-        InetSocketAddress externalAddress = new InetSocketAddress(name, 53);
-        if (externalAddress.isUnresolved()) {
-            externalAddress = new InetSocketAddress("1.1.1.1", 0);
-        }
-        EthernetAddress ifAddr = fromEgressInterface(externalAddress);
-        if (ifAddr == null) {
-            return fromEgressInterface(new InetSocketAddress("1::1", 0));
-        } else {
-            return ifAddr;
-        }
-    }
-
-    /**
-     * A factory method to return the address of the interface used to route
-     * traffic to the specified IP address.
-     *
-     * @since 4.1
-     */
-    public static EthernetAddress fromEgressInterface(InetSocketAddress externalSocketAddress) 
-    {
-        DatagramSocket ds = null;
-        Socket socket = null;
         try {
-            ds = new DatagramSocket();
-            ds.connect(externalSocketAddress);
-            InetAddress localAddress = ds.getLocalAddress();
-            if (localAddress.equals(InetAddress.getByName("0.0.0.0"))) {
-                // try using Socket instead, especially for MacOS
-                socket = new Socket();
-                socket.connect(externalSocketAddress, 3000);
-                localAddress = socket.getLocalAddress();
-            }
-            NetworkInterface egressIf = NetworkInterface.getByInetAddress(localAddress);
-            return fromInterface(egressIf);
-        } catch (Exception e) {
+            EgressInterfaceFinder finder = new EgressInterfaceFinder();
+            return fromInterface(finder.egressInterface());
+        } catch (EgressResolutionException e) {
             return null;
-        } finally {
-            if (ds != null) {
-                ds.close();
-            }
-            if (socket != null) {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    // ignore;
-                }
-            }
         }
     }
 
