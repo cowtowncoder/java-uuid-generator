@@ -78,6 +78,7 @@ public class EgressInterfaceFinder {
      * one of them succeeds.
      *
      * @return the egress interface
+     * @param finders array of finder callbacks to be executed
      * @throws EgressResolutionException if an egress interface could not be
      *                                   determined
      * @since 4.2
@@ -151,7 +152,7 @@ public class EgressInterfaceFinder {
      * methods:
      * <ul>
      * <li>using a {@link DatagramSocket}, which seems to work well for Windows
-     * & Linux, and is faster to uses than {@link Socket} as opening one does
+     * &amp; Linux, and is faster to uses than {@link Socket} as opening one does
      * not actually require negotiate a handshake connection, but this does
      * not appear to work on MacOS
      * <li>using a {@link Socket}, which seems to work better for MacOS, but
@@ -195,6 +196,14 @@ public class EgressInterfaceFinder {
         return fromAggregate(finders);
     }
 
+    /**
+     * Returns a finder that tries to determine egress interface by connecting
+     * to the specified remote address.
+     *
+     * @param timeoutMillis give up after this length of time
+     * @param address the remote address to connect to
+     * @return finder callback
+     */
     private Finder remoteSocketConnectionFinder(
             final int timeoutMillis, final InetSocketAddress address) {
         return new Finder() {
@@ -335,7 +344,6 @@ public class EgressInterfaceFinder {
      * working for you.
      *
      * @since 4.2
-     * @author Paul Galbraith <paul@galbraiths.ca>
      */
     public static class EgressResolutionException extends Exception {
         private final List<String> messages = new ArrayList<String>();
