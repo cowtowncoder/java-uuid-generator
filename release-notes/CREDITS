@@ -128,5 +128,6 @@ Dirk-Jan Rutten (excitement-engineer@github)
   [4.1.1]
 
 Paul Galbraith (pgalbraith@github)
-  * Contributed #52: Add `Generators.egressTimeBasedGenerator()` method that constructs
-    `TimedBasedGenerator` with a sensible choice of interface
+  * Contributed #73: Add `Generators.defaultTimeBasedGenerator()` to use "default"
+    interface  address for time/based UUIDs
+  [4.2.0]
