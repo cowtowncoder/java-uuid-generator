@@ -17,15 +17,15 @@
 
 package com.fasterxml.uuid;
 
-import java.util.Arrays;
-import java.util.Random;
-
 import com.fasterxml.uuid.impl.TimeBasedGenerator;
-
+import java.net.InetSocketAddress;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+
+import java.util.Arrays;
+import java.util.Random;
 
 /**
  * JUnit Test class for the com.fasterxml.uuid.EthernetAddress class.
@@ -1307,6 +1307,21 @@ public class EthernetAddressTest extends TestCase
         EthernetAddress addr = EthernetAddress.fromInterface();
         assertNotNull(addr);
         assertNotNull(addr.toString());
+    }
+
+    public void testFromEgressInterface() {
+        EthernetAddress ifAddr = EthernetAddress.fromEgressInterface();
+        assertNotNull(ifAddr);
+        assertNotNull(ifAddr.toString());
+    }
+
+    public void testDefaultTimeBasedGenerator()
+    {
+        TimeBasedGenerator generator = Generators.defaultTimeBasedGenerator();
+        assertNotNull(generator);
+        EthernetAddress ifAddr = generator.getEthernetAddress();
+        assertNotNull(ifAddr);
+        assertNotNull(ifAddr.toString());
     }
 
     public void testBogus() throws Exception

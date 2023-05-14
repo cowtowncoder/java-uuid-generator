@@ -15,12 +15,11 @@
 
 package com.fasterxml.uuid;
 
+import com.fasterxml.uuid.EgressInterfaceFinder.EgressResolutionException;
+
+import java.io.IOException;
 import java.io.Serializable;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
+import java.net.*;
 import java.security.SecureRandom;
 import java.util.Enumeration;
 import java.util.Random;
@@ -275,9 +274,9 @@ public class EthernetAddress
             while (en.hasMoreElements()) {
                 NetworkInterface nint = en.nextElement();
                 if (!nint.isLoopback()) {
-                    byte[] data = nint.getHardwareAddress();
-                    if ((data != null) && (data.length == 6)) {
-                        return new EthernetAddress(data);
+                    EthernetAddress addr = fromInterface(nint);
+                    if (addr != null) {
+                        return addr;
                     }
                 }
             }
@@ -285,6 +284,74 @@ public class EthernetAddress
             // fine, let's take is as signal of not having any interfaces
         }
         return null;
+    }
+
+    /**
+     * A factory method to return the ethernet address of a specified network interface.
+     *
+     * @since 4.2
+     */
+    public static EthernetAddress fromInterface(NetworkInterface nint) 
+    {
+        if (nint != null) {
+            try {
+                byte[] data = nint.getHardwareAddress();
+                if (data != null && data.length == 6) {
+                    return new EthernetAddress(data);
+                }
+            } catch (SocketException e) {
+                // could not get address
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Factory method that locates a network interface that has
+     * a suitable mac address (ethernet cards, and things that
+     * emulate one), and return that address. It will first try to
+     * identify an egress interface, and failing that, it will select
+     * indeterminately from all non-loopback interfaces found.
+     * Method is meant for accessing an address needed to construct
+     * generator for time+location based UUID generation method.
+     *
+     * @return Ethernet address of one of interfaces system has;
+     *    not including local or loopback addresses; if one exists,
+     *    null if no such interfaces are found.
+     *
+     * @since 4.2
+     */
+    public static EthernetAddress fromPreferredInterface()
+    {
+        EthernetAddress egressIfAddress = fromEgressInterface();
+        if (egressIfAddress == null) {
+            return fromInterface();
+        } else {
+            return egressIfAddress;
+        }
+    }
+
+    /**
+     * A factory method that will try to determine the ethernet address of
+     * the network interface that connects to the default network gateway.
+     * To do this it will try to open a connection to one of the root DNS
+     * servers, or barring that, to address 1.1.1.1, or finally if that also
+     * fails then to IPv6 address "1::1".  If a connection can be opened then
+     * the interface through which that connection is routed is determined
+     * to be the default egress interface, and the corresponding address of
+     * that interface will be returned.  If all attempts are unsuccessful,
+     * null will be returned.
+     *
+     * @since 4.2
+     */
+    public static EthernetAddress fromEgressInterface()
+    {
+        try {
+            EgressInterfaceFinder finder = new EgressInterfaceFinder();
+            return fromInterface(finder.egressInterface());
+        } catch (EgressResolutionException e) {
+            return null;
+        }
     }
 
     /**
