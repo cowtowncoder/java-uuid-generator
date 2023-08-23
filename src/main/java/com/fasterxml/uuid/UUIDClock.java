@@ -26,6 +26,15 @@ package com.fasterxml.uuid;
  */
 public class UUIDClock
 {
+    private final static UUIDClock DEFAULT = new UUIDClock();
+
+    /**
+     * @since 4.3
+     */
+    public final static UUIDClock systemTimeClock() {
+        return DEFAULT;
+    }
+
     /**
      * Returns the current time in milliseconds.
      */

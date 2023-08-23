@@ -7,6 +7,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.fasterxml.uuid.NoArgGenerator;
+import com.fasterxml.uuid.UUIDClock;
 import com.fasterxml.uuid.UUIDType;
 
 /**
@@ -37,6 +38,15 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
      * Random number generator that this generator uses.
      */
     protected final Random _random;
+
+    /**
+     * Underlying {@link UUIDClock} used for accessing current time, to use for
+     * generation.
+     *
+     * @since 4.3
+     */
+    protected final UUIDClock _clock;
+
     private long _lastTimestamp = -1;
     private final byte[] _lastEntropy  = new byte[ENTROPY_BYTE_LENGTH];
     private final Lock lock = new ReentrantLock();
@@ -53,9 +63,20 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
      *   use a <b>good</b> (pseudo) random number generator; for example, JDK's
      *   {@link SecureRandom}.
      */
-    
-    public TimeBasedEpochGenerator(Random rnd)
+    public TimeBasedEpochGenerator(Random rnd) {
+        this(rnd, UUIDClock.systemTimeClock());
+    }
+
+    /**
+     * @param rnd Random number generator to use for generating UUIDs; if null,
+     *   shared default generator is used. Note that it is strongly recommend to
+     *   use a <b>good</b> (pseudo) random number generator; for example, JDK's
+     *   {@link SecureRandom}.
+     * @clock clock Object used for accessing current time to use for generation
+     */
+    public TimeBasedEpochGenerator(Random rnd, UUIDClock clock)
     {
+        _clock = clock;
         if (rnd == null) {
             rnd = LazyRandom.sharedSecureRandom(); 
         }
@@ -82,7 +103,7 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
     {
         lock.lock();
         try { 
-            long rawTimestamp = System.currentTimeMillis();
+            long rawTimestamp = _clock.currentTimeMillis();
             if (rawTimestamp == _lastTimestamp) {
                 boolean c = true;
                 for (int i = ENTROPY_BYTE_LENGTH - 1; i >= 0; i--) {
