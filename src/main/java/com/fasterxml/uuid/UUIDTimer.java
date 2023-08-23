@@ -233,7 +233,9 @@ public class UUIDTimer
     /**
      * Method that constructs unique timestamp suitable for use for
      * constructing UUIDs. Default implementation is fully synchronized;
-     * sub-classes may choose to implemented alternate strategies
+     * sub-classes may choose to implement alternate strategies but
+     * due to existing usage and expectations should also be synchronized
+     * unless usage is specifically known not to require it.
      *
      * @return 64-bit timestamp to use for constructing UUID
      */

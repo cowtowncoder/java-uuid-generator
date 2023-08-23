@@ -10,5 +10,10 @@ import java.util.UUID;
  */
 public abstract class NoArgGenerator extends UUIDGenerator
 {
+    /**
+     * Method for generating a {@link UUID}.
+     *
+     * @return Newly generated {@link UUID}
+     */
     public abstract UUID generate();
 }

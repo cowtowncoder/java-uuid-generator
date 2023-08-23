@@ -85,11 +85,7 @@ public class TimeBasedGenerator extends NoArgGenerator
     /* UUID generation
     /**********************************************************************
      */
-    
-    /* As timer is not synchronized (nor _uuidBytes), need to sync; but most
-     * importantly, synchronize on timer which may also be shared between
-     * multiple instances
-     */
+
     @Override
     public UUID generate()
     {
