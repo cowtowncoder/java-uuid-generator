@@ -76,11 +76,11 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
      */
     public TimeBasedEpochGenerator(Random rnd, UUIDClock clock)
     {
-        _clock = clock;
         if (rnd == null) {
             rnd = LazyRandom.sharedSecureRandom(); 
         }
         _random = rnd;
+        _clock = clock;
     }
 
     /*

@@ -17,6 +17,8 @@
 
 package com.fasterxml.uuid;
 
+import static org.junit.Assert.assertNotEquals;
+
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.util.*;
@@ -25,7 +27,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
-
 
 import com.fasterxml.uuid.impl.UUIDUtil;
 import com.fasterxml.uuid.impl.NameBasedGenerator;
@@ -38,6 +39,7 @@ import com.fasterxml.uuid.impl.TimeBasedGenerator;
  * JUnit Test class for the com.fasterxml.uuid.UUIDGenerator class.
  *
  * @author Eric Bie
+ * @author Tatu Saloranta
  */
 public class UUIDGeneratorTest extends TestCase
 {
@@ -254,7 +256,7 @@ public class UUIDGeneratorTest extends TestCase
     {
         // this test will attempt to check for reasonable behavior of the
         // generateTimeBasedUUID method
-        
+
         Random entropy = new Random(0x666);
 
         // we need a instance to use
@@ -295,6 +297,38 @@ public class UUIDGeneratorTest extends TestCase
 
         // check that all uuids have timestamps between the start and end time
         checkUUIDArrayForCorrectCreationTimeEpoch(uuid_array, start_time, end_time);
+    }
+
+    // [#70]: allow use of custom UUIDClock
+    public void testGenerateTimeBasedEpochUUIDWithFixedClock() throws Exception
+    {
+        final UUIDClock fixedClock = new UUIDClock() {
+            @Override
+            public long currentTimeMillis() {
+                return 123L;
+            }
+        };
+        // we need a instance to use
+        TimeBasedEpochGenerator gen = Generators.timeBasedEpochGenerator(new Random(123),
+                fixedClock);
+
+        UUID uuid1 = gen.generate();
+        UUID uuid2 = gen.generate();
+        UUID uuid3 = gen.generate();
+
+        // Alas! Was thinking of comparing fixed value, but even Epoch-based generator
+        // forces uniqueness by default. So instead will only test that generation
+        // works and produces unique instances
+
+        // First: should be unique (diff contents)
+        assertNotEquals(uuid1, uuid2);
+        assertNotEquals(uuid2, uuid3);
+        assertNotEquals(uuid3, uuid1);
+
+        // Second: should not be same instances either:
+        assertNotSame(uuid1, uuid2);
+        assertNotSame(uuid2, uuid3);
+        assertNotSame(uuid3, uuid1);
     }
     
     /**
