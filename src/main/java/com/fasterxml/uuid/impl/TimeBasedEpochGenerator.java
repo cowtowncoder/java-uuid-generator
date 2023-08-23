@@ -72,7 +72,7 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
      *   shared default generator is used. Note that it is strongly recommend to
      *   use a <b>good</b> (pseudo) random number generator; for example, JDK's
      *   {@link SecureRandom}.
-     * @clock clock Object used for accessing current time to use for generation
+     * @param clock clock Object used for accessing current time to use for generation
      */
     public TimeBasedEpochGenerator(Random rnd, UUIDClock clock)
     {
