@@ -169,7 +169,7 @@ public class UUIDTimer
 
     public UUIDTimer(Random rnd, TimestampSynchronizer sync) throws IOException
     {
-        this(rnd, sync, new UUIDClock());
+        this(rnd, sync, UUIDClock.systemTimeClock());
     }
 
     /**
