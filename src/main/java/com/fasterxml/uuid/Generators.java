@@ -28,9 +28,9 @@ import com.fasterxml.uuid.impl.TimeBasedGenerator;
 
 /**
  * Root factory class for constructing UUID generators.
- * 
+ *
  * @author tatu
- * 
+ *
  * @since 3.0
  */
 public class Generators
@@ -133,8 +133,8 @@ public class Generators
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * version 7 (time+random based), using specified Ethernet address
-     * as the location part of UUID.
+     * version 7 (Unix Epoch time+random based), using specified {@link Random}
+     * number generator.
      * No additional external synchronization is used.
      */
     public static TimeBasedEpochGenerator timeBasedEpochGenerator(Random random)
@@ -144,9 +144,9 @@ public class Generators
 
     /**
      * Factory method for constructing UUID generator that generates UUID using
-     * version 7 (time+random based), using specified Ethernet address
-     * as the location part of UUID.
-     * Timestamp to use is access using specified {@link UUIDClock}
+     * version 7 (Unix Epoch time+random based), using specified {@link Random}
+     * number generato.
+     * Timestamp to use is accessed using specified {@link UUIDClock}
      *
      * No additional external synchronization is used.
      *
@@ -161,7 +161,7 @@ public class Generators
     // // Time+location-based generation
 
     /**
-     * Factory method for constructing UUID generator that generates UUID using variant 1
+     * Factory method for constructing UUID generator that generates UUID using version 1
      * (time+location based). This method will use the ethernet address of the interface
      * that routes to the default gateway, or if that cannot be found, then the address of
      * an indeterminately selected non-loopback interface. For most simple and common
