@@ -43,7 +43,7 @@ JUG supports all 3 official UUID generation methods.
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <slf4j.version>1.7.36</slf4j.version>
+    <slf4j.version>2.0.9</slf4j.version>
 
     <project.build.outputTimestamp>2023-05-14T23:38:15Z</project.build.outputTimestamp>
   </properties>
