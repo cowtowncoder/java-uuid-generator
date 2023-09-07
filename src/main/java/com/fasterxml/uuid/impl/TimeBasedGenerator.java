@@ -87,9 +87,13 @@ public class TimeBasedGenerator extends NoArgGenerator
      */
 
     @Override
-    public UUID generate()
-    {
+    public UUID generate() {
         final long rawTimestamp = _timer.getTimestamp();
+        return generate(rawTimestamp);
+    }
+
+    public UUID generate(long rawTimestamp)
+    {
         // Time field components are kind of shuffled, need to slice:
         int clockHi = (int) (rawTimestamp >>> 32);
         int clockLo = (int) rawTimestamp;
