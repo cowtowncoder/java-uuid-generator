@@ -87,12 +87,18 @@ public class TimeBasedGenerator extends NoArgGenerator
      */
 
     @Override
-    public UUID generate() {
+    public UUID generate()
+    {
         final long rawTimestamp = _timer.getTimestamp();
-        return generate(rawTimestamp);
+        return construct(rawTimestamp);
     }
 
-    public UUID generate(long rawTimestamp)
+    /**
+     * @since 4.3
+     * @param rawTimestamp unix epoch millis
+     * @return unix epoch time based UUID
+     */
+    public UUID construct(long rawTimestamp)
     {
         // Time field components are kind of shuffled, need to slice:
         int clockHi = (int) (rawTimestamp >>> 32);
