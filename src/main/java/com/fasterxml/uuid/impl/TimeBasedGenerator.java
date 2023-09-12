@@ -89,14 +89,22 @@ public class TimeBasedGenerator extends NoArgGenerator
     @Override
     public UUID generate()
     {
-        final long rawTimestamp = _timer.getTimestamp();
-        return construct(rawTimestamp);
+        return construct(_timer.getTimestamp());
     }
 
     /**
+     * Method that will construct actual {@link UUID} instance for given
+     * timestamp: called by {@link #generate()} but may alternatively be
+     * called directly to construct an instance with known timestamp.
+     * NOTE: calling this method directly does NOT guarantee uniqueness of resulting
+     * {@link UUID} (caller has to guarantee uniqueness)
+     *
+     * @param rawTimestamp Timestamp usually obtained from {@link UUIDTimer#getTimestamp()},
+     *   used for constructing UUID instance
+     *
+     * @return unix Time-based UUID constructed for given timestamp
+     *
      * @since 4.3
-     * @param rawTimestamp unix epoch millis
-     * @return unix epoch time based UUID
      */
     public UUID construct(long rawTimestamp)
     {

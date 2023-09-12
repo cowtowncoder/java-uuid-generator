@@ -105,9 +105,18 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
     }
 
     /**
-     * @since 4.3
+     * Method that will construct actual {@link UUID} instance for given
+     * unix epoch timestamp: called by {@link #generate()} but may alternatively be
+     * called directly to construct an instance with known timestamp.
+     * NOTE: calling this method directly produces somewhat distinct UUIDs as
+     * "entropy" value is still generated as necessary to avoid producing same
+     * {@link UUID} even if same timestamp is being passed.
+     *
      * @param rawTimestamp unix epoch millis
+     *
      * @return unix epoch time based UUID
+     *
+     * @since 4.3
      */
     public UUID construct(long rawTimestamp)
     {

@@ -8,6 +8,9 @@ Releases
 
 #78: TimeBasedEpochGenerator (UUIDv7) can't be provided a `UUIDClock`
  (reported by @Frozenlock)
+#84: Add `construct()` methods to specify the milliseconds being used
+  for time-based UUID generation
+ (contributed by @BranchPredictor)
 
 4.2.0 (14-May-2023)
 
