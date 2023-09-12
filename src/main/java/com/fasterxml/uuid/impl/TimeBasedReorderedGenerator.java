@@ -96,7 +96,16 @@ public class TimeBasedReorderedGenerator extends NoArgGenerator
     {
         // Ok, get 60-bit timestamp (4 MSB are ignored)
         final long rawTimestamp = _timer.getTimestamp();
+        return construct(rawTimestamp);
+    }
 
+    /**
+     * @since 4.3
+     * @param rawTimestamp unix epoch millis
+     * @return unix epoch time based UUID
+     */
+    public UUID construct(long rawTimestamp)
+    {
         // First: discard 4 MSB, next 32 bits (top of 60-bit timestamp) form the
         // highest 32-bit segments
         final long timestampHigh = (rawTimestamp >>> 28) << 32;

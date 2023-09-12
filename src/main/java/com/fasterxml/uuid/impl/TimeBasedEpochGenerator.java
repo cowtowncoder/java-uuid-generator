@@ -97,13 +97,22 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
     /* UUID generation
     /**********************************************************************
      */
-    
+
     @Override
     public UUID generate()
     {
+        return construct(_clock.currentTimeMillis());
+    }
+
+    /**
+     * @since 4.3
+     * @param rawTimestamp unix epoch millis
+     * @return unix epoch time based UUID
+     */
+    public UUID construct(long rawTimestamp)
+    {
         lock.lock();
         try { 
-            long rawTimestamp = _clock.currentTimeMillis();
             if (rawTimestamp == _lastTimestamp) {
                 boolean c = true;
                 for (int i = ENTROPY_BYTE_LENGTH - 1; i >= 0; i--) {
