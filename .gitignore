@@ -1,5 +1,15 @@
-# Skip maven 'target' directory
-target
+syntax: glob
+*.class
+*~
+*.bak
+*.off
+*.old
+*.java.orig
+.DS_Store
+
+# building
+/target
+.mvn/wrapper/maven-wrapper.jar
 
 # plus eclipse crap
 .classpath
