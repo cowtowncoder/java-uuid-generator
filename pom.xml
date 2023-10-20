@@ -190,6 +190,25 @@ https://stackoverflow.com/questions/37958104/maven-javadoc-no-source-files-for-p
           </execution>
         </executions>
       </plugin>
+      <!-- 12-Oct-2023, tatu: JaCoCo for code coverage -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
