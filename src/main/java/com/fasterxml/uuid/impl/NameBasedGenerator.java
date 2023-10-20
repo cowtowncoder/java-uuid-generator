@@ -121,7 +121,13 @@ public class NameBasedGenerator extends StringArgGenerator
         // !!! TODO: 14-Oct-2010, tatu: can repurpose faster UTF-8 encoding from Jackson
         return generate(name.getBytes(_utf8));
     }
-    
+
+    @Override
+    public UUID concurrentGenerate(String name)
+    {
+        return concurrentGenerate(name.getBytes(_utf8));
+    }
+
     @Override
     public UUID generate(byte[] nameBytes)
     {
@@ -134,6 +140,18 @@ public class NameBasedGenerator extends StringArgGenerator
             _digester.update(nameBytes);
             digest = _digester.digest();
         }
+        return UUIDUtil.constructUUID(_type, digest);
+    }
+
+    @Override
+    public UUID concurrentGenerate(byte[] nameBytes){
+        byte[] digest;
+        _digester.reset();
+        if (_namespace != null) {
+            _digester.update(UUIDUtil.asByteArray(_namespace));
+        }
+        _digester.update(nameBytes);
+        digest = _digester.digest();
         return UUIDUtil.constructUUID(_type, digest);
     }
 }

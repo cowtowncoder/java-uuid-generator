@@ -110,12 +110,18 @@ public class Generators
     {
         UUIDType type = null;
         if (digester == null) {
-            try {
-                digester = MessageDigest.getInstance("SHA-1");
-                type = UUIDType.NAME_BASED_SHA1;
-            } catch (NoSuchAlgorithmException nex) {
-                throw new IllegalArgumentException("Couldn't instantiate SHA-1 MessageDigest instance: "+nex.toString());
-            }
+            ThreadLocal<MessageDigest> threadLocalDisgester = new ThreadLocal<MessageDigest>() {
+                @Override
+                protected MessageDigest initialValue() {
+                    try {
+                        return MessageDigest.getInstance("SHA-1");
+                    } catch (NoSuchAlgorithmException nex) {
+                        throw new IllegalArgumentException("Couldn't instantiate SHA-1 MessageDigest instance: "+ nex.toString());
+                    }
+                }
+            };
+            digester = threadLocalDisgester.get();
+            type = UUIDType.NAME_BASED_SHA1;
         }
         return new NameBasedGenerator(namespace, digester, type);
     }
