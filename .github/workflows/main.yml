@@ -3,7 +3,7 @@ on:
   push:
     branches:
     - master
-    - "3.0"
+    - "4.3"
     paths-ignore:
     - "README.md"
     - "release-notes/*"
