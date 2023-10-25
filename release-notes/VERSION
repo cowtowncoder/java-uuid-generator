@@ -7,6 +7,8 @@ Releases
 5.0.0 (not yet released)
 
 #53: Increase JDK baseline to JDK 8
+#85: Fix `LazyRandom` for native code generation tools
+ (contributed by @Maia-Everett)
 
 4.3.0 (12-Sep-2023)
 

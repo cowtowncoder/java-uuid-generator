@@ -131,3 +131,7 @@ Paul Galbraith (pgalbraith@github)
   * Contributed #73: Add `Generators.defaultTimeBasedGenerator()` to use "default"
     interface  address for time/based UUIDs
   [4.2.0]
+
+Maia Everett (Maia-Everett@github)
+  * Contributed #85: Fix `LazyRandom` for native code generation tools
+  [5.0.0]
