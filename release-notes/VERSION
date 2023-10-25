@@ -4,6 +4,10 @@ Project: java-uuid-generator
 Releases
 ============================================================================
 
+5.0.0 (not yet released)
+
+#53: Increase JDK baseline to JDK 8
+
 4.3.0 (12-Sep-2023)
 
 #78: TimeBasedEpochGenerator (UUIDv7) can't be provided a `UUIDClock`
