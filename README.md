@@ -34,7 +34,7 @@ Maven coordinates are:
 <dependency>
   <groupId>com.fasterxml.uuid</groupId>
   <artifactId>java-uuid-generator</artifactId>
-  <version>4.1.1</version>
+  <version>4.3.0</version>
 </dependency>
 ```
 
