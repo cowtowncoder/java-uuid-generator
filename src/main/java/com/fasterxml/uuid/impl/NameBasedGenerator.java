@@ -1,6 +1,7 @@
 package com.fasterxml.uuid.impl;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.UUID;
 
@@ -18,10 +19,7 @@ import com.fasterxml.uuid.UUIDType;
  */
 public class NameBasedGenerator extends StringArgGenerator
 {
-    public final static Charset _utf8;
-    static {
-        _utf8 = Charset.forName("UTF-8");
-    }
+    public final static Charset _utf8 = StandardCharsets.UTF_8;
 
     private final LoggerFacade _logger = LoggerFacade.getLogger(getClass());
 
