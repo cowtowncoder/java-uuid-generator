@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import com.fasterxml.uuid.impl.TimeBasedEpochGenerator;
 
+import com.fasterxml.uuid.impl.TimeBasedEpochRandomGenerator;
 import junit.framework.TestCase;
 
 public class UUIDComparatorTest
