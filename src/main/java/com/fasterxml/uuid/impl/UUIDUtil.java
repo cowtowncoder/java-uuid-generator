@@ -353,4 +353,59 @@ public class UUIDUtil
             throw new IllegalArgumentException("Invalid offset ("+offset+") passed: not enough room in byte array (need 16 bytes)");
         }
     }
+
+    /**
+     * Extract timestamp from time-based UUIDs. If UUID is not time-based type return 0;
+     *
+     * @param uuid uuid timestamp to extract from
+     * @return time in milliseconds, or 0 if type does not support timestamps
+     */
+    public static long extractTimestamp(UUID uuid) {
+        UUIDType type = typeOf(uuid);
+        if (type == null)
+            return 0;
+        switch (type) {
+            case NAME_BASED_SHA1:
+            case UNKNOWN:
+            case DCE:
+            case RANDOM_BASED:
+            case FREE_FORM:
+            case NAME_BASED_MD5:
+                return 0;
+            case TIME_BASED:
+                return getTimestampFromUuidV1(uuid);
+            case TIME_BASED_REORDERED:
+                return getTimestampFromUuidV6(uuid);
+            case TIME_BASED_EPOCH:
+                return getTimestampFromUuidV7(uuid);
+            default:
+                throw new IllegalArgumentException("Unexpected type " + type);
+        }
+    }
+
+    private static long getTimestampFromUuidV1(UUID uuid) {
+        long mostSignificantBits = uuid.getMostSignificantBits();
+        mostSignificantBits = mostSignificantBits & 0b1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1110_1111_1111_1111L;
+        long low = mostSignificantBits >>> 32;
+        long lowOfHigher = mostSignificantBits & 0xFFFF0000L;
+        lowOfHigher = lowOfHigher >>> 16;
+        long highOfHigher = mostSignificantBits & 0xFFFFL;
+        return highOfHigher << 48 | lowOfHigher << 32 | low;
+    }
+
+    private static long getTimestampFromUuidV6(UUID uuid) {
+        long mostSignificantBits = uuid.getMostSignificantBits();
+        mostSignificantBits = mostSignificantBits & 0b1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1001_1111_1111_1111L;
+        long lowL = mostSignificantBits & 0xFFFL;
+        long lowH = mostSignificantBits & 0xFFFF0000L;
+        lowH = lowH >>> 16;
+        long high = mostSignificantBits & 0xFFFFFFFF00000000L;
+        return high >>> 4 | lowH << 12 | lowL;
+    }
+
+    private static long getTimestampFromUuidV7(UUID uuid) {
+        long mostSignificantBits = uuid.getMostSignificantBits();
+        mostSignificantBits = mostSignificantBits & 0b1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1001_1111_1111_1111L;
+        return mostSignificantBits >>> 16;
+    }
 }
