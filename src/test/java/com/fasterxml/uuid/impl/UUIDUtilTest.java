@@ -34,7 +34,7 @@ public class UUIDUtilTest extends TestCase
     public void testExtractTimestampUUIDTimeBased() {
         TimeBasedGenerator generator = Generators.timeBasedGenerator();
         for (int i = 0; i < 9000; i++) {
-            long rawTimestamp = ThreadLocalRandom.current().nextLong() >>> 60;
+            long rawTimestamp = ThreadLocalRandom.current().nextLong() >>> 4;
             UUID uuid = generator.construct(rawTimestamp);
             assertEquals(rawTimestamp, UUIDUtil.extractTimestamp(uuid));
         }
@@ -43,7 +43,7 @@ public class UUIDUtilTest extends TestCase
     public void testExtractTimestampUUIDTimeBasedReordered() {
         TimeBasedReorderedGenerator generator = Generators.timeBasedReorderedGenerator();
         for (int i = 0; i < 9000; i++) {
-            long rawTimestamp = ThreadLocalRandom.current().nextLong() >>> 60;
+            long rawTimestamp = ThreadLocalRandom.current().nextLong() >>> 4;
             UUID uuid = generator.construct(rawTimestamp);
             assertEquals(rawTimestamp, UUIDUtil.extractTimestamp(uuid));
         }
@@ -52,7 +52,7 @@ public class UUIDUtilTest extends TestCase
     public void testExtractTimestampUUIDEpochBased() {
         TimeBasedEpochGenerator generator = Generators.timeBasedEpochGenerator();
         for (int i = 0; i < 9000; i++) {
-            long rawTimestamp = ThreadLocalRandom.current().nextLong() >>> 60;
+            long rawTimestamp = ThreadLocalRandom.current().nextLong() >>> 16;
             UUID uuid = generator.construct(rawTimestamp);
             assertEquals(rawTimestamp, UUIDUtil.extractTimestamp(uuid));
         }
