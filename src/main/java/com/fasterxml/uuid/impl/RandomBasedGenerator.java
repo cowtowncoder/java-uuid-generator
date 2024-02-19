@@ -92,26 +92,4 @@ public class RandomBasedGenerator extends NoArgGenerator
         }
         return UUIDUtil.constructUUID(UUIDType.RANDOM_BASED, r1, r2);
     }
-
-    /*
-    /**********************************************************************
-    /* Internal methods
-    /**********************************************************************
-     */
-
-    protected final static long _toLong(byte[] buffer, int offset)
-    {
-        long l1 = _toInt(buffer, offset);
-        long l2 = _toInt(buffer, offset+4);
-        long l = (l1 << 32) + ((l2 << 32) >>> 32);
-        return l;
-    }
-
-    private final static long _toInt(byte[] buffer, int offset)
-    {
-        return (buffer[offset] << 24)
-            + ((buffer[++offset] & 0xFF) << 16)
-            + ((buffer[++offset] & 0xFF) << 8)
-            + (buffer[++offset] & 0xFF);
-    }
 }
