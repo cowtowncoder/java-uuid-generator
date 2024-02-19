@@ -362,7 +362,7 @@ public class UUIDUtil
      *
      * @return timestamp in milliseconds (since Epoch), or 0 if type does not support timestamps
      *
-     * @since 5.0.0
+     * @since 5.0
      */
     public static long extractTimestamp(UUID uuid)
     {

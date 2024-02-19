@@ -13,6 +13,9 @@ Releases
  (contributed by @magdel)
 #85: Fix `LazyRandom` for native code generation tools
  (contributed by @Maia-Everett)
+#94: Add alternate version to UUIDv7 generator that uses random values on every
+  call (not just for different timestamp)
+ (contributed by @magdel)
 
 4.3.0 (12-Sep-2023)
 

@@ -67,7 +67,7 @@ UUID uuid = Generators.nameBasedgenerator().generate("string to hash"); // Versi
 // With JUG 4.1+: support for https://github.com/uuid6/uuid6-ietf-draft versions 6 and 7:
 UUID uuid = Generators.timeBasedReorderedGenerator().generate(); // Version 6
 UUID uuid = Generators.timeBasedEpochGenerator().generate(); // Version 7
-UUID uuid = Generators.timeBasedEpochRandomGenerator().generate(); // Version 7 with random values
+UUID uuid = Generators.timeBasedEpochRandomGenerator().generate(); // Version 7 with per-call random values
 ```
 
 If you want customize generators, you may also just want to hold on to generator instance:

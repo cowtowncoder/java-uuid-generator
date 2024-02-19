@@ -25,7 +25,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * {@link com.fasterxml.uuid.ext.FileBasedTimestampSynchronizer} (or
  * equivalent).
  *
- * @since 4.1
+ * @since 5.0
  */
 public class TimeBasedEpochRandomGenerator extends NoArgGenerator
 {
@@ -45,8 +45,6 @@ public class TimeBasedEpochRandomGenerator extends NoArgGenerator
     /**
      * Underlying {@link UUIDClock} used for accessing current time, to use for
      * generation.
-     *
-     * @since 4.3
      */
     protected final UUIDClock _clock;
 
@@ -117,8 +115,6 @@ public class TimeBasedEpochRandomGenerator extends NoArgGenerator
      * @param rawTimestamp unix epoch millis
      *
      * @return unix epoch time based UUID
-     *
-     * @since 4.3
      */
     public UUID construct(long rawTimestamp)
     {
