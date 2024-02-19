@@ -1,12 +1,10 @@
 package com.fasterxml.uuid.impl;
 
+import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 import com.fasterxml.uuid.Generators;
 import junit.framework.TestCase;
-import org.junit.Test;
-import org.junit.runners.JUnit4;
 
 /**
  * Test class focusing on verifying functionality provided by
@@ -17,6 +15,8 @@ import org.junit.runners.JUnit4;
  */
 public class UUIDUtilTest extends TestCase
 {
+    final static int TEST_REPS = 1_000_000;
+
     public void testNilUUID() {
         UUID nil = UUIDUtil.nilUUID();
         // Should be all zeroes:
@@ -33,8 +33,9 @@ public class UUIDUtilTest extends TestCase
 
     public void testExtractTimestampUUIDTimeBased() {
         TimeBasedGenerator generator = Generators.timeBasedGenerator();
-        for (int i = 0; i < 9000; i++) {
-            long rawTimestamp = ThreadLocalRandom.current().nextLong() >>> 4;
+        final Random rnd = new Random(1);
+        for (int i = 0; i < TEST_REPS; i++) {
+            long rawTimestamp = rnd.nextLong() >>> 4;
             UUID uuid = generator.construct(rawTimestamp);
             assertEquals(rawTimestamp, UUIDUtil.extractTimestamp(uuid));
         }
@@ -42,8 +43,9 @@ public class UUIDUtilTest extends TestCase
 
     public void testExtractTimestampUUIDTimeBasedReordered() {
         TimeBasedReorderedGenerator generator = Generators.timeBasedReorderedGenerator();
-        for (int i = 0; i < 9000; i++) {
-            long rawTimestamp = ThreadLocalRandom.current().nextLong() >>> 4;
+        final Random rnd = new Random(2);
+        for (int i = 0; i < TEST_REPS; i++) {
+            long rawTimestamp = rnd.nextLong() >>> 4;
             UUID uuid = generator.construct(rawTimestamp);
             assertEquals(rawTimestamp, UUIDUtil.extractTimestamp(uuid));
         }
@@ -51,8 +53,9 @@ public class UUIDUtilTest extends TestCase
 
     public void testExtractTimestampUUIDEpochBased() {
         TimeBasedEpochGenerator generator = Generators.timeBasedEpochGenerator();
-        for (int i = 0; i < 9000; i++) {
-            long rawTimestamp = ThreadLocalRandom.current().nextLong() >>> 16;
+        final Random rnd = new Random(3);
+        for (int i = 0; i < TEST_REPS; i++) {
+            long rawTimestamp = rnd.nextLong() >>> 16;
             UUID uuid = generator.construct(rawTimestamp);
             assertEquals(rawTimestamp, UUIDUtil.extractTimestamp(uuid));
         }

@@ -355,10 +355,12 @@ public class UUIDUtil
     }
 
     /**
-     * Extract timestamp from time-based UUIDs. If UUID is not time-based type return 0;
+     * Extract 64-bit timestamp from time-based UUIDs (if time-based type);
+     * returns 0 for other types.
      *
      * @param uuid uuid timestamp to extract from
-     * @return time in milliseconds, or 0 if type does not support timestamps
+     *
+     * @return timestamp in milliseconds (since Epoch), or 0 if type does not support timestamps
      *
      * @since 5.0.0
      */
