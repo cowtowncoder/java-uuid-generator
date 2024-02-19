@@ -7,6 +7,10 @@ Releases
 5.0.0 (not yet released)
 
 #53: Increase JDK baseline to JDK 8
+#81: Add `UUIDUtil.extractTimestamp()` for extracting 64-bit timestamp for
+  all timestamp-based versions
+ (requested by @gabrielbalan)
+ (contributed by @magdel)
 #85: Fix `LazyRandom` for native code generation tools
  (contributed by @Maia-Everett)
 
