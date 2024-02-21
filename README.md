@@ -67,6 +67,7 @@ UUID uuid = Generators.nameBasedgenerator().generate("string to hash"); // Versi
 // With JUG 4.1+: support for https://github.com/uuid6/uuid6-ietf-draft versions 6 and 7:
 UUID uuid = Generators.timeBasedReorderedGenerator().generate(); // Version 6
 UUID uuid = Generators.timeBasedEpochGenerator().generate(); // Version 7
+// With JUG 5.0 added variation:
 UUID uuid = Generators.timeBasedEpochRandomGenerator().generate(); // Version 7 with per-call random values
 ```
 
@@ -136,30 +137,32 @@ it is rather slower than JUG version: for more information, read
 JUG jar built under `target/`:
 
 ```
-target/java-uuid-generator-4.1.2-SNAPSHOT.jar
+target/java-uuid-generator-5.0.0-SNAPSHOT.jar
 ```
 
 can also be used as a simple Command-line UUID generation tool.
 
 To see usage you can do something like:
 
-    java -jar target/java-uuid-generator-4.1.2-SNAPSHOT.jar
+    java -jar target/java-uuid-generator-5.0.0-SNAPSHOT.jar
 
 and get full instructions, but to generate 5 Random-based UUIDs, you would use:
 
-    java -jar target/java-uuid-generator-4.1.2-SNAPSHOT.jar -c 5 r
+    java -jar target/java-uuid-generator-5.0.0-SNAPSHOT.jar -c 5 r
 
 (where `-c` (or `--count`) means number of UUIDs to generate, and `r` means Random-based version)
 
 NOTE: this functionality is included as of JUG 4.1 -- with earlier versions you would need a bit longer invocation as Jar metadata did not specify "Main-Class".
 If so, you would need to use
 
-    java -cp target/java-uuid-generator-4.1.2-SNAPSHOT.jar com.fasterxml.uuid.Jug -c 5 r
+    java -cp target/java-uuid-generator-5.0.0-SNAPSHOT.jar com.fasterxml.uuid.Jug -c 5 r
 
 ## Compatibility
 
 JUG versions 3.1 and later require JDK 1.6 to work, mostly to be able to access local Ethernet MAC address.
 Earlier versions (3.0 and before) worked on 1.4 (which introduced `java.util.UUID`).
+
+JUG versions 5.0 and later require JDK 8 to work.
 
 ## Known Issues
 
