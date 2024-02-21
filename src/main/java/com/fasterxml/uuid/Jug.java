@@ -33,6 +33,7 @@ public class Jug
         TYPES.put("name-based", "n");
         TYPES.put("reordered-time-based", "o"); // Version 6
         TYPES.put("epoch-time-based", "e"); // Version 7
+        TYPES.put("random-epoch-time-based", "m"); // Version 7 but more random
     }
 
     protected final static HashMap<String,String> OPTIONS = new HashMap<String,String>();
@@ -264,6 +265,16 @@ public class Jug
                     System.out.print("(using secure random generator, info = '"+r.getProvider().getInfo()+"')");
                 }
                 noArgGenerator = Generators.timeBasedEpochGenerator(r);
+            }
+            break;
+        case 'm': // random-epoch-time-based
+            usesRnd = true;
+            {
+                SecureRandom r = new SecureRandom();
+                if (verbose) {
+                    System.out.print("(using secure random generator, info = '"+r.getProvider().getInfo()+"')");
+                }
+                noArgGenerator = Generators.timeBasedEpochRandomGenerator(r);
             }
             break;
         case 'n': // name-based

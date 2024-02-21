@@ -1,20 +1,23 @@
 package com.fasterxml.uuid.impl;
 
+import com.fasterxml.uuid.NoArgGenerator;
+import com.fasterxml.uuid.UUIDClock;
+import com.fasterxml.uuid.UUIDType;
+
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.fasterxml.uuid.NoArgGenerator;
-import com.fasterxml.uuid.UUIDClock;
-import com.fasterxml.uuid.UUIDType;
-
 /**
  * Implementation of UUID generator that uses time/location based generation
  * method field from the Unix Epoch timestamp source - the number of 
  * milliseconds seconds since midnight 1 Jan 1970 UTC, leap seconds excluded.
  * This is usually referred to as "Version 7".
+ * In addition to that random part is regenerated for every new UUID.
+ * This removes possibilities to have almost similar UUID, when calls
+ * to generate are made within same millisecond.
  * <p>
  * As all JUG provided implementations, this generator is fully thread-safe.
  * Additionally it can also be made externally synchronized with other instances
@@ -22,10 +25,10 @@ import com.fasterxml.uuid.UUIDType;
  * {@link com.fasterxml.uuid.ext.FileBasedTimestampSynchronizer} (or
  * equivalent).
  *
- * @since 4.1
+ * @since 5.0
  */
-public class TimeBasedEpochGenerator extends NoArgGenerator
-{ 
+public class TimeBasedEpochRandomGenerator extends NoArgGenerator
+{
     private static final int ENTROPY_BYTE_LENGTH = 10;
 
     /*
@@ -42,12 +45,9 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
     /**
      * Underlying {@link UUIDClock} used for accessing current time, to use for
      * generation.
-     *
-     * @since 4.3
      */
     protected final UUIDClock _clock;
 
-    private long _lastTimestamp = -1;
     private final byte[] _lastEntropy  = new byte[ENTROPY_BYTE_LENGTH];
     private final Lock lock = new ReentrantLock();
 
@@ -63,7 +63,7 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
      *   use a <b>good</b> (pseudo) random number generator; for example, JDK's
      *   {@link SecureRandom}.
      */
-    public TimeBasedEpochGenerator(Random rnd) {
+    public TimeBasedEpochRandomGenerator(Random rnd) {
         this(rnd, UUIDClock.systemTimeClock());
     }
 
@@ -74,7 +74,7 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
      *   {@link SecureRandom}.
      * @param clock clock Object used for accessing current time to use for generation
      */
-    public TimeBasedEpochGenerator(Random rnd, UUIDClock clock)
+    public TimeBasedEpochRandomGenerator(Random rnd, UUIDClock clock)
     {
         if (rnd == null) {
             rnd = LazyRandom.sharedSecureRandom(); 
@@ -115,30 +115,12 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
      * @param rawTimestamp unix epoch millis
      *
      * @return unix epoch time based UUID
-     *
-     * @since 4.3
      */
     public UUID construct(long rawTimestamp)
     {
         lock.lock();
         try { 
-            if (rawTimestamp == _lastTimestamp) {
-                boolean c = true;
-                for (int i = ENTROPY_BYTE_LENGTH - 1; i >= 0; i--) {
-                    if (c) {
-                        byte temp = _lastEntropy[i];
-                        temp = (byte) (temp + 0x01);
-                        c = _lastEntropy[i] == (byte) 0xff && c;
-                        _lastEntropy[i] = temp;
-                    }
-                }
-                if (c) {
-                    throw new IllegalStateException("overflow on same millisecond");
-                }
-            } else {
-                _lastTimestamp = rawTimestamp;
-                _random.nextBytes(_lastEntropy);
-            }
+            _random.nextBytes(_lastEntropy);
             return UUIDUtil.constructUUID(UUIDType.TIME_BASED_EPOCH, (rawTimestamp << 16) | _toShort(_lastEntropy, 0), _toLong(_lastEntropy, 2));
         } finally {
             lock.unlock();

@@ -23,6 +23,7 @@ import java.util.*;
 import com.fasterxml.uuid.impl.NameBasedGenerator;
 import com.fasterxml.uuid.impl.RandomBasedGenerator;
 import com.fasterxml.uuid.impl.TimeBasedEpochGenerator;
+import com.fasterxml.uuid.impl.TimeBasedEpochRandomGenerator;
 import com.fasterxml.uuid.impl.TimeBasedReorderedGenerator;
 import com.fasterxml.uuid.impl.TimeBasedGenerator;
 
@@ -135,6 +136,10 @@ public class Generators
      * Factory method for constructing UUID generator that generates UUID using
      * version 7 (Unix Epoch time+random based), using specified {@link Random}
      * number generator.
+     *<p>
+     * NOTE: calls within same millisecond produce very similar values; this may be
+     * unsafe in some environments.
+     *<p>
      * No additional external synchronization is used.
      */
     public static TimeBasedEpochGenerator timeBasedEpochGenerator(Random random)
@@ -145,9 +150,12 @@ public class Generators
     /**
      * Factory method for constructing UUID generator that generates UUID using
      * version 7 (Unix Epoch time+random based), using specified {@link Random}
-     * number generato.
-     * Timestamp to use is accessed using specified {@link UUIDClock}
-     *
+     * number generator.
+     * Timestamp to use is accessed using specified {@link UUIDClock}.
+     *<p>
+     * NOTE: calls within same millisecond produce very similar values; this may be
+     * unsafe in some environments.
+     *<p>
      * No additional external synchronization is used.
      *
      * @since 4.3
@@ -156,6 +164,42 @@ public class Generators
             UUIDClock clock)
     {
         return new TimeBasedEpochGenerator(random, clock);
+    }
+
+    /**
+     * Factory method for constructing UUID generator that generates UUID using
+     * version 7 (Unix Epoch time+random based), using specified {@link Random}
+     * number generator.
+     *<p>
+     * Calls within same millisecond use additional per-call randomness to try to create
+     * more distinct values, compared to {@link #timeBasedEpochGenerator(Random)}
+     *<p>
+     * No additional external synchronization is used.
+     *
+     * @since 5.0
+     */
+    public static TimeBasedEpochRandomGenerator timeBasedEpochRandomGenerator(Random random)
+    {
+        return new TimeBasedEpochRandomGenerator(random);
+    }
+
+    /**
+     * Factory method for constructing UUID generator that generates UUID using
+     * version 7 (Unix Epoch time+random based), using specified {@link Random}
+     * number generator.
+     * Timestamp to use is accessed using specified {@link UUIDClock}
+     *<p>
+     * Calls within same millisecond use additional per-call randomness to try to create
+     * more distinct values, compared to {@link #timeBasedEpochGenerator(Random)}
+     *<p>
+     * No additional external synchronization is used.
+     *
+     * @since 5.0
+     */
+    public static TimeBasedEpochRandomGenerator timeBasedEpochRandomGenerator(Random random,
+            UUIDClock clock)
+    {
+        return new TimeBasedEpochRandomGenerator(random, clock);
     }
 
     // // Time+location-based generation

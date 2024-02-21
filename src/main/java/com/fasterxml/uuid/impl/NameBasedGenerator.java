@@ -116,7 +116,7 @@ public class NameBasedGenerator extends StringArgGenerator
     @Override
     public UUID generate(String name)
     {
-        // !!! TODO: 14-Oct-2010, tatu: can repurpose faster UTF-8 encoding from Jackson
+        // !!! TODO: 14-Oct-2010, tatu: could re-purpose faster UTF-8 encoding from Jackson
         return generate(name.getBytes(_utf8));
     }
     
