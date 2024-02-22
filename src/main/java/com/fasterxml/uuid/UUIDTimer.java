@@ -358,7 +358,7 @@ public class UUIDTimer
     /**********************************************************************
      */
 
-    private final static int MAX_WAIT_COUNT = 50;
+    private static final int MAX_WAIT_COUNT = 50;
 
     /**
      * Simple utility method to use to wait for couple of milliseconds,

@@ -305,6 +305,58 @@ public class UUIDGeneratorTest extends TestCase
     }
 
     /**
+     * Test of generateTimeBasedEpochUUID() method with UUIDClock instance,
+     * of class com.fasterxml.uuid.UUIDGenerator.
+     */
+    public void testGenerateTimeBasedEpochUUIDWithUUIDClock() throws Exception
+    {
+        // this test will attempt to check for reasonable behavior of the
+        // generateTimeBasedUUID method
+
+        Random entropy = new Random(0x666);
+
+        // we need a instance to use
+        TimeBasedEpochGenerator uuid_gen = Generators.timeBasedEpochGenerator(null, UUIDClock.systemTimeClock());
+        assertEquals(uuid_gen.getType(), UUIDType.TIME_BASED_EPOCH);
+
+        // first check that given a number of calls to generateTimeBasedEpochUUID,
+        // all returned UUIDs order after the last returned UUID
+        // we'll check this by generating the UUIDs into one array and sorting
+        // then in another and checking the order of the two match
+        // change the number in the array statement if you want more or less
+        // UUIDs to be generated and tested
+        UUID uuid_array[] = new UUID[SIZE_OF_TEST_ARRAY];
+
+        // before we generate all the uuids, lets get the start time
+        long start_time = System.currentTimeMillis();
+        Thread.sleep(2);  // Clean start time
+
+        // now create the array of uuids
+        for (int i = 0; i < uuid_array.length; i++) {
+            uuid_array[i] = uuid_gen.generate();
+        }
+
+        // now capture the end time
+        long end_time = System.currentTimeMillis();
+        Thread.sleep(2);  // Clean end time
+
+        // check that none of the UUIDs are null
+        checkUUIDArrayForNonNullUUIDs(uuid_array);
+
+        // check that all the uuids were correct variant and version (type-1)
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.TIME_BASED_EPOCH);
+
+        // check that all the uuids were generated with correct order
+        checkUUIDArrayForCorrectOrdering(uuid_array);
+
+        // check that all uuids were unique
+        checkUUIDArrayForUniqueness(uuid_array);
+
+        // check that all uuids have timestamps between the start and end time
+        checkUUIDArrayForCorrectCreationTimeEpoch(uuid_array, start_time, end_time);
+    }
+
+    /**
      * Test of generateTimeBasedEpochRandomUUID() method,
      * of class com.fasterxml.uuid.UUIDGenerator.
      */
@@ -317,6 +369,58 @@ public class UUIDGeneratorTest extends TestCase
 
         // we need a instance to use
         TimeBasedEpochRandomGenerator uuid_gen = Generators.timeBasedEpochRandomGenerator(entropy);
+
+        assertEquals(uuid_gen.getType(), UUIDType.TIME_BASED_EPOCH);
+        // first check that given a number of calls to generateTimeBasedEpochUUID,
+        // all returned UUIDs order after the last returned UUID
+        // we'll check this by generating the UUIDs into one array and sorting
+        // then in another and checking the order of the two match
+        // change the number in the array statement if you want more or less
+        // UUIDs to be generated and tested
+        UUID uuid_array[] = new UUID[SIZE_OF_TEST_ARRAY];
+
+        // before we generate all the uuids, lets get the start time
+        long start_time = System.currentTimeMillis();
+        Thread.sleep(2);  // Clean start time
+
+        // now create the array of uuids
+        for (int i = 0; i < uuid_array.length; i++) {
+            uuid_array[i] = uuid_gen.generate();
+        }
+
+        // now capture the end time
+        long end_time = System.currentTimeMillis();
+        Thread.sleep(2);  // Clean end time
+
+        // check that none of the UUIDs are null
+        checkUUIDArrayForNonNullUUIDs(uuid_array);
+
+        // check that all the uuids were correct variant and version (type-1)
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.TIME_BASED_EPOCH);
+
+        // check that all uuids were unique
+        // NOTE: technically, this test 'could' fail, but statistically
+        // speaking it should be extremely unlikely unless the implementation
+        // of (Secure)Random is bad
+        checkUUIDArrayForUniqueness(uuid_array);
+
+        // check that all uuids have timestamps between the start and end time
+        checkUUIDArrayForCorrectCreationTimeEpoch(uuid_array, start_time, end_time);
+    }
+
+    /**
+     * Test of generateTimeBasedEpochRandomUUID() method with UUIDClock instance,
+     * of class com.fasterxml.uuid.UUIDGenerator.
+     */
+    public void testGenerateTimeBasedEpochRandomUUIDWithUUIDClock() throws Exception
+    {
+        // this test will attempt to check for reasonable behavior of the
+        // generateTimeBasedRandomUUID method
+
+        Random entropy = new Random(0x666);
+
+        // we need a instance to use
+        TimeBasedEpochRandomGenerator uuid_gen = Generators.timeBasedEpochRandomGenerator(null, UUIDClock.systemTimeClock());
 
         assertEquals(uuid_gen.getType(), UUIDType.TIME_BASED_EPOCH);
         // first check that given a number of calls to generateTimeBasedEpochUUID,
@@ -550,6 +654,82 @@ public class UUIDGeneratorTest extends TestCase
             Arrays.equals(uuid_array, uuid_array2));
     }
     
+    /**
+     * Test of generateNameBasedUUID()
+     * method, of class com.fasterxml.uuid.UUIDGenerator.
+     */
+    public void testGenerateNameBasedUUIDWithDefaults()
+    {
+        // this test will attempt to check for reasonable behavior of the
+        // generateNameBasedUUID method
+
+        NameBasedGenerator uuid_gen = Generators.nameBasedGenerator();
+        assertEquals(uuid_gen.getType(), UUIDType.NAME_BASED_SHA1);
+        UUID uuid_array[] = new UUID[SIZE_OF_TEST_ARRAY];
+
+        // now create the array of uuids
+        for (int i = 0; i < uuid_array.length; i++)
+        {
+            uuid_array[i] = uuid_gen.generate("test name"+i);
+        }
+
+        // check that none of the UUIDs are null
+        checkUUIDArrayForNonNullUUIDs(uuid_array);
+
+        // check that all the uuids were correct variant and version
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_SHA1);
+
+        // check that all uuids were unique
+        checkUUIDArrayForUniqueness(uuid_array);
+
+        // now create the array of uuids
+        for (int i = 0; i < uuid_array.length; i++)
+        {
+            uuid_array[i] = uuid_gen.generate("test name" + i);
+        }
+
+        // check that none of the UUIDs are null
+        checkUUIDArrayForNonNullUUIDs(uuid_array);
+
+        // check that all the uuids were correct variant and version
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_SHA1);
+
+        // check that all uuids were unique
+        checkUUIDArrayForUniqueness(uuid_array);
+
+        // now, lets make sure generating two sets of name based uuid with the
+        // same args always gives the same result
+        uuid_array = new UUID[SIZE_OF_TEST_ARRAY];
+
+        // now create the array of uuids
+        for (int i = 0; i < uuid_array.length; i++) {
+            uuid_array[i] = uuid_gen.generate("test name" + i);
+        }
+
+        UUID uuid_array2[] = new UUID[SIZE_OF_TEST_ARRAY];
+
+        // now create the array of uuids
+        for (int i = 0; i < uuid_array2.length; i++) {
+            uuid_array2[i] = uuid_gen.generate("test name" + i);
+        }
+
+        // check that none of the UUIDs are null
+        checkUUIDArrayForNonNullUUIDs(uuid_array);
+        checkUUIDArrayForNonNullUUIDs(uuid_array2);
+
+        // check that all the uuids were correct variant and version
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array, UUIDType.NAME_BASED_SHA1);
+        checkUUIDArrayForCorrectVariantAndVersion(uuid_array2, UUIDType.NAME_BASED_SHA1);
+
+        // check that all uuids were unique
+        checkUUIDArrayForUniqueness(uuid_array);
+        checkUUIDArrayForUniqueness(uuid_array2);
+
+        // check that both arrays are equal to one another
+        assertTrue("expected both arrays to be equal, they were not!",
+            Arrays.equals(uuid_array, uuid_array2));
+    }
+
     /**
      * Test of generateTimeBasedReorderedUUID() method,
      * of class com.fasterxml.uuid.UUIDGenerator.
