@@ -74,7 +74,7 @@ public class Generators
      * Factory method for constructing UUID generator that uses specified
      * random number generator for constructing UUIDs according to standard
      * method number 5, but without using a namespace.
-     * Digester to use will be SHA-1 as recommened by UUID spec.
+     * Digester to use will be SHA-1 as recommended by UUID spec.
      */
     public static NameBasedGenerator nameBasedGenerator() {
         return nameBasedGenerator(null);

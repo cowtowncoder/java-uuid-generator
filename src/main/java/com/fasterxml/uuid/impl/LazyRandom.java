@@ -16,6 +16,9 @@ public final class LazyRandom
     private static volatile SecureRandom shared;
 
     public static SecureRandom sharedSecureRandom() {
+        if (shared != null) {
+            return shared;
+        }
         synchronized (lock) {
             SecureRandom result = shared;
             if (result == null) {
