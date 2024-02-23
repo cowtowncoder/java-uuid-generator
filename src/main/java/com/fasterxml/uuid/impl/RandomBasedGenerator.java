@@ -24,12 +24,6 @@ import com.fasterxml.uuid.UUIDType;
 public class RandomBasedGenerator extends NoArgGenerator
 {
     /**
-     * Default shared random number generator, used if no random number generator
-     * is explicitly specified for instance
-     */
-    protected static Random _sharedRandom = null;
-
-    /**
      * Random number generator that this generator uses.
      */
     protected final Random _random;
@@ -51,10 +45,8 @@ public class RandomBasedGenerator extends NoArgGenerator
     {
         if (rnd == null) {
             rnd = LazyRandom.sharedSecureRandom();
-            _secureRandom = true;
-        } else {
-            _secureRandom = (rnd instanceof SecureRandom);
         }
+        _secureRandom = (rnd instanceof SecureRandom);
         _random = rnd;
     }
 
