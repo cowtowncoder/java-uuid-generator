@@ -4,7 +4,7 @@ Project: java-uuid-generator
 Releases
 ============================================================================
 
-5.0.0 (not yet released)
+5.0.0 (23-Feb-2024)
 
 #53: Increase JDK baseline to JDK 8
 #81: Add `UUIDUtil.extractTimestamp()` for extracting 64-bit timestamp for
