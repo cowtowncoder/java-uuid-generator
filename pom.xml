@@ -15,7 +15,7 @@
     -->
   <packaging>bundle</packaging>
   <name>Java UUID Generator</name>
-  <version>5.0.0</version>
+  <version>5.0.1-SNAPSHOT</version>
   <description>
 Java UUID Generator (JUG) is a Java library for generating
 Universally Unique IDentifiers, UUIDs (see http://en.wikipedia.org/wiki/UUID).
@@ -45,7 +45,7 @@ JUG supports 3 original official UUID generation methods as well as later additi
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j.version>1.7.36</slf4j.version>
 
-    <project.build.outputTimestamp>2024-02-24T01:04:32Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2024-02-24T01:04:48Z</project.build.outputTimestamp>
   </properties>
   <licenses>
     <license>
