@@ -28,7 +28,7 @@ JUG supports 3 original official UUID generation methods as well as later additi
     <connection>scm:git:git://github.com/cowtowncoder/java-uuid-generator.git</connection>
     <url>https://github.com/cowtowncoder/java-uuid-generator</url>
     <developerConnection>scm:git:git@github.com:cowtowncoder/java-uuid-generator.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>java-uuid-generator-5.0.0</tag>
   </scm>
   <developers>
     <developer>
@@ -45,7 +45,7 @@ JUG supports 3 original official UUID generation methods as well as later additi
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j.version>1.7.36</slf4j.version>
 
-    <project.build.outputTimestamp>2023-09-13T00:45:46Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2024-02-24T00:57:26Z</project.build.outputTimestamp>
   </properties>
   <licenses>
     <license>
@@ -94,18 +94,6 @@ JUG supports 3 original official UUID generation methods as well as later additi
             <source>1.8</source>
             <target>1.8</target>
           </configuration>
-        </plugin>
-        <plugin><!-- plug-in to attach source bundle in repo -->
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-source-plugin</artifactId>
-           <executions>
-            <execution>
-              <id>attach-sources</id>
-              <goals>
-                <goal>jar</goal>
-              </goals>
-            </execution>
-          </executions>
         </plugin>
 
         <!-- javadocs? yes please -->
