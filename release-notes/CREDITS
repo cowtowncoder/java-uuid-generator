@@ -134,4 +134,7 @@ Paul Galbraith (pgalbraith@github)
 
 Maia Everett (Maia-Everett@github)
   * Contributed #85: Fix `LazyRandom` for native code generation tools
+Pavel Raev (magdel@github)
+  * Contributed  #81: Add UUIDUtil.extractTimestamp() for extracting 64-bit timestamp for all timestamp-based versions
+  * Contributed Add alternate version to UUIDv7 generator that uses random values on every call (not just for different timestamp)
   [5.0.0]
