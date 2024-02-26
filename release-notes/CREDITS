@@ -132,9 +132,14 @@ Paul Galbraith (pgalbraith@github)
     interface  address for time/based UUIDs
   [4.2.0]
 
+Pavel Raev (magdel@github)
+  * Contributed  #81: Add UUIDUtil.extractTimestamp() for extracting 64-bit
+    timestamp for all timestamp-based versions
+   [5.0.0]
+  * Contributed #94 Add alternate version to UUIDv7 generator that uses random
+    values on every call (not just for different timestamp)
+   [5.0.0]
+
 Maia Everett (Maia-Everett@github)
   * Contributed #85: Fix `LazyRandom` for native code generation tools
-Pavel Raev (magdel@github)
-  * Contributed  #81: Add UUIDUtil.extractTimestamp() for extracting 64-bit timestamp for all timestamp-based versions
-  * Contributed Add alternate version to UUIDv7 generator that uses random values on every call (not just for different timestamp)
-  [5.0.0]
+   [5.0.0]
