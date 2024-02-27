@@ -126,6 +126,11 @@ public class Generators
     /**
      * Factory method for constructing UUID generator that generates UUID using
      * version 7 (Unix Epoch time+random based).
+     *<p>
+     * NOTE: calls within same millisecond produce very similar values; this may be
+     * unsafe in some environments.
+     *<p>
+     * No additional external synchronization is used.
      */
     public static TimeBasedEpochGenerator timeBasedEpochGenerator()
     {
@@ -164,6 +169,24 @@ public class Generators
             UUIDClock clock)
     {
         return new TimeBasedEpochGenerator(random, clock);
+    }
+
+    // // Epoch Time+random generation
+
+    /**
+     * Factory method for constructing UUID generator that generates UUID using
+     * version 7 (Unix Epoch time+random based).
+     *<p>
+     * Calls within same millisecond use additional per-call randomness to try to create
+     * more distinct values, compared to {@link #timeBasedEpochGenerator(Random)}
+     *<p>
+     * No additional external synchronization is used.
+     *
+     * @since 5.0.1
+     */
+    public static TimeBasedEpochRandomGenerator timeBasedEpochRandomGenerator()
+    {
+        return timeBasedEpochRandomGenerator(null);
     }
 
     /**
