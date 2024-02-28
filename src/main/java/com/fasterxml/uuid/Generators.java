@@ -182,7 +182,7 @@ public class Generators
      *<p>
      * No additional external synchronization is used.
      *
-     * @since 5.0.1
+     * @since 5.1
      */
     public static TimeBasedEpochRandomGenerator timeBasedEpochRandomGenerator()
     {

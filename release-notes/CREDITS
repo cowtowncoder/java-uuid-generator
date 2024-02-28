@@ -143,3 +143,8 @@ Pavel Raev (magdel@github)
 Maia Everett (Maia-Everett@github)
   * Contributed #85: Fix `LazyRandom` for native code generation tools
    [5.0.0]
+
+Daniel Albuquerque (worldtiki@github)
+  * Contributed #99: New factory method to create TimeBasedEpochRandomGenerator
+   [5.1.0]
+
