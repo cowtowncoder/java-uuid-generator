@@ -61,6 +61,16 @@ public class UUIDUtilTest extends TestCase
         }
     }
 
+    public void testExtractTimestampUUIDEpochRandomBased() {
+        TimeBasedEpochRandomGenerator generator = Generators.timeBasedEpochRandomGenerator();
+        final Random rnd = new Random(3);
+        for (int i = 0; i < TEST_REPS; i++) {
+            long rawTimestamp = rnd.nextLong() >>> 16;
+            UUID uuid = generator.construct(rawTimestamp);
+            assertEquals(rawTimestamp, UUIDUtil.extractTimestamp(uuid));
+        }
+    }
+
     public void testExtractTimestampUUIDOnOtherValues() {
         assertEquals(0L, UUIDUtil.extractTimestamp(null));
         assertEquals(0L, UUIDUtil.extractTimestamp(UUID.fromString("00000000-0000-0000-0000-000000000000")));

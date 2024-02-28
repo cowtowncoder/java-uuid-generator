@@ -4,6 +4,11 @@ Project: java-uuid-generator
 Releases
 ============================================================================
 
+5.1.0 (not yet released)
+
+#99: New factory method to create TimeBasedEpochRandomGenerator
+ (contributed by Daniel A)
+
 5.0.0 (23-Feb-2024)
 
 #53: Increase JDK baseline to JDK 8
