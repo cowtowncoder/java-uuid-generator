@@ -10,6 +10,19 @@ In addition, many other individuals have helped fix bugs and implement new featu
 
 JUG is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
 
+## Supported UUID versions (1, 3, 4, 5, 6, 7)
+
+JUG supports both "classic" versions defined in [RFC 4122](https://datatracker.ietf.org/doc/html/rfc4122):
+
+* `1`: time/location - based
+* `3` and `5`: name hash - based
+* `4`: random number - based
+
+and newly (in 2022-2024) proposed (see [uuid6](https://uuid6.github.io/uuid6-ietf-draft/) and [RFC-4122 bis](https://datatracker.ietf.org/doc/draft-ietf-uuidrev-rfc4122bis/)) variants:
+
+* `6`: reordered variant of version `1` (with lexicographic ordering)
+* `7`: Unix-timestamp + random based variant (also with lexicographic ordering)
+
 ## Status
 
 | Type | Status |
@@ -18,7 +31,7 @@ JUG is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENS
 | Artifact |  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.fasterxml.uuid/java-uuid-generator/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.fasterxml.uuid/java-uuid-generator/) |
 | OSS Sponsorship | [![Tidelift](https://tidelift.com/badges/package/maven/com.fasterxml.uuid:java-uuid-generator)](https://tidelift.com/subscription/pkg/maven-com-fasterxml-uuid-java-uuid-generator?utm_source=maven-com-fasterxml-uuid-java-uuid-generator&utm_medium=referral&utm_campaign=readme) |
 | Javadocs | [![Javadoc](https://javadoc.io/badge/com.fasterxml.uuid/java-uuid-generator.svg)](http://www.javadoc.io/doc/com.fasterxml.uuid/java-uuid-generator)
-| Code coverage (4.x) | [![codecov.io](https://codecov.io/github/cowtowncoder/java-uuid-generator/coverage.svg?branch=master)](https://codecov.io/github/cowtowncoder/java-uuid-generator?branch=master) |
+| Code coverage (5.x) | [![codecov.io](https://codecov.io/github/cowtowncoder/java-uuid-generator/coverage.svg?branch=master)](https://codecov.io/github/cowtowncoder/java-uuid-generator?branch=master) |
 | OpenSSF Score | [![OpenSSF  Scorecard](https://api.securityscorecards.dev/projects/github.com/cowtowncoder/java-uuid-generator/badge)](https://securityscorecards.dev/viewer/?uri=github.com/cowtowncoder/java-uuid-generator) |
 
 ## Usage

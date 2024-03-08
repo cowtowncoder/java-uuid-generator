@@ -53,7 +53,7 @@ public class Generators
     /**
      * Factory method for constructing UUID generator that uses default (shared)
      * random number generator for constructing UUIDs according to standard
-     * method number 4.
+     * version 4.
      */
     public static RandomBasedGenerator randomBasedGenerator() {
         return randomBasedGenerator(null);
@@ -62,7 +62,7 @@ public class Generators
     /**
      * Factory method for constructing UUID generator that uses specified
      * random number generator for constructing UUIDs according to standard
-     * method number 4.
+     * version 4.
      */
     public static RandomBasedGenerator randomBasedGenerator(Random rnd) {
         return new RandomBasedGenerator(rnd);
@@ -73,7 +73,7 @@ public class Generators
     /**
      * Factory method for constructing UUID generator that uses specified
      * random number generator for constructing UUIDs according to standard
-     * method number 5, but without using a namespace.
+     * version 5, but without using a namespace.
      * Digester to use will be SHA-1 as recommended by UUID spec.
      */
     public static NameBasedGenerator nameBasedGenerator() {
@@ -83,7 +83,7 @@ public class Generators
     /**
      * Factory method for constructing UUID generator that uses specified
      * random number generator for constructing UUIDs according to standard
-     * method number 5, with specified namespace (or without one if null
+     * version 5, with specified namespace (or without one if null
      * is specified).
      * Digester to use will be SHA-1 as recommened by UUID spec.
      * 
@@ -98,7 +98,7 @@ public class Generators
     /**
      * Factory method for constructing UUID generator that uses specified
      * random number generator for constructing UUIDs according to standard
-     * method number 3 or 5, with specified namespace (or without one if null
+     * version 3 or 5, with specified namespace (or without one if null
      * is specified), using specified digester.
      * If digester is passed as null, a SHA-1 digester will be constructed.
      * 
