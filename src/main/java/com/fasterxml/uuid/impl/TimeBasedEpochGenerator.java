@@ -128,7 +128,7 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
                     if (c) {
                         byte temp = _lastEntropy[i];
                         temp = (byte) (temp + 0x01);
-                        c = _lastEntropy[i] == (byte) 0xff && c;
+                        c = _lastEntropy[i] == (byte) 0xff;
                         _lastEntropy[i] = temp;
                     }
                 }
