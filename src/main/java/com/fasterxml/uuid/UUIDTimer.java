@@ -320,6 +320,16 @@ public class UUIDTimer
         return systime;
     }
 
+    /**
+     * Converts UUID v1 & v6 timestamp to Unix epoch timestamp
+     *
+     * @param timestamp timestamp, used to create UUID v1 & v6
+     * @return Unix epoch timestamp
+     */
+    public static long timestampToEpoch(long timestamp) {
+        return (timestamp - kClockOffset) / kClockMultiplierL;
+    }
+
     /*
     /**********************************************************************
     /* Test-support methods

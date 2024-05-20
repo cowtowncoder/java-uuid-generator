@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import com.fasterxml.uuid.Generators;
+import com.fasterxml.uuid.NoArgGenerator;
 import junit.framework.TestCase;
 
 /**
@@ -37,9 +38,17 @@ public class UUIDUtilTest extends TestCase
         for (int i = 0; i < TEST_REPS; i++) {
             long rawTimestamp = rnd.nextLong() >>> 4;
             UUID uuid = generator.construct(rawTimestamp);
-            assertEquals(rawTimestamp, UUIDUtil.extractTimestamp(uuid));
+            assertEquals(rawTimestamp, UUIDUtil.getTimestampFromUuidV1(uuid));
         }
     }
+
+    public void testExtractTimestampUUIDTimeBasedCurrentTimemillis() {
+        TimeBasedGenerator generator = Generators.timeBasedGenerator();
+        long time = System.currentTimeMillis();
+        UUID uuid2 = generator.generate();
+        assertEquals(time, UUIDUtil.extractTimestamp(uuid2));
+    }
+
 
     public void testExtractTimestampUUIDTimeBasedReordered() {
         TimeBasedReorderedGenerator generator = Generators.timeBasedReorderedGenerator();
@@ -47,8 +56,15 @@ public class UUIDUtilTest extends TestCase
         for (int i = 0; i < TEST_REPS; i++) {
             long rawTimestamp = rnd.nextLong() >>> 4;
             UUID uuid = generator.construct(rawTimestamp);
-            assertEquals(rawTimestamp, UUIDUtil.extractTimestamp(uuid));
+            assertEquals(rawTimestamp, UUIDUtil.getTimestampFromUuidV6(uuid));
         }
+    }
+
+    public void testExtractTimestampUUIDTimeBasedReorderedCurrentTimeMillis() {
+        NoArgGenerator generator = Generators.timeBasedReorderedGenerator();
+        long time = System.currentTimeMillis();
+        UUID uuid = generator.generate();
+        assertEquals(time, UUIDUtil.extractTimestamp(uuid));
     }
 
     public void testExtractTimestampUUIDEpochBased() {
@@ -60,6 +76,14 @@ public class UUIDUtilTest extends TestCase
             assertEquals(rawTimestamp, UUIDUtil.extractTimestamp(uuid));
         }
     }
+
+    public void testExtractTimestampUUIDEpochBasedCurrentTimeMillis() {
+        NoArgGenerator generator = Generators.timeBasedEpochGenerator();
+        long time = System.currentTimeMillis();
+        UUID uuid = generator.generate();
+        assertEquals(time, UUIDUtil.extractTimestamp(uuid));
+    }
+
 
     public void testExtractTimestampUUIDEpochRandomBased() {
         TimeBasedEpochRandomGenerator generator = Generators.timeBasedEpochRandomGenerator();
