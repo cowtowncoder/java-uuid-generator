@@ -320,6 +320,20 @@ public class UUIDTimer
         return systime;
     }
 
+    /**
+     * Converts a UUID v1 or v6 timestamp (where unit is 100 nanoseconds),
+     * to Unix epoch timestamp (milliseconds since 01-Jan-1970 UTC)
+     *
+     * @param timestamp Timestamp used to create UUID versions 1 and 6
+     *
+     * @return Unix epoch timestamp
+     *
+     * @since 5.1
+     */
+    public static long timestampToEpoch(long timestamp) {
+        return (timestamp - kClockOffset) / kClockMultiplierL;
+    }
+
     /*
     /**********************************************************************
     /* Test-support methods

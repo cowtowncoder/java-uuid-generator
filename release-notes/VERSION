@@ -8,6 +8,8 @@ Releases
 
 #99: New factory method to create TimeBasedEpochRandomGenerator
  (contributed by Daniel A)
+#105: `UUIDUtil.extractTimestamp()` is broken for versions 1 and 6
+ (contributed by @magdel)
 
 5.0.0 (23-Feb-2024)
 
