@@ -321,9 +321,9 @@ public class UUIDTimer
     }
 
     /**
-     * Converts UUID v1 & v6 timestamp to Unix epoch timestamp
+     * Converts a UUID v1 or v6 timestamp to Unix epoch timestamp
      *
-     * @param timestamp timestamp, used to create UUID v1 & v6
+     * @param timestamp timestamp, used to create UUID versions 1 and 6
      * @return Unix epoch timestamp
      */
     public static long timestampToEpoch(long timestamp) {
