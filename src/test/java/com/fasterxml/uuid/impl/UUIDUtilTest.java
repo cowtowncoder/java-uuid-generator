@@ -38,7 +38,7 @@ public class UUIDUtilTest extends TestCase
         for (int i = 0; i < TEST_REPS; i++) {
             long rawTimestamp = rnd.nextLong() >>> 4;
             UUID uuid = generator.construct(rawTimestamp);
-            assertEquals(rawTimestamp, UUIDUtil.getTimestampFromUuidV1(uuid));
+            assertEquals(rawTimestamp, UUIDUtil._getRawTimestampFromUuidV1(uuid));
         }
     }
 
@@ -56,7 +56,7 @@ public class UUIDUtilTest extends TestCase
         for (int i = 0; i < TEST_REPS; i++) {
             long rawTimestamp = rnd.nextLong() >>> 4;
             UUID uuid = generator.construct(rawTimestamp);
-            assertEquals(rawTimestamp, UUIDUtil.getTimestampFromUuidV6(uuid));
+            assertEquals(rawTimestamp, UUIDUtil._getRawTimestampFromUuidV6(uuid));
         }
     }
 

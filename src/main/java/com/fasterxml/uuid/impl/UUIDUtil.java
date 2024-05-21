@@ -361,7 +361,7 @@ public class UUIDUtil
      *
      * @param uuid uuid timestamp to extract from
      *
-     * @return timestamp in milliseconds (since Epoch), or 0 if type does not support timestamps
+     * @return Unix timestamp in milliseconds (since Epoch), or 0 if type does not support timestamps
      *
      * @since 5.0
      */
@@ -381,23 +381,25 @@ public class UUIDUtil
             case NAME_BASED_MD5:
                 return 0L;
             case TIME_BASED:
-                return UUIDTimer.timestampToEpoch(getTimestampFromUuidV1(uuid));
+                return UUIDTimer.timestampToEpoch(_getRawTimestampFromUuidV1(uuid));
             case TIME_BASED_REORDERED:
-                return UUIDTimer.timestampToEpoch(getTimestampFromUuidV6(uuid));
+                return UUIDTimer.timestampToEpoch(_getRawTimestampFromUuidV6(uuid));
             case TIME_BASED_EPOCH:
-                return _getTimestampFromUuidV7(uuid);
+                return _getRawTimestampFromUuidV7(uuid);
             default:
                 throw new IllegalArgumentException("Invalid `UUID`: unexpected type " + type);
         }
     }
 
     /**
-     * Get timestamp, used to create the UUID v1
+     * Get raw timestamp, used to create the UUID v1
+     *<p>
+     * NOTE: no verification is done to ensure UUID given is of version 1.
      *
      * @param uuid uuid, to extract timestamp from
-     * @return timestamp, used to create uuid
+     * @return timestamp, used to create uuid v1
      */
-    static long getTimestampFromUuidV1(UUID uuid) {
+    static long _getRawTimestampFromUuidV1(UUID uuid) {
         long mostSignificantBits = uuid.getMostSignificantBits();
         mostSignificantBits = mostSignificantBits & 0b1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1110_1111_1111_1111L;
         long low = mostSignificantBits >>> 32;
@@ -408,12 +410,14 @@ public class UUIDUtil
     }
 
     /**
-     * Get timestamp, used to create the UUID v6
+     * Get raw timestamp, used to create the UUID v6.
+     *<p>
+     * NOTE: no verification is done to ensure UUID given is of version 6.
      *
      * @param uuid uuid, to extract timestamp from
-     * @return timestamp, used to create uuid
+     * @return timestamp, used to create uuid v6
      */
-    static long getTimestampFromUuidV6(UUID uuid) {
+    static long _getRawTimestampFromUuidV6(UUID uuid) {
         long mostSignificantBits = uuid.getMostSignificantBits();
         mostSignificantBits = mostSignificantBits & 0b1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1001_1111_1111_1111L;
         long lowL = mostSignificantBits & 0xFFFL;
@@ -423,7 +427,7 @@ public class UUIDUtil
         return high >>> 4 | lowH << 12 | lowL;
     }
 
-    private static long _getTimestampFromUuidV7(UUID uuid) {
+    static long _getRawTimestampFromUuidV7(UUID uuid) {
         long mostSignificantBits = uuid.getMostSignificantBits();
         mostSignificantBits = mostSignificantBits & 0b1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1001_1111_1111_1111L;
         return mostSignificantBits >>> 16;
