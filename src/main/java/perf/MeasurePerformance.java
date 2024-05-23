@@ -1,6 +1,10 @@
 package perf;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 
 import com.fasterxml.uuid.*;
 import com.fasterxml.uuid.impl.RandomBasedGenerator;
@@ -51,11 +55,14 @@ public class MeasurePerformance
         final TimeBasedGenerator timeGenPlain = Generators.timeBasedGenerator(nic);
         final TimeBasedGenerator timeGenSynced = Generators.timeBasedGenerator(nic,
                 new com.fasterxml.uuid.ext.FileBasedTimestampSynchronizer());
-        final StringArgGenerator nameGen = Generators.nameBasedGenerator(namespaceForNamed);
-        
+
+        final MessageDigest digester = MessageDigest.getInstance("SHA-1");
+        final StringArgGenerator nameGen = Generators.nameBasedGenerator(namespaceForNamed, digester);
+        final StringArgGenerator nameGenConcurrent = Generators.nameBasedGenerator(namespaceForNamed);
+
         while (true) {
             try {  Thread.sleep(100L); } catch (InterruptedException ie) { }
-            int round = (i++ % 7);
+            int round = (i++ % 10);
    
             long curr = System.currentTimeMillis();
             String msg;
@@ -93,19 +100,32 @@ public class MeasurePerformance
                 testRandom(uuids, ROUNDS, utilRandomGen);
                 break;
 
-                
             case 6:
                 msg = "Jug, name-based";
                 testNameBased(uuids, ROUNDS, nameGen);
                 break;
 
-                /*
             case 7:
+                msg = "Jug, name-based, concurrent";
+                testNameBasedConcurrent(uuids, ROUNDS, nameGenConcurrent);
+                break;
+
+            case 8:
+                msg = "Jug, name-based, ten threads";
+                testNameBasedTenThreads(uuids, ROUNDS, namespaceForNamed);
+                break;
+
+            case 9:
+                msg = "Jug, name-based, concurrent, ten threads";
+                testNameBasedConcurrentTenThreads(uuids, ROUNDS, namespaceForNamed);
+                break;
+                /*
+            case 8:
                 msg = "http://johannburkard.de/software/uuid/";
                 testUUID32(uuids, ROUNDS);
                 break;
                 */
-                
+
             default:
                 throw new Error("Internal error");
             }
@@ -175,7 +195,67 @@ public class MeasurePerformance
             }
         }
     }
-    
+
+    private final void testNameBasedConcurrent(Object[] uuids, int rounds, StringArgGenerator uuidGen)
+    {
+        while (--rounds >= 0) {
+            for (int i = 0, len = uuids.length; i < len; ++i) {
+                uuids[i] = uuidGen.concurrentGenerate(NAME);
+            }
+        }
+    }
+
+    private final void testNameBasedTenThreads(Object[] uuids, int rounds, final UUID namespaceForNamed) throws InterruptedException, BrokenBarrierException, NoSuchAlgorithmException
+    {
+        while (--rounds >= 0) {
+            final CyclicBarrier gate = new CyclicBarrier(11);
+            final MessageDigest digester = MessageDigest.getInstance("SHA-1");
+            final StringArgGenerator nameGen = Generators.nameBasedGenerator(namespaceForNamed, digester);
+            for (int j = 0; j < 10; j ++) {
+                final Object[] fuuids = uuids;
+                Thread t = new Thread(new Runnable() {
+                    public void run() {
+                        try {
+                            gate.await();
+                            for (int i = 0, len = fuuids.length; i < len; ++i) {
+                                fuuids[i] = nameGen.generate(NAME);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                t.start();
+            }
+            gate.await();
+        }
+    }
+
+    private final void testNameBasedConcurrentTenThreads(Object[] uuids, int rounds, final UUID namespaceForNamed) throws InterruptedException, BrokenBarrierException, NoSuchAlgorithmException
+    {
+        while (--rounds >= 0) {
+            final CyclicBarrier gate = new CyclicBarrier(11);
+            final Object[] fuuids = uuids;
+            for (int j = 0; j < 10; j ++) {
+                Thread t = new Thread(new Runnable() {
+                    public void run() {
+                        final StringArgGenerator nameGen = Generators.nameBasedGenerator(namespaceForNamed);
+                         try {
+                            gate.await();
+                            for (int i = 0, len = fuuids.length; i < len; ++i) {
+                                fuuids[i] = nameGen.concurrentGenerate(NAME);
+                            }
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                t.start();
+            }
+            gate.await();
+        }
+    }
+
     public static void main(String[] args) throws Exception
     {
         new MeasurePerformance().test();

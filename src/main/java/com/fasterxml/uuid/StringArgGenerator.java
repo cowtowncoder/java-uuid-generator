@@ -17,10 +17,24 @@ public abstract class StringArgGenerator extends UUIDGenerator
     public abstract UUID generate(String name);
 
     /**
+     * Method for generating name-based UUIDs using specified name (serialized to
+     * bytes using UTF-8 encoding). No synchronization is performed on digester.
+     *  Digester is assumed to be created with ThreadLocal.
+     */
+    public abstract UUID concurrentGenerate(String name);
+    /**
      * Method for generating name-based UUIDs using specified byte-serialization
      * of name.
      * 
      * @since 3.1
      */
     public abstract UUID generate(byte[] nameBytes);
+
+    /**
+     * Method for generating name-based UUIDs using specified byte-serialization
+     * of name. No synchronization is performed on digester. Digester is assumed
+     * to be created with ThreadLocal.
+     */
+    public abstract UUID concurrentGenerate(byte[] nameBytes);
+
 }
