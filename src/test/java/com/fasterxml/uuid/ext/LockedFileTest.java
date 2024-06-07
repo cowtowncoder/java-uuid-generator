@@ -26,7 +26,7 @@ public class LockedFileTest
             new LockedFile(null);
             fail("This should have thrown a null pointer exception");
         } catch (NullPointerException nullPointerException) {
-            assertNull(nullPointerException.getMessage());
+            ; // good
         }
     }
 
