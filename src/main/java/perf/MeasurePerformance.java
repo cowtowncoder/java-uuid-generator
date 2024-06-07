@@ -1,5 +1,6 @@
 package perf;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import com.fasterxml.uuid.*;
@@ -19,20 +20,26 @@ import com.fasterxml.uuid.impl.TimeBasedGenerator;
  */
 public class MeasurePerformance
 {
-    // Let's generate quarter million UUIDs per test
-    
-    private static final int ROUNDS = 250;
-    private static final int COUNT = 1000;
-    
-    // also: let's just use a single name for name-based, to avoid extra overhead:
-    final String NAME = "http://www.cowtowncoder.com/blog/blog.html";
-    final byte[] NAME_BYTES;
 
-    public MeasurePerformance() throws java.io.IOException
-    {
-        NAME_BYTES = NAME.getBytes("UTF-8");
+    // also: let's just use a single name for name-based, to avoid extra overhead:
+    private final static String NAME_STRING = "http://www.cowtowncoder.com/blog/blog.html";
+
+    private final static byte[] NAME_BYTES = NAME_STRING.getBytes(StandardCharsets.UTF_8);
+
+    // Let's generate 50k UUIDs per test round
+    private static final int COUNT = 1000;
+    private static final int DEFAULT_ROUNDS = 50;
+
+    private final int rounds;
+    private final boolean runForever;
+
+    public MeasurePerformance() { this(DEFAULT_ROUNDS, true); }
+
+    public MeasurePerformance(int rounds, boolean runForever) {
+        this.rounds = rounds;
+        this.runForever = runForever;
     }
-    
+
     public void test() throws Exception
     {
         int i = 0;
@@ -53,8 +60,11 @@ public class MeasurePerformance
                 new com.fasterxml.uuid.ext.FileBasedTimestampSynchronizer());
         final StringArgGenerator nameGen = Generators.nameBasedGenerator(namespaceForNamed);
         
-        while (true) {
-            try {  Thread.sleep(100L); } catch (InterruptedException ie) { }
+        boolean running = true;
+        final long sleepTime = runForever ? 350L : 1L;
+
+        while (running) {
+            Thread.sleep(sleepTime);
             int round = (i++ % 7);
    
             long curr = System.currentTimeMillis();
@@ -65,44 +75,49 @@ public class MeasurePerformance
     
             case 0:
                 msg = "JDK, random";
-                testJDK(uuids, ROUNDS);
+                testJDK(uuids, rounds);
                 break;
 
             case 1:
                 msg = "JDK, name";
-                testJDKNames(uuids, ROUNDS);
+                testJDKNames(uuids, rounds);
                 break;
                 
             case 2:
                 msg = "Jug, time-based (non-sync)";
-                testTimeBased(uuids, ROUNDS, timeGenPlain);
+                testTimeBased(uuids, rounds, timeGenPlain);
                 break;
 
             case 3:
                 msg = "Jug, time-based (SYNC)";
-                testTimeBased(uuids, ROUNDS, timeGenSynced);
+                testTimeBased(uuids, rounds, timeGenSynced);
                 break;
                 
             case 4:
                 msg = "Jug, SecureRandom";
-                testRandom(uuids, ROUNDS, secureRandomGen);
+                testRandom(uuids, rounds, secureRandomGen);
                 break;
 
             case 5:
                 msg = "Jug, java.util.Random";
-                testRandom(uuids, ROUNDS, utilRandomGen);
+                testRandom(uuids, rounds, utilRandomGen);
                 break;
 
                 
             case 6:
                 msg = "Jug, name-based";
-                testNameBased(uuids, ROUNDS, nameGen);
+                testNameBased(uuids, rounds, nameGen);
+
+                // Last one, quit unless running forever
+                if (!runForever) {
+                    running = false;
+                }
                 break;
 
                 /*
             case 7:
                 msg = "http://johannburkard.de/software/uuid/";
-                testUUID32(uuids, ROUNDS);
+                testUUID32(uuids, rounds);
                 break;
                 */
                 
@@ -143,7 +158,7 @@ public class MeasurePerformance
     {
         while (--rounds >= 0) {
             for (int i = 0, len = uuids.length; i < len; ++i) {
-                final byte[] nameBytes = NAME.getBytes("UTF-8");
+                final byte[] nameBytes = NAME_BYTES;
                 uuids[i] = UUID.nameUUIDFromBytes(nameBytes);
             }
         }
@@ -171,13 +186,13 @@ public class MeasurePerformance
     {
         while (--rounds >= 0) {
             for (int i = 0, len = uuids.length; i < len; ++i) {
-                uuids[i] = uuidGen.generate(NAME);
+                uuids[i] = uuidGen.generate(NAME_STRING);
             }
         }
     }
     
     public static void main(String[] args) throws Exception
     {
-        new MeasurePerformance().test();
+        new MeasurePerformance(DEFAULT_ROUNDS, true).test();
     }
 }
