@@ -47,7 +47,7 @@ public class Jug
         OPTIONS.put("verbose", "v");
     }
     
-    protected static void printUsage()
+    protected void printUsage()
     {
         String clsName = Jug.class.getName();
         System.err.println("Usage: java "+clsName+" [options] type");
@@ -75,7 +75,7 @@ public class Jug
         System.err.println("  epoch-based / e: generate UUID based on current time (as 'epoch') and random number");
     }
 
-    private static void printMap(Map<String,String> m, PrintStream out, boolean option)
+    private void printMap(Map<String,String> m, PrintStream out, boolean option)
     {
         int i = 0;
         int len = m.size();
@@ -102,6 +102,10 @@ public class Jug
 
     public static void main(String[] args)
     {
+        new Jug().run(args);
+    }
+
+    public void run(String[] args) {
         if (args.length == 0) {
             printUsage();
             return;
@@ -123,7 +127,7 @@ public class Jug
         if (tmp == null) {
             if (!TYPES.containsValue(type)) {
                 System.err.println("Unrecognized UUID generation type '"+
-                                   type+"'; currently available ones are:");
+                        type+"'; currently available ones are:");
                 printMap(TYPES, System.err, false);
                 System.err.println();
                 System.exit(1);
@@ -136,7 +140,7 @@ public class Jug
 
         NoArgGenerator noArgGenerator = null; // random- or time-based
         StringArgGenerator nameArgGenerator = null; // name-based
-        
+
         for (int i = 0; i < count; ++i) {
             String opt = args[i];
 
@@ -170,46 +174,46 @@ public class Jug
             try {
                 String next;
                 switch (option) {
-                case 'c':
-                    // Need a number now:
-                    next = args[++i];
-                    try {
-                        genCount = Integer.parseInt(next);
-                    } catch (NumberFormatException nex) {
-                        System.err.println("Invalid number argument for option '"+opt+"', exiting.");
-                        System.exit(1);
-                    }
-                    if (genCount < 1) {
-                        System.err.println("Invalid number argument for option '"+opt+"'; negative numbers not allowed, ignoring (defaults to 1).");
-                    }
-                    break;
-                case 'e':
-                    // Need the ethernet address:
-                    next = args[++i];
-                    try {
-                        addr = EthernetAddress.valueOf(next);
-                    } catch (NumberFormatException nex) {
-                        System.err.println("Invalid ethernet address for option '"+opt+"', error: "+nex.toString());
-                        System.exit(1);
-                    }
-                    break;
-                case 'h':
-                    printUsage();
-                    return;
-                case 'n':
-                    // Need the name
-                    name = args[++i];
-                    break;
-                case 'p': // performance:
-                    performance = true;
-                    break;
-                case 's':
-                    // Need the namespace id
-                    nameSpace = args[++i];
-                    break;
-                case 'v':
-                    verbose = true;
-                    break;
+                    case 'c':
+                        // Need a number now:
+                        next = args[++i];
+                        try {
+                            genCount = Integer.parseInt(next);
+                        } catch (NumberFormatException nex) {
+                            System.err.println("Invalid number argument for option '"+opt+"', exiting.");
+                            System.exit(1);
+                        }
+                        if (genCount < 1) {
+                            System.err.println("Invalid number argument for option '"+opt+"'; negative numbers not allowed, ignoring (defaults to 1).");
+                        }
+                        break;
+                    case 'e':
+                        // Need the ethernet address:
+                        next = args[++i];
+                        try {
+                            addr = EthernetAddress.valueOf(next);
+                        } catch (NumberFormatException nex) {
+                            System.err.println("Invalid ethernet address for option '"+opt+"', error: "+nex.toString());
+                            System.exit(1);
+                        }
+                        break;
+                    case 'h':
+                        printUsage();
+                        return;
+                    case 'n':
+                        // Need the name
+                        name = args[++i];
+                        break;
+                    case 'p': // performance:
+                        performance = true;
+                        break;
+                    case 's':
+                        // Need the namespace id
+                        nameSpace = args[++i];
+                        break;
+                    case 'v':
+                        verbose = true;
+                        break;
                 }
             } catch (IndexOutOfBoundsException ie) {
                 // We get here when an arg is missing...
@@ -227,80 +231,80 @@ public class Jug
         boolean usesRnd = false;
 
         switch (typeC) {
-        case 't': // time-based
-        case 'o': // reordered-time-based (Version 6)
-            // 30-Jun-2022, tatu: Is this true? My former self must have had his
-            //    reasons so leaving as is but... odd.
-            usesRnd = true;
-            // No address specified? Need a dummy one...
-            if (addr == null) {
-                if (verbose) {
-                    System.out.print("(no address specified, generating dummy address: ");
+            case 't': // time-based
+            case 'o': // reordered-time-based (Version 6)
+                // 30-Jun-2022, tatu: Is this true? My former self must have had his
+                //    reasons so leaving as is but... odd.
+                usesRnd = true;
+                // No address specified? Need a dummy one...
+                if (addr == null) {
+                    if (verbose) {
+                        System.out.print("(no address specified, generating dummy address: ");
+                    }
+                    addr = EthernetAddress.constructMulticastAddress(new java.util.Random(System.currentTimeMillis()));
+                    if (verbose) {
+                        System.out.print(addr.toString());
+                        System.out.println(")");
+                    }
                 }
-                addr = EthernetAddress.constructMulticastAddress(new java.util.Random(System.currentTimeMillis()));
-                if (verbose) {
-                    System.out.print(addr.toString());
-                    System.out.println(")");
+                noArgGenerator = (typeC == 't')
+                        ? Generators.timeBasedGenerator(addr)
+                        : Generators.timeBasedReorderedGenerator(addr);
+                break;
+            case 'r': // random-based
+                usesRnd = true;
+                {
+                    SecureRandom r = new SecureRandom();
+                    if (verbose) {
+                        System.out.print("(using secure random generator, info = '"+r.getProvider().getInfo()+"')");
+                    }
+                    noArgGenerator = Generators.randomBasedGenerator(r);
                 }
-            }
-            noArgGenerator = (typeC == 't')
-                    ? Generators.timeBasedGenerator(addr)
-                    : Generators.timeBasedReorderedGenerator(addr);
-            break;
-        case 'r': // random-based
-            usesRnd = true;
-            {
-                SecureRandom r = new SecureRandom();
-                if (verbose) {
-                    System.out.print("(using secure random generator, info = '"+r.getProvider().getInfo()+"')");
+                break;
+            case 'e': // epoch-time-based
+                usesRnd = true;
+                {
+                    SecureRandom r = new SecureRandom();
+                    if (verbose) {
+                        System.out.print("(using secure random generator, info = '"+r.getProvider().getInfo()+"')");
+                    }
+                    noArgGenerator = Generators.timeBasedEpochGenerator(r);
                 }
-                noArgGenerator = Generators.randomBasedGenerator(r);
-            }
-            break;
-        case 'e': // epoch-time-based
-            usesRnd = true;
-            {
-                SecureRandom r = new SecureRandom();
-                if (verbose) {
-                    System.out.print("(using secure random generator, info = '"+r.getProvider().getInfo()+"')");
+                break;
+            case 'm': // random-epoch-time-based
+                usesRnd = true;
+                {
+                    SecureRandom r = new SecureRandom();
+                    if (verbose) {
+                        System.out.print("(using secure random generator, info = '"+r.getProvider().getInfo()+"')");
+                    }
+                    noArgGenerator = Generators.timeBasedEpochRandomGenerator(r);
                 }
-                noArgGenerator = Generators.timeBasedEpochGenerator(r);
-            }
-            break;
-        case 'm': // random-epoch-time-based
-            usesRnd = true;
-            {
-                SecureRandom r = new SecureRandom();
-                if (verbose) {
-                    System.out.print("(using secure random generator, info = '"+r.getProvider().getInfo()+"')");
-                }
-                noArgGenerator = Generators.timeBasedEpochRandomGenerator(r);
-            }
-            break;
-        case 'n': // name-based
-            if (nameSpace == null) {
-                System.err.println("--name-space (-s) - argument missing when using method that requires it, exiting.");
-                System.exit(1);
-            }
-            if (name == null) {
-                System.err.println("--name (-n) - argument missing when using method that requires it, exiting.");
-                System.exit(1);
-            }
-            if (typeC == 'n') {
-                String orig = nameSpace;
-                nameSpace = nameSpace.toLowerCase();
-                if (nameSpace.equals("url")) {
-                    nsUUID = NameBasedGenerator.NAMESPACE_URL;
-                } else  if (nameSpace.equals("dns")) {
-                    nsUUID = NameBasedGenerator.NAMESPACE_DNS;
-                } else {
-                    System.err.println("Unrecognized namespace '"+orig
-                            +"'; only DNS and URL allowed for name-based generation.");
+                break;
+            case 'n': // name-based
+                if (nameSpace == null) {
+                    System.err.println("--name-space (-s) - argument missing when using method that requires it, exiting.");
                     System.exit(1);
                 }
-            }
-            nameArgGenerator = Generators.nameBasedGenerator(nsUUID);
-            break;
+                if (name == null) {
+                    System.err.println("--name (-n) - argument missing when using method that requires it, exiting.");
+                    System.exit(1);
+                }
+                if (typeC == 'n') {
+                    String orig = nameSpace;
+                    nameSpace = nameSpace.toLowerCase();
+                    if (nameSpace.equals("url")) {
+                        nsUUID = NameBasedGenerator.NAMESPACE_URL;
+                    } else  if (nameSpace.equals("dns")) {
+                        nsUUID = NameBasedGenerator.NAMESPACE_DNS;
+                    } else {
+                        System.err.println("Unrecognized namespace '"+orig
+                                +"'; only DNS and URL allowed for name-based generation.");
+                        System.exit(1);
+                    }
+                }
+                nameArgGenerator = Generators.nameBasedGenerator(nsUUID);
+                break;
         }
 
         // And then let's rock:
