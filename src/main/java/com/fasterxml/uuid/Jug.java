@@ -253,34 +253,34 @@ public class Jug
                 break;
             case 'r': // random-based
                 usesRnd = true;
-            {
-                SecureRandom r = new SecureRandom();
-                if (verbose) {
-                    System.out.print("(using secure random generator, info = '"+r.getProvider().getInfo()+"')");
+                {
+                    SecureRandom r = new SecureRandom();
+                    if (verbose) {
+                        System.out.print("(using secure random generator, info = '"+r.getProvider().getInfo()+"')");
+                    }
+                    noArgGenerator = Generators.randomBasedGenerator(r);
                 }
-                noArgGenerator = Generators.randomBasedGenerator(r);
-            }
-            break;
+                break;
             case 'e': // epoch-time-based
                 usesRnd = true;
-            {
-                SecureRandom r = new SecureRandom();
-                if (verbose) {
-                    System.out.print("(using secure random generator, info = '"+r.getProvider().getInfo()+"')");
+                {
+                    SecureRandom r = new SecureRandom();
+                    if (verbose) {
+                        System.out.print("(using secure random generator, info = '"+r.getProvider().getInfo()+"')");
+                    }
+                    noArgGenerator = Generators.timeBasedEpochGenerator(r);
                 }
-                noArgGenerator = Generators.timeBasedEpochGenerator(r);
-            }
-            break;
+                break;
             case 'm': // random-epoch-time-based
                 usesRnd = true;
-            {
-                SecureRandom r = new SecureRandom();
-                if (verbose) {
-                    System.out.print("(using secure random generator, info = '"+r.getProvider().getInfo()+"')");
+                {
+                    SecureRandom r = new SecureRandom();
+                    if (verbose) {
+                        System.out.print("(using secure random generator, info = '"+r.getProvider().getInfo()+"')");
+                    }
+                    noArgGenerator = Generators.timeBasedEpochRandomGenerator(r);
                 }
-                noArgGenerator = Generators.timeBasedEpochRandomGenerator(r);
-            }
-            break;
+                break;
             case 'n': // name-based
                 if (nameSpace == null) {
                     System.err.println("--name-space (-s) - argument missing when using method that requires it, exiting.");
