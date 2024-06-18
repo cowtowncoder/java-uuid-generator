@@ -47,8 +47,15 @@ Maven coordinates are:
 <dependency>
   <groupId>com.fasterxml.uuid</groupId>
   <artifactId>java-uuid-generator</artifactId>
-  <version>5.0.0</version>
+  <version>5.1.0</version>
 </dependency>
+```
+
+
+Gradle:
+
+```groovy
+implementation 'com.fasterxml.uuid:java-uuid-generator:5.1.0'
 ```
 
 #### Third-party Dependencies by JUG
