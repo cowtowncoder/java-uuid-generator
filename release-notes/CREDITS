@@ -148,3 +148,6 @@ Daniel Albuquerque (worldtiki@github)
   * Contributed #99: New factory method to create TimeBasedEpochRandomGenerator
    [5.1.0]
 
+Alexander Ilinykh (divinenickname@github)
+  * Contributed improvements to README.md, pom.xml (OSGi inclusion)
+   [5.1.1]
