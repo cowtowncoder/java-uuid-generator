@@ -20,12 +20,15 @@ import java.security.*;
 import java.util.*;
 
 import com.fasterxml.uuid.impl.NameBasedGenerator;
+import com.fasterxml.uuid.jug.UsageInfo;
 
 /**
  * Simple command-line interface to UUID generation functionality.
  */
 public class Jug
 {
+    private final UsageInfo usageInfo = new UsageInfo();
+
     protected final static HashMap<String,String> TYPES = new HashMap<String,String>();
     static {
         TYPES.put("time-based", "t");
@@ -45,34 +48,6 @@ public class Jug
         OPTIONS.put("name", "n");
         OPTIONS.put("performance", "p");
         OPTIONS.put("verbose", "v");
-    }
-    
-    protected void printUsage()
-    {
-        String clsName = Jug.class.getName();
-        System.err.println("Usage: java "+clsName+" [options] type");
-        System.err.println("Where options are:");
-        System.err.println("  --count / -c <number>: will generate <number> UUIDs (default: 1)");
-        System.err.println("  --ethernet-address / -e <ether-address>: defines the ethernet address");
-        System.err.println("    (in xx:xx:xx:xx:xx:xx notation, usually obtained using 'ifconfig' etc)");
-        System.err.println("    to use with time-based UUID generation");
-        System.err.println("  --help / -h: lists the usage (ie. what you see now)");
-        System.err.println("  --name / -n: specifies");
-        System.err.println("     o name for name-based UUID generation");
-        System.err.println("     o 'information' part of tag-URI for tag-URI UUID generation");
-        System.err.println("  --namespace / -s: specifies");
-        System.err.println("    o the namespace (DNS or URL) for name-based UUID generation");
-        System.err.println("    o 'authority' part of tag-URI for tag-URI UUID generation;");
-        System.err.println("        (fully-qualified domain name, email address)");
-        System.err.println("  --performance / -p: measure time it takes to generate UUID(s).");
-        System.err.println("    [note that UUIDs are not printed out unless 'verbose' is also specified]");
-        System.err.println("  --verbose / -v: lists additional information about UUID generation\n    (by default only UUIDs are printed out (to make it usable in scripts)");
-        System.err.println("And type is one of:");
-        System.err.println("  time-based / t: generate UUID based on current time and optional\n    location information (defined with -e option)");
-        System.err.println("  random-based / r: generate UUID based on the default secure random number generator");
-        System.err.println("  name-based / n: generate UUID based on MD5 hash of given String ('name')");
-        System.err.println("  reordered-time-based / o: generate UUID based on current time and optional\n    location information (defined with -e option)");
-        System.err.println("  epoch-based / e: generate UUID based on current time (as 'epoch') and random number");
     }
 
     private void printMap(Map<String,String> m, PrintStream out, boolean option)
@@ -107,7 +82,7 @@ public class Jug
 
     public void run(String[] args) {
         if (args.length == 0) {
-            printUsage();
+            usageInfo.print();
             return;
         }
 
@@ -198,7 +173,7 @@ public class Jug
                         }
                         break;
                     case 'h':
-                        printUsage();
+                        usageInfo.print();
                         return;
                     case 'n':
                         // Need the name

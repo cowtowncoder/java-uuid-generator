@@ -1,10 +1,11 @@
 package com.fasterxml.uuid.impl;
 
+import com.fasterxml.uuid.Jug;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Wrapper we (only) need to support CLI usage (see {@link com.fasterxml.uuid.Jug}
+ * Wrapper we (only) need to support CLI usage (see {@link Jug}
  * wherein we do not actually  have logger package included; in which case we
  * will print warning(s) out to {@code System.err}.
  * For normal embedded usage no benefits, except if someone forgot their SLF4j API

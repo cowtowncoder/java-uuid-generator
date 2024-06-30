@@ -1,5 +1,6 @@
-package com.fasterxml.uuid;
+package com.fasterxml.uuid.jug;
 
+import com.fasterxml.uuid.Jug;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
