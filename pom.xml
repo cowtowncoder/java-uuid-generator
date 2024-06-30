@@ -132,12 +132,14 @@ https://stackoverflow.com/questions/37958104/maven-javadoc-no-source-files-for-p
               <Export-Package>
                 com.fasterxml.uuid;version="${project.version}",
                 com.fasterxml.uuid.ext;version="${project.version}",
-                com.fasterxml.uuid.impl;version="${project.version}"
+                com.fasterxml.uuid.impl;version="${project.version}",
+                com.fasterxml.uuid.jug;version="${project.version}"
               </Export-Package>
               <Import-Package>
                 com.fasterxml.uuid;version="[${project.version},${project.version}]",
                 com.fasterxml.uuid.ext;version="[${project.version},${project.version}]",
                 com.fasterxml.uuid.impl;version="[${project.version},${project.version}]",
+                com.fasterxml.uuid.jug;version="[${project.version},${project.version}]",
                 org.slf4j;version="[${slf4j.version},2)"
               </Import-Package>
               <Private-Package />
