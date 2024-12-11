@@ -4,6 +4,11 @@ Project: java-uuid-generator
 Releases
 ============================================================================
 
+(not yet released)
+
+#122: RFC-4122 Obsoleted by RFC-9562 (document change)
+ (pointed out by @akefirad)
+
 5.1.0 (02-Jun-2024)
 
 #99: New factory method to create TimeBasedEpochRandomGenerator
