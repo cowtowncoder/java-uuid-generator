@@ -2,7 +2,7 @@
 
 JUG is a set of Java classes for working with UUIDs: generating UUIDs using any of standard methods, outputting
 efficiently, sorting and so on.
-It generates UUIDs according to the [UUID specification (RFC-4122)](https://tools.ietf.org/html/rfc4122)
+It generates UUIDs according to the [UUID specification (RFC-9562)](https://tools.ietf.org/html/rfc9562)
 (see [Wikipedia UUID page](http://en.wikipedia.org/wiki/UUID) for more explanation)
 
 JUG was written by Tatu Saloranta (<tatu.saloranta@iki.fi>) originally in 2002 and has been updated over the years.
@@ -12,13 +12,13 @@ JUG is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENS
 
 ## Supported UUID versions (1, 3, 4, 5, 6, 7)
 
-JUG supports both "classic" versions defined in RFC 4122]:
+JUG supports both "classic" versions defined in RFC 9562]:
 
 * `1`: time/location - based
 * `3` and `5`: name hash - based
 * `4`: random number - based
 
-and newly (in 2022-2024) proposed (see [uuid6](https://uuid6.github.io/uuid6-ietf-draft/) and [RFC-4122 bis](https://datatracker.ietf.org/doc/draft-ietf-uuidrev-rfc4122bis/)) variants:
+and newly (in 2022-2024) proposed (see [uuid6](https://uuid6.github.io/uuid6-ietf-draft/) and [RFC-9562](https://datatracker.ietf.org/doc/html/rfc9562) variants:
 
 * `6`: reordered variant of version `1` (with lexicographic ordering)
 * `7`: Unix-timestamp + random based variant (also with lexicographic ordering)

@@ -2,7 +2,7 @@ package com.fasterxml.uuid;
 
 /**
  * Enumeration of different flavors of UUIDs: 5 specified by specs
- * (<a href="http://tools.ietf.org/html/rfc4122">RFC-4122</a>)
+ * (<a href="http://tools.ietf.org/html/rfc9562">RFC-9562</a>)
  * and one
  * virtual entry ("UNKNOWN") to represent invalid one that consists of
  * all zero bites
