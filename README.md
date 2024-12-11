@@ -12,13 +12,13 @@ JUG is licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENS
 
 ## Supported UUID versions (1, 3, 4, 5, 6, 7)
 
-JUG supports both "classic" versions defined in RFC 9562]:
+JUG supports both "classic" versions defined in [RFC 4122](https://datatracker.ietf.org/doc/html/rfc4122):
 
 * `1`: time/location - based
 * `3` and `5`: name hash - based
 * `4`: random number - based
 
-and newly (in 2022-2024) proposed (see [uuid6](https://uuid6.github.io/uuid6-ietf-draft/) and [RFC-9562](https://datatracker.ietf.org/doc/html/rfc9562) variants:
+and newly (in 2022-) proposed (see [uuid6](https://uuid6.github.io/uuid6-ietf-draft/) and [RFC-9562](https://datatracker.ietf.org/doc/html/rfc9562) variants:
 
 * `6`: reordered variant of version `1` (with lexicographic ordering)
 * `7`: Unix-timestamp + random based variant (also with lexicographic ordering)
