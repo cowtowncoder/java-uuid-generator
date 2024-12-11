@@ -46,7 +46,7 @@ public class UUIDUtil
 
     /**
      * Accessor for so-call "Nil UUID" (see
-     * <a href="https://www.rfc-editor.org/rfc/rfc4122#section-4.1.7">RFC 4122/4.1.7</a>;
+     * <a href="https://datatracker.ietf.org/doc/html/rfc9562#name-nil-uuid">RFC 9562, #5.9</a>;
      * one that is all zeroes.
      *
      * @since 4.1
@@ -59,7 +59,7 @@ public class UUIDUtil
 
     /**
      * Accessor for so-call "Max UUID" (see
-     * <a href="https://www.ietf.org/archive/id/draft-peabody-dispatch-new-uuid-format-04.html#name-max-uuid">UUID 6 draft</a>;
+     * <a href="https://datatracker.ietf.org/doc/html/rfc9562#name-max-uuid">RFC-9562, #5.10</a>);
      * one that is all one bits
      *
      * @since 4.1
