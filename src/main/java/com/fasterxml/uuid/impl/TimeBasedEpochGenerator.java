@@ -3,8 +3,7 @@ package com.fasterxml.uuid.impl;
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 
 import com.fasterxml.uuid.NoArgGenerator;
 import com.fasterxml.uuid.UUIDClock;
@@ -35,9 +34,9 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
      */
 
     /**
-     * Random number generator that this generator uses.
+     * Random number generator that fills a byte array with entropy
      */
-    protected final Random _random;
+    protected final Consumer<byte[]> _randomNextBytes;
 
     /**
      * Underlying {@link UUIDClock} used for accessing current time, to use for
@@ -49,7 +48,6 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
 
     private long _lastTimestamp = -1;
     private final byte[] _lastEntropy  = new byte[ENTROPY_BYTE_LENGTH];
-    private final Lock lock = new ReentrantLock();
 
     /*
     /**********************************************************************
@@ -76,10 +74,12 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
      */
     public TimeBasedEpochGenerator(Random rnd, UUIDClock clock)
     {
-        if (rnd == null) {
-            rnd = LazyRandom.sharedSecureRandom(); 
-        }
-        _random = rnd;
+        this((rnd == null ? LazyRandom.sharedSecureRandom() : rnd)::nextBytes, clock);
+    }
+
+    TimeBasedEpochGenerator(Consumer<byte[]> randomNextBytes, UUIDClock clock)
+    {
+        _randomNextBytes = randomNextBytes;
         _clock = clock;
     }
 
@@ -120,28 +120,39 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
      */
     public UUID construct(long rawTimestamp)
     {
-        lock.lock();
-        try { 
+        final long mostSigBits, leastSigBits;
+        synchronized (_lastEntropy) {
             if (rawTimestamp == _lastTimestamp) {
-                boolean c = true;
-                for (int i = ENTROPY_BYTE_LENGTH - 1; i >= 0; i--) {
-                    if (c) {
-                        byte temp = _lastEntropy[i];
-                        temp = (byte) (temp + 0x01);
-                        c = _lastEntropy[i] == (byte) 0xff;
-                        _lastEntropy[i] = temp;
+                carry:
+                {
+                    for (int i = ENTROPY_BYTE_LENGTH - 1; i > 0; i--) {
+                        _lastEntropy[i] = (byte) (_lastEntropy[i] + 1);
+                        if (_lastEntropy[i] != 0x00) {
+                            break carry;
+                        }
                     }
-                }
-                if (c) {
-                    throw new IllegalStateException("overflow on same millisecond");
+                    _lastEntropy[0] = (byte) (_lastEntropy[0] + 1);
+                    if (_lastEntropy[0] >= 0x04) {
+                        throw new IllegalStateException("overflow on same millisecond");
+                    }
                 }
             } else {
                 _lastTimestamp = rawTimestamp;
-                _random.nextBytes(_lastEntropy);
+                _randomNextBytes.accept(_lastEntropy);
+                // In the most significant byte, only 2 bits will fit in the UUID, and one of those should be cleared
+                // to guard against overflow.
+                _lastEntropy[0] &= 0x01;
             }
-            return UUIDUtil.constructUUID(UUIDType.TIME_BASED_EPOCH, (rawTimestamp << 16) | _toShort(_lastEntropy, 0), _toLong(_lastEntropy, 2));
-        } finally {
-            lock.unlock();
+            mostSigBits = rawTimestamp << 16 |
+                    (long) UUIDType.TIME_BASED_EPOCH.raw() << 12 |
+                    Byte.toUnsignedLong(_lastEntropy[0]) << 10 |
+                    Byte.toUnsignedLong(_lastEntropy[1]) << 2 |
+                    Byte.toUnsignedLong(_lastEntropy[2]) >>> 6;
+            long right62Mask = (1L << 62) - 1;
+            long variant = 0x02;
+            leastSigBits = variant << 62 |
+                    _toLong(_lastEntropy, 2) & right62Mask;
         }
+        return new UUID(mostSigBits, leastSigBits);
     }
 }
