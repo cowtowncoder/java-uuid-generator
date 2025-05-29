@@ -30,7 +30,7 @@ jobs:
         distribution: "temurin"
         java-version: ${{ matrix.java_version }}
         cache: 'maven'
-	server-id: central-snapshots
+        server-id: central-snapshots
         server-username: CI_DEPLOY_USERNAME
         server-password: CI_DEPLOY_PASSWORD
     - name: Build
