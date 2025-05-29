@@ -6,7 +6,7 @@
   <parent>
       <groupId>com.fasterxml</groupId>
       <artifactId>oss-parent</artifactId>
-      <version>58</version>
+      <version>68</version>
   </parent>
   <groupId>com.fasterxml.uuid</groupId>
   <artifactId>java-uuid-generator</artifactId>
@@ -198,6 +198,11 @@ https://stackoverflow.com/questions/37958104/maven-javadoc-no-source-files-for-p
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <!-- 28-May-2025, tatu: Ensure we use new Sonatype Central Portal: -->
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </build>

@@ -15,7 +15,7 @@ permissions:
   contents: read
 jobs:
   build:
-    runs-on: 'ubuntu-22.04'
+    runs-on: 'ubuntu-latest'
     strategy:
       fail-fast: false
       matrix:
@@ -30,15 +30,18 @@ jobs:
         distribution: "temurin"
         java-version: ${{ matrix.java_version }}
         cache: 'maven'
+        server-id: central-snapshots
+        server-username: CI_DEPLOY_USERNAME
+        server-password: CI_DEPLOY_PASSWORD
     - name: Build
       run: ./mvnw -B -q -ff -ntp verify
     - name: Generate code coverage
-      if: github.event_name != 'pull_request' && matrix.java_version == '8'
+      if: ${{ github.event_name != 'pull_request' && matrix.java_version == '8' }}
       run: ./mvnw -B -q -ff -ntp test
     - name: Publish code coverage
-      if: github.event_name != 'pull_request' && matrix.java_version == '8'
+      if: ${{ github.event_name != 'pull_request' && matrix.java_version == '8' }}
       uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d # v5.4.2
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./target/site/jacoco/jacoco.xml
+        files: ./target/site/jacoco/jacoco.xml
         flags: unittests
