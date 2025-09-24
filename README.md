@@ -83,7 +83,7 @@ For example:
 ```java
 UUID uuid = Generators.timeBasedGenerator().generate(); // Version 1
 UUID uuid = Generators.randomBasedGenerator().generate(); // Version 4
-UUID uuid = Generators.nameBasedgenerator().generate("string to hash"); // Version 5
+UUID uuid = Generators.nameBasedGenerator().generate("string to hash"); // Version 5
 // With JUG 4.1+: support for https://github.com/uuid6/uuid6-ietf-draft versions 6 and 7:
 UUID uuid = Generators.timeBasedReorderedGenerator().generate(); // Version 6
 UUID uuid = Generators.timeBasedEpochGenerator().generate(); // Version 7
