@@ -4,7 +4,7 @@ Project: java-uuid-generator
 Releases
 ============================================================================
 
-(not yet released)
+5.1.1 (26-Feb-2025)
 
 #122: RFC-4122 Obsoleted by RFC-9562 (document change)
  (pointed out by @akefirad)
