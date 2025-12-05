@@ -1,8 +1,5 @@
 package com.fasterxml.uuid.ext;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -12,6 +9,11 @@ import java.nio.file.Path;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
 import static com.fasterxml.uuid.ext.LockedFile.READ_ERROR;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +21,19 @@ public class LockedFileTest
 {
     @TempDir
     Path temporaryFolder;
+
+    @BeforeAll
+    static void setUp() {
+        // Suppress logging during test
+        LockedFile.logging(false);
+    }
+    
+    @AfterAll
+    static void tearDown() {
+        // Re-enable logging after tests
+        LockedFile.logging(true);
+        
+    }
 
     @Test
     public void constructor_givenNull_shouldThrowNullPointerException() throws IOException {

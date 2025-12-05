@@ -39,8 +39,10 @@ import org.slf4j.LoggerFactory;
  */
 class LockedFile
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LockedFile.class);
 
-    private static final Logger logger = LoggerFactory.getLogger(LockedFile.class);
+    // Wrapper just to allow test(s) to disable/re-route
+    static LoggerWrapper logger = new LoggerWrapper(LOGGER);
     
     /**
      * Expected file length comes from hex-timestamp (16 digits),
@@ -115,6 +117,11 @@ class LockedFile
         mLock = lock;
     }
 
+    // @since 5.2 for testing (for `LockedFileTest`)
+    static void logging(boolean enabled) {
+        logger = new LoggerWrapper(enabled ? LOGGER : null);
+    }
+    
     public void deactivate()
     {
         RandomAccessFile raf = mRAFile;
@@ -131,7 +138,7 @@ class LockedFile
         try {
             size = (int) mChannel.size();
         } catch (IOException ioe) {
-            logger.error("Failed to read file size", ioe);
+            logger.error(ioe, "Failed to read file size");
             return READ_ERROR;
         }
 
@@ -151,7 +158,7 @@ class LockedFile
         try {
             mRAFile.readFully(data);
         } catch (IOException ie) {
-            logger.error("(file '{}') Failed to read {} bytes", mFile, size, ie);
+            logger.error(ie, "(file '"+mFile+"') Failed to read "+size+" bytes");
             return READ_ERROR;
         }
 
@@ -168,25 +175,25 @@ class LockedFile
         dataStr = dataStr.trim();
 
         long result = -1;
-        String err = null;
+        String errMsg = null;
 
         if (!dataStr.startsWith("[0")
             || dataStr.length() < 3
             || Character.toLowerCase(dataStr.charAt(2)) != 'x') {
-            err = "does not start with '[0x' prefix";
+            errMsg = "does not start with '[0x' prefix";
         } else {
             int ix = dataStr.indexOf(']', 3);
             if (ix <= 0) {
-                err = "does not end with ']' marker";
+                errMsg = "does not end with ']' marker";
             } else {
                 String hex = dataStr.substring(3, ix);
                 if (hex.length() > 16) {
-                    err = "length of the (hex) timestamp too long; expected 16, had "+hex.length()+" ('"+hex+"')";
+                    errMsg = "length of the (hex) timestamp too long; expected 16, had "+hex.length()+" ('"+hex+"')";
                 } else {
                     try {
                         result = Long.parseLong(hex, 16);
                     } catch (NumberFormatException nex) {
-                        err = "does not contain a valid hex timestamp; got '"
+                        errMsg = "does not contain a valid hex timestamp; got '"
                             +hex+"' (parse error: "+nex+")";
                     }
                 }
@@ -195,7 +202,7 @@ class LockedFile
 
         // Unsuccesful?
         if (result < 0L) {
-            logger.error("(file '{}') Malformed timestamp file contents: {}", mFile, err);
+            logger.error("(file '{}') Malformed timestamp file contents: {}", mFile, errMsg);
             return READ_ERROR;
         }
 
@@ -210,12 +217,11 @@ class LockedFile
     {
 	// Let's do sanity check first:
 	if (stamp <= mLastTimestamp) {
-	    /* same stamp is not dangerous, but pointless... so warning,
-	     * not an error:
-	     */
+	    // same stamp is not dangerous, but pointless... so warning,
+	    // not an error:
 	    if (stamp == mLastTimestamp) {
 	        logger.warn("(file '{}') Trying to re-write existing timestamp ({})", mFile, stamp);
-		return;
+	        return;
 	    }
 	    throw new IOException(""+mFile+" trying to overwrite existing value ("+mLastTimestamp+") with an earlier timestamp ("+stamp+")");
 	}
@@ -260,20 +266,58 @@ class LockedFile
      */
 
     protected static void doDeactivate(File f, RandomAccessFile raf,
-                                       FileLock lock)
+            FileLock lock)
     {
         if (lock != null) {
             try {
                 lock.release();
             } catch (Throwable t) {
-                logger.error("Failed to release lock (for file '{}')", f, t);
+                logger.error(t, "Failed to release lock (for file '"+f+"')");
             }
         }
         if (raf != null) {
             try {
                 raf.close();
             } catch (Throwable t) {
-                logger.error("Failed to close file '{}'", f, t);
+                logger.error(t, "Failed to close file '{"+f+"}'");
+            }
+        }
+    }
+
+    /*
+    //////////////////////////////////////////////////////////////
+    // Helper class(es)
+    //////////////////////////////////////////////////////////////
+     */
+    
+    private static class LoggerWrapper {
+        private final Logger logger;
+
+        public LoggerWrapper(Logger l) {
+            logger = l;
+        }
+
+        public void error(Throwable t, String msg) {
+            if (logger != null) {
+                logger.error(msg, t);
+            }
+        }
+
+        public void error(String msg, Object arg1, Object arg2) {
+            if (logger != null) {
+                logger.error(msg, arg1, arg2);
+            }
+        }
+
+        public void warn(String msg) {
+            if (logger != null) {
+                logger.warn(msg);
+            }
+        }
+
+        public void warn(String msg, Object arg1, Object arg2) {
+            if (logger != null) {
+                logger.warn(msg, arg1, arg2);
             }
         }
     }
