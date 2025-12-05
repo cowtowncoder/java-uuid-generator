@@ -4,6 +4,10 @@ Project: java-uuid-generator
 Releases
 ============================================================================
 
+5.2.0 (not yet released)
+
+- Update to `oss-parent` v69
+
 5.1.1 (26-Sep-2025)
 
 #122: RFC-4122 Obsoleted by RFC-9562 (document change)
