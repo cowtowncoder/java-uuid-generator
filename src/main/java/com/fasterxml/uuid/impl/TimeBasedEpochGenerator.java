@@ -1,6 +1,7 @@
 package com.fasterxml.uuid.impl;
 
 import java.security.SecureRandom;
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -90,7 +91,7 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
      */
     protected TimeBasedEpochGenerator(Consumer<byte[]> randomNextBytes, UUIDClock clock)
     {
-        _randomNextBytes = randomNextBytes;
+        _randomNextBytes = Objects.requireNonNull(randomNextBytes);
         _clock = clock;
     }
 
