@@ -4,7 +4,7 @@ Project: java-uuid-generator
 Releases
 ============================================================================
 
-5.2.0 (not yet released)
+5.2.0 (05-Dec-2025)
 
 #124: TimeBasedEpochGenerator should prevent overflow
  (Chad P)
