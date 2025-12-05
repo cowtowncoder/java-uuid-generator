@@ -1,15 +1,18 @@
 package com.fasterxml.uuid.impl;
 
-import com.fasterxml.uuid.UUIDClock;
-import junit.framework.TestCase;
-
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class TimeBasedEpochGeneratorTest extends TestCase {
+import com.fasterxml.uuid.UUIDClock;
+import junit.framework.TestCase;
 
+/**
+ * @since 5.3
+ */
+public class TimeBasedEpochGeneratorTest extends TestCase
+{
     public void testFormat() {
         BigInteger minEntropy = BigInteger.ZERO;
         long minTimestamp = 0;
