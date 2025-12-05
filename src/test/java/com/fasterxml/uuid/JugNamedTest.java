@@ -1,10 +1,9 @@
 package com.fasterxml.uuid;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -13,15 +12,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.StringContains.containsString;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(Parameterized.class)
 public class JugNamedTest {
-    @Parameterized.Parameter
-    public UseCase useCase;
+    private UseCase useCase;
 
     private PrintStream oldStrOut;
     private PrintStream oldStrErr;
@@ -30,9 +28,10 @@ public class JugNamedTest {
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private Jug jug_underTest;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        jug_underTest = new Jug();oldStrOut = System.out;
+        jug_underTest = new Jug();
+        oldStrOut = System.out;
         oldStrErr = System.err;
         PrintStream stubbedStream = new PrintStream(outContent);
         System.setOut(stubbedStream);
@@ -40,14 +39,16 @@ public class JugNamedTest {
         System.setErr(stubbedErrStream);
     }
 
-    @After
+    @AfterEach
     public void cleanup() {
         System.setOut(oldStrOut);
         System.setErr(oldStrErr);
     }
 
-    @Test
-    public void run_shouldProduceUUID() {
+    @ParameterizedTest
+    @MethodSource("useCases")
+    public void run_shouldProduceUUID(UseCase useCase) {
+        this.useCase = useCase;
         // given
 
         // when
@@ -62,8 +63,10 @@ public class JugNamedTest {
                 UUID.fromString(actualUuid.substring(0, actualUuid.length() - 1)).getClass());
     }
 
-    @Test
-    public void run_givenCount3_shouldProduceUUID() {
+    @ParameterizedTest
+    @MethodSource("useCases")
+    public void run_givenCount3_shouldProduceUUID(UseCase useCase) {
+        this.useCase = useCase;
         // given
 
         // when
@@ -80,8 +83,10 @@ public class JugNamedTest {
         }
     }
 
-    @Test
-    public void run_givenPerformance_shouldProducePerformanceInfo() {
+    @ParameterizedTest
+    @MethodSource("useCases")
+    public void run_givenPerformance_shouldProducePerformanceInfo(UseCase useCase) {
+        this.useCase = useCase;
         // given
 
         // when
@@ -94,8 +99,10 @@ public class JugNamedTest {
 
         assertThat(actualOutput, containsString("Performance: took"));
     }
-    @Test
-    public void run_givenHelp_shouldProduceHelpInfo() {
+    @ParameterizedTest
+    @MethodSource("useCases")
+    public void run_givenHelp_shouldProduceHelpInfo(UseCase useCase) {
+        this.useCase = useCase;
         // given
 
         // when
@@ -109,8 +116,10 @@ public class JugNamedTest {
         assertThat(actualOutput, containsString("Usage: java"));
     }
 
-    @Test
-    public void run_givenVerbose_shouldProduceExtraInfo() {
+    @ParameterizedTest
+    @MethodSource("useCases")
+    public void run_givenVerbose_shouldProduceExtraInfo(UseCase useCase) {
+        this.useCase = useCase;
         // given
 
         // when
@@ -124,8 +133,10 @@ public class JugNamedTest {
         assertThat(actualOutput, containsString("Done."));
     }
 
-    @Test
-    public void run_givenVerboseAndPerformance_shouldProduceExtraInfo() {
+    @ParameterizedTest
+    @MethodSource("useCases")
+    public void run_givenVerboseAndPerformance_shouldProduceExtraInfo(UseCase useCase) {
+        this.useCase = useCase;
         // given
 
         // when
@@ -141,12 +152,11 @@ public class JugNamedTest {
         assertThat(actualOutput, containsString("Performance: took"));
     }
 
-    @Parameterized.Parameters(name = "{index} -> {0}")
-    public static List<UseCase> useCases() {
-        return Arrays.asList(
+    static Stream<UseCase> useCases() {
+        return Stream.of(
                 new UseCase("n", "-n", "world", "-s", "url"),
                 new UseCase("n", "-n", "world", "-s", "dns")
-            );
+        );
     }
 
     private static class UseCase {

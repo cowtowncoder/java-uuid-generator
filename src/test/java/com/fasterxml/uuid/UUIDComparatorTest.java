@@ -22,11 +22,13 @@ import java.util.UUID;
 
 import com.fasterxml.uuid.impl.TimeBasedEpochGenerator;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UUIDComparatorTest
-    extends TestCase
 {
+    @Test
     public void testIntComp()
     {
         assertEquals(0, UUIDComparator.compareUInts(123, 123));
@@ -47,6 +49,7 @@ public class UUIDComparatorTest
         assertTrue(UUIDComparator.compareUInts(0xFFFFFF00, 0xFFFFFF17) < 0);
     }
 
+    @Test
     public void testLongComp()
     {
         assertEquals(0, UUIDComparator.compareULongs(123L, 123L));
@@ -75,6 +78,7 @@ public class UUIDComparatorTest
     /*
      * [Issue#13]
      */
+    @Test
     public void testSorting()
     {
         String[] src = new String[] {
@@ -107,6 +111,7 @@ public class UUIDComparatorTest
         }
     }
 
+    @Test
     public void testSortingMV7() throws Exception {
         final int count = 10000000;
         Random entropy = new Random(0x666); 
@@ -120,7 +125,7 @@ public class UUIDComparatorTest
         HashSet<UUID> unique = new HashSet<UUID>(count);
         
         for (int i = 0; i < created.size(); i++) {
-            assertEquals("Error at: " + i, created.get(i), sortedUUID.get(i));
+            assertEquals(created.get(i), sortedUUID.get(i), "Error at: " + i);
             if (!unique.add(created.get(i))) {
                 System.out.println("Duplicate at: " + i);
             }

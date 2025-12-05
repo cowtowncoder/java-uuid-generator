@@ -1,10 +1,10 @@
 package com.fasterxml.uuid;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -13,12 +13,10 @@ import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.StringContains.containsString;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(Parameterized.class)
 public class JugNoArgsTest {
-    @Parameterized.Parameter
-    public String useCase;
+    private String useCase;
 
     private PrintStream oldStrOut;
     private PrintStream oldStrErr;
@@ -27,7 +25,7 @@ public class JugNoArgsTest {
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private Jug jug_underTest;
 
-    @Before
+    @BeforeEach
     public void setup() {
         jug_underTest = new Jug();
         oldStrOut = System.out;
@@ -38,14 +36,16 @@ public class JugNoArgsTest {
         System.setErr(stubbedErrStream);
     }
 
-    @After
+    @AfterEach
     public void cleanup() {
         System.setOut(oldStrOut);
         System.setErr(oldStrErr);
     }
 
-    @Test
-    public void run_givenNoOptions_shouldProduceUUID() {
+    @ParameterizedTest
+    @ValueSource(strings = {"t", "o", "r", "e", "m"})
+    public void run_givenNoOptions_shouldProduceUUID(String useCase) {
+        this.useCase = useCase;
         // given
 
         // when
@@ -59,8 +59,10 @@ public class JugNoArgsTest {
                 UUID.fromString(actualUuid.substring(0, actualUuid.length() - 1)).getClass());
     }
 
-    @Test
-    public void run_givenCount1_shouldProduceUUID() {
+    @ParameterizedTest
+    @ValueSource(strings = {"t", "o", "r", "e", "m"})
+    public void run_givenCount1_shouldProduceUUID(String useCase) {
+        this.useCase = useCase;
         // given
 
         // when
@@ -76,8 +78,10 @@ public class JugNoArgsTest {
                 UUID.fromString(actualUuid.substring(0, actualUuid.length() - 1)).getClass());
     }
 
-    @Test
-    public void run_givenCount2_shouldProduce2UUIDs() {
+    @ParameterizedTest
+    @ValueSource(strings = {"t", "o", "r", "e", "m"})
+    public void run_givenCount2_shouldProduce2UUIDs(String useCase) {
+        this.useCase = useCase;
         // given
 
         // when
@@ -95,8 +99,10 @@ public class JugNoArgsTest {
         }
     }
 
-    @Test
-    public void run_givenEthernet_shouldProduceUUID() {
+    @ParameterizedTest
+    @ValueSource(strings = {"t", "o", "r", "e", "m"})
+    public void run_givenEthernet_shouldProduceUUID(String useCase) {
+        this.useCase = useCase;
         // given
 
         // when
@@ -112,8 +118,10 @@ public class JugNoArgsTest {
                 UUID.fromString(actualUuid.substring(0, actualUuid.length() - 1)).getClass());
     }
 
-    @Test
-    public void run_givenName_shouldProduceUUID() {
+    @ParameterizedTest
+    @ValueSource(strings = {"t", "o", "r", "e", "m"})
+    public void run_givenName_shouldProduceUUID(String useCase) {
+        this.useCase = useCase;
         // given
 
         // when
@@ -129,8 +137,10 @@ public class JugNoArgsTest {
                 UUID.fromString(actualUuid.substring(0, actualUuid.length() - 1)).getClass());
     }
 
-    @Test
-    public void run_givenDnsNameSpace_shouldProduceUUID() {
+    @ParameterizedTest
+    @ValueSource(strings = {"t", "o", "r", "e", "m"})
+    public void run_givenDnsNameSpace_shouldProduceUUID(String useCase) {
+        this.useCase = useCase;
         // given
 
         // when
@@ -146,8 +156,10 @@ public class JugNoArgsTest {
                 UUID.fromString(actualUuid.substring(0, actualUuid.length() - 1)).getClass());
     }
 
-    @Test
-    public void run_givenUrlNameSpace_shouldProduceUUID() {
+    @ParameterizedTest
+    @ValueSource(strings = {"t", "o", "r", "e", "m"})
+    public void run_givenUrlNameSpace_shouldProduceUUID(String useCase) {
+        this.useCase = useCase;
         // given
 
         // when
@@ -163,8 +175,10 @@ public class JugNoArgsTest {
                 UUID.fromString(actualUuid.substring(0, actualUuid.length() - 1)).getClass());
     }
 
-    @Test
-    public void run_givenPerformance_shouldProducePerformanceInfo() {
+    @ParameterizedTest
+    @ValueSource(strings = {"t", "o", "r", "e", "m"})
+    public void run_givenPerformance_shouldProducePerformanceInfo(String useCase) {
+        this.useCase = useCase;
         // given
 
         // when
@@ -177,8 +191,10 @@ public class JugNoArgsTest {
         assertThat(actualOutput, containsString("Performance: took"));
     }
 
-    @Test
-    public void run_givenHelp_shouldProduceHelpInfo() {
+    @ParameterizedTest
+    @ValueSource(strings = {"t", "o", "r", "e", "m"})
+    public void run_givenHelp_shouldProduceHelpInfo(String useCase) {
+        this.useCase = useCase;
         // given
 
         // when
@@ -191,8 +207,10 @@ public class JugNoArgsTest {
         assertThat(actualOutput, containsString("Usage: java"));
     }
 
-    @Test
-    public void run_givenVerbose_shouldProduceExtraInfo() {
+    @ParameterizedTest
+    @ValueSource(strings = {"t", "o", "r", "e", "m"})
+    public void run_givenVerbose_shouldProduceExtraInfo(String useCase) {
+        this.useCase = useCase;
         // given
 
         // when
@@ -205,14 +223,4 @@ public class JugNoArgsTest {
         assertThat(actualOutput, containsString("Done."));
     }
 
-    @Parameterized.Parameters(name = "{index} -> type: {0}")
-    public static List<String> useCases() {
-        return Arrays.asList(
-                "t",
-                "o",
-                "r",
-                "e",
-                "m"
-                );
-    }
 }

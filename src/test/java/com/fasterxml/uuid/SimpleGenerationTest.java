@@ -2,10 +2,13 @@ package com.fasterxml.uuid;
 
 import java.util.UUID;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
-public class SimpleGenerationTest extends TestCase
+import static org.junit.jupiter.api.Assertions.*;
+
+public class SimpleGenerationTest
 {
+    @Test
     public void testIssue5() throws Exception
     {
         UUID uuid = Generators.randomBasedGenerator().generate();
