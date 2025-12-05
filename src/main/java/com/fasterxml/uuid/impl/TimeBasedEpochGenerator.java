@@ -37,7 +37,7 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
     /**
      * Source for random numbers used to fill a byte array with entropy.
      *
-     * @since 5.3 (replaced earlier {@code java.util.Random _random})
+     * @since 5.2 (replaced earlier {@code java.util.Random _random})
      */
     protected final Consumer<byte[]> _randomNextBytes;
 
@@ -87,7 +87,7 @@ public class TimeBasedEpochGenerator extends NoArgGenerator
      *  for example, JDK's {@code SecureRandom::nextBytes}.
      * @param clock clock Object used for accessing current time to use for generation
      *
-     * @since 5.3
+     * @since 5.2
      */
     protected TimeBasedEpochGenerator(Consumer<byte[]> randomNextBytes, UUIDClock clock)
     {

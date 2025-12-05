@@ -10,7 +10,7 @@ import com.fasterxml.uuid.UUIDClock;
 import junit.framework.TestCase;
 
 /**
- * @since 5.3
+ * @since 5.2
  */
 public class TimeBasedEpochGeneratorTest extends TestCase
 {
