@@ -17,12 +17,11 @@
 
 package com.fasterxml.uuid;
 
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.fasterxml.uuid.impl.TimeBasedGenerator;
 import java.net.InetSocketAddress;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -33,7 +32,7 @@ import java.util.Random;
  * @author Eric Bie
  * @author Tatu Saloranta (changes for version 3.0)
  */
-public class EthernetAddressTest extends TestCase
+public class EthernetAddressTest
 {
     // constant defining the length of a valid ethernet address byte array
     private static final int ETHERNET_ADDRESS_ARRAY_LENGTH = 6;
@@ -167,22 +166,6 @@ public class EthernetAddressTest extends TestCase
         new EthernetAddress(0x0000cf74d8ef49b8L);
                      
     
-    public EthernetAddressTest(java.lang.String testName)
-    {
-        super(testName);
-    }
-    
-    public static Test suite()
-    {
-        TestSuite suite = new TestSuite(EthernetAddressTest.class);
-        return suite;
-    }
-    
-    public static void main(String[] args)
-    {
-        TestRunner.run(suite());
-    }
-
     /**************************************************************************
      * Begin Constructor tests
      *************************************************************************/
@@ -190,6 +173,8 @@ public class EthernetAddressTest extends TestCase
      * Test of EthernetAddress(byte[]) constructor,
      * of class com.fasterxml.uuid.EthernetAddress.
      */
+    @Test
+
     public void testByteArrayEthernetAddressConstructor()
     {
         // lets test some error cases
@@ -245,47 +230,39 @@ public class EthernetAddressTest extends TestCase
         // gives us a null EthernetAddress (definition of null EthernetAddress)
         EthernetAddress ethernet_address =
             new EthernetAddress(new byte[ETHERNET_ADDRESS_ARRAY_LENGTH]);
-        assertEquals(
-            "EthernetAddress(byte[]) did not create expected EthernetAddress",
-            NULL_ETHERNET_ADDRESS_LONG,
-            ethernet_address.toLong());
+        assertEquals(NULL_ETHERNET_ADDRESS_LONG, ethernet_address.toLong(), "EthernetAddress(byte[]) did not create expected EthernetAddress");
         
         // let's test creating an array from a good byte array
         ethernet_address =
             new EthernetAddress(VALID_ETHERNET_ADDRESS_BYTE_ARRAY);
-        assertEquals(
-            "EthernetAddress(byte[]) did not create expected EthernetAddress",
-            VALID_ETHERNET_ADDRESS_LONG,
-            ethernet_address.toLong());
+        assertEquals(VALID_ETHERNET_ADDRESS_LONG, ethernet_address.toLong(), "EthernetAddress(byte[]) did not create expected EthernetAddress");
     }
     
     /**
      * Test of EthernetAddress(long) constructor,
      * of class com.fasterxml.uuid.EthernetAddress.
      */
+    @Test
+
     public void testLongEthernetAddressConstructor()
     {
         // let's test that creating a EthernetAddress from an zero long
         // gives us a null EthernetAddress (definition of null EthernetAddress)
         EthernetAddress ethernet_address =
             new EthernetAddress(0x0000000000000000L);
-        assertEquals(
-            "EthernetAddress(long) did not create expected EthernetAddress",
-            NULL_ETHERNET_ADDRESS_LONG,
-            ethernet_address.toLong());
+        assertEquals(NULL_ETHERNET_ADDRESS_LONG, ethernet_address.toLong(), "EthernetAddress(long) did not create expected EthernetAddress");
         
         // let's test creating an array from a good long
         ethernet_address = new EthernetAddress(VALID_ETHERNET_ADDRESS_LONG);
-        assertEquals(
-            "EthernetAddress(long) did not create expected EthernetAddress",
-            VALID_ETHERNET_ADDRESS_LONG,
-            ethernet_address.toLong());
+        assertEquals(VALID_ETHERNET_ADDRESS_LONG, ethernet_address.toLong(), "EthernetAddress(long) did not create expected EthernetAddress");
     }
     
     /**
      * Test of EthernetAddress(String) constructor,
      * of class com.fasterxml.uuid.EthernetAddress.
      */
+    @Test
+
     public void testStringEthernetAddressConstructor()
     {
         // test a null string case
@@ -408,6 +385,8 @@ public class EthernetAddressTest extends TestCase
     /**
      * Test of asByteArray method, of class com.fasterxml.uuid.EthernetAddress.
      */
+    @Test
+
     public void testAsByteArray()
     {
         // we'll test making a couple EthernetAddresses and then check that
@@ -415,18 +394,14 @@ public class EthernetAddressTest extends TestCase
         
         // first we'll test the null EthernetAddress
         EthernetAddress ethernet_address = new EthernetAddress(0L);
-        assertEquals("Expected length of returned array wrong",
-            ETHERNET_ADDRESS_ARRAY_LENGTH,
-            ethernet_address.asByteArray().length);
+        assertEquals(ETHERNET_ADDRESS_ARRAY_LENGTH, ethernet_address.asByteArray().length, "Expected length of returned array wrong");
         assertEthernetAddressArraysAreEqual(
             NULL_ETHERNET_ADDRESS_BYTE_ARRAY, 0,
             ethernet_address.asByteArray(), 0);
         
         // now test a non-null EthernetAddress
         ethernet_address = new EthernetAddress(VALID_ETHERNET_ADDRESS_LONG);
-        assertEquals("Expected length of returned array wrong",
-            ETHERNET_ADDRESS_ARRAY_LENGTH,
-            ethernet_address.asByteArray().length);
+        assertEquals(ETHERNET_ADDRESS_ARRAY_LENGTH, ethernet_address.asByteArray().length, "Expected length of returned array wrong");
         assertEthernetAddressArraysAreEqual(
             VALID_ETHERNET_ADDRESS_BYTE_ARRAY, 0,
             ethernet_address.asByteArray(), 0);
@@ -452,6 +427,8 @@ public class EthernetAddressTest extends TestCase
     /**
      * Test of clone method, of class com.fasterxml.uuid.EthernetAddress.
      */
+    @Test
+
     public void testClone()
     {
         // as lifted from the JDK Object JavaDoc for clone:
@@ -470,17 +447,16 @@ public class EthernetAddressTest extends TestCase
         // ARE true in the case of EthernetAddress clone() because it is
         // the desired behavior.
         EthernetAddress x = new EthernetAddress(VALID_ETHERNET_ADDRESS_STRING);
-        assertTrue("x.clone() != x did not return true",
-                    x.clone() != x);
-        assertTrue("x.clone().getClass() == x.getClass() did not return true",
-                    x.clone().getClass() == x.getClass());
-        assertTrue("x.clone().equals(x) did not return true",
-                    x.clone().equals(x));
+        assertTrue(x.clone() != x, "x.clone() != x did not return true");
+        assertTrue(x.clone().getClass() == x.getClass(), "x.clone().getClass() == x.getClass() did not return true");
+        assertTrue(x.clone().equals(x), "x.clone().equals(x) did not return true");
     }
     
     /**
      * Test of compareTo method, of class com.fasterxml.uuid.EthernetAddress.
      */
+    @Test
+
     public void testCompareTo()
     {
         // first, let's make sure calling compareTo with null
@@ -594,71 +570,57 @@ public class EthernetAddressTest extends TestCase
     /**
      * Test of equals method, of class com.fasterxml.uuid.EthernetAddress.
      */
+    @Test
+
     public void testEquals()
     {
         // test passing null to equals returns false
         // (as specified in the JDK docs for Object)
         EthernetAddress x =
             new EthernetAddress(VALID_ETHERNET_ADDRESS_BYTE_ARRAY);
-        assertFalse("equals(null) didn't return false",
-                x.equals((Object)null));
+        assertFalse(x.equals((Object)null), "equals(null) didn't return false");
         
         // test passing an object which is not a EthernetAddress returns false
-        assertFalse("x.equals(non_EthernetAddress_object) didn't return false",
-                    x.equals(new Object()));
+        assertFalse(x.equals(new Object()), "x.equals(non_EthernetAddress_object) didn't return false");
         
         // test a case where two EthernetAddresss are definitly not equal
         EthernetAddress w =
             new EthernetAddress(ANOTHER_VALID_ETHERNET_ADDRESS_BYTE_ARRAY);
-        assertFalse("x == w didn't return false",
-                    x == w);
-        assertFalse("x.equals(w) didn't return false",
-                    x.equals(w));
+        assertFalse(x == w, "x == w didn't return false");
+        assertFalse(x.equals(w), "x.equals(w) didn't return false");
 
         // test refelexivity
-        assertTrue("x.equals(x) didn't return true",
-                    x.equals(x));
+        assertTrue(x.equals(x), "x.equals(x) didn't return true");
         
         // test symmetry
         EthernetAddress y =
             new EthernetAddress(VALID_ETHERNET_ADDRESS_BYTE_ARRAY);
-        assertFalse("x == y didn't return false",
-                    x == y);
-        assertTrue("y.equals(x) didn't return true",
-                    y.equals(x));
-        assertTrue("x.equals(y) didn't return true",
-                    x.equals(y));
+        assertFalse(x == y, "x == y didn't return false");
+        assertTrue(y.equals(x), "y.equals(x) didn't return true");
+        assertTrue(x.equals(y), "x.equals(y) didn't return true");
         
         // now we'll test transitivity
         EthernetAddress z =
             new EthernetAddress(VALID_ETHERNET_ADDRESS_BYTE_ARRAY);
-        assertFalse("x == y didn't return false",
-                    x == y);
-        assertFalse("x == y didn't return false",
-                    y == z);
-        assertFalse("x == y didn't return false",
-                    x == z);
-        assertTrue("x.equals(y) didn't return true",
-                    x.equals(y));
-        assertTrue("y.equals(z) didn't return true",
-                    y.equals(z));
-        assertTrue("x.equals(z) didn't return true",
-                    x.equals(z));
+        assertFalse(x == y, "x == y didn't return false");
+        assertFalse(y == z, "x == y didn't return false");
+        assertFalse(x == z, "x == y didn't return false");
+        assertTrue(x.equals(y), "x.equals(y) didn't return true");
+        assertTrue(y.equals(z), "y.equals(z) didn't return true");
+        assertTrue(x.equals(z), "x.equals(z) didn't return true");
         
         // test consistancy (this test is just calling equals multiple times)
-        assertFalse("x == y didn't return false",
-                    x == y);
-        assertTrue("x.equals(y) didn't return true",
-                    x.equals(y));
-        assertTrue("x.equals(y) didn't return true",
-                    x.equals(y));
-        assertTrue("x.equals(y) didn't return true",
-                    x.equals(y));
+        assertFalse(x == y, "x == y didn't return false");
+        assertTrue(x.equals(y), "x.equals(y) didn't return true");
+        assertTrue(x.equals(y), "x.equals(y) didn't return true");
+        assertTrue(x.equals(y), "x.equals(y) didn't return true");
     }
     
     /**
      * Test of toByteArray method, of class com.fasterxml.uuid.EthernetAddress.
      */
+    @Test
+
     public void testToByteArray()
     {
         // we'll test making a couple EthernetAddresses and then check that the
@@ -666,18 +628,14 @@ public class EthernetAddressTest extends TestCase
         
         // first we'll test the null EthernetAddress
         EthernetAddress ethernet_address = new EthernetAddress(0L);
-        assertEquals("Expected length of returned array wrong",
-            ETHERNET_ADDRESS_ARRAY_LENGTH,
-            ethernet_address.toByteArray().length);
+        assertEquals(ETHERNET_ADDRESS_ARRAY_LENGTH, ethernet_address.toByteArray().length, "Expected length of returned array wrong");
         assertEthernetAddressArraysAreEqual(
             NULL_ETHERNET_ADDRESS_BYTE_ARRAY, 0,
             ethernet_address.toByteArray(), 0);
         
         // now test a non-null EthernetAddress
         ethernet_address = new EthernetAddress(VALID_ETHERNET_ADDRESS_LONG);
-        assertEquals("Expected length of returned array wrong",
-            ETHERNET_ADDRESS_ARRAY_LENGTH,
-            ethernet_address.toByteArray().length);
+        assertEquals(ETHERNET_ADDRESS_ARRAY_LENGTH, ethernet_address.toByteArray().length, "Expected length of returned array wrong");
         assertEthernetAddressArraysAreEqual(
             VALID_ETHERNET_ADDRESS_BYTE_ARRAY, 0,
             ethernet_address.toByteArray(), 0);
@@ -704,6 +662,8 @@ public class EthernetAddressTest extends TestCase
      * Test of toByteArray(byte[]) method,
      * of class com.fasterxml.uuid.EthernetAddress.
      */
+    @Test
+
     public void testToByteArrayDest()
     {
         // constant for use in this test
@@ -767,9 +727,7 @@ public class EthernetAddressTest extends TestCase
         assertEthernetAddressArraysAreEqual(NULL_ETHERNET_ADDRESS_BYTE_ARRAY, 0, test_array, 0);
         for (int i = 0; i < EXTRA_DATA_LENGTH; i++)
         {
-            assertEquals("Expected array fill value changed",
-                        (byte)'x',
-                        test_array[i + ETHERNET_ADDRESS_ARRAY_LENGTH]);
+            assertEquals((byte)'x', test_array[i + ETHERNET_ADDRESS_ARRAY_LENGTH], "Expected array fill value changed");
         }
         
         // now test a good EthernetAddress case with extra data in the array
@@ -783,9 +741,7 @@ public class EthernetAddressTest extends TestCase
             VALID_ETHERNET_ADDRESS_BYTE_ARRAY, 0, test_array, 0);
         for (int i = 0; i < EXTRA_DATA_LENGTH; i++)
         {
-            assertEquals("Expected array fill value changed",
-                        (byte)'x',
-                        test_array[i + ETHERNET_ADDRESS_ARRAY_LENGTH]);
+            assertEquals((byte)'x', test_array[i + ETHERNET_ADDRESS_ARRAY_LENGTH], "Expected array fill value changed");
         }
     }
     
@@ -793,6 +749,8 @@ public class EthernetAddressTest extends TestCase
      * Test of toByteArray(byte[], int) method,
      * of class com.fasterxml.uuid.EthernetAddress.
      */
+    @Test
+
     public void testToByteArrayDestOffset()
     {
         // constant value for use in this test
@@ -905,9 +863,7 @@ public class EthernetAddressTest extends TestCase
         assertEthernetAddressArraysAreEqual(
             NULL_ETHERNET_ADDRESS_BYTE_ARRAY, 0, test_array, 0);
         for (int i = 0; i < EXTRA_DATA_LENGTH; i++) {
-            assertEquals("Expected array fill value changed",
-                        (byte)'x',
-                        test_array[i + ETHERNET_ADDRESS_ARRAY_LENGTH]);
+            assertEquals((byte)'x', test_array[i + ETHERNET_ADDRESS_ARRAY_LENGTH], "Expected array fill value changed");
         }
         
         // now test a null EthernetAddress case with extra data in the array
@@ -920,13 +876,9 @@ public class EthernetAddressTest extends TestCase
             test_array, EXTRA_DATA_LENGTH/2);
         for (int i = 0; i < EXTRA_DATA_LENGTH/2; i++)
         {
-            assertEquals("Expected array fill value changed",
-                (byte)'x',
-                test_array[i]);
-            assertEquals("Expected array fill value changed",
-                (byte)'x',
-                test_array[i + ETHERNET_ADDRESS_ARRAY_LENGTH +
-                    EXTRA_DATA_LENGTH/2]);
+            assertEquals((byte)'x', test_array[i], "Expected array fill value changed");
+            assertEquals((byte)'x', test_array[i + ETHERNET_ADDRESS_ARRAY_LENGTH +
+                    EXTRA_DATA_LENGTH/2], "Expected array fill value changed");
         }
         
         // now test a good EthernetAddress case with extra data in the array
@@ -940,9 +892,7 @@ public class EthernetAddressTest extends TestCase
             VALID_ETHERNET_ADDRESS_BYTE_ARRAY, 0, test_array, 0);
         for (int i = 0; i < EXTRA_DATA_LENGTH; i++)
         {
-            assertEquals("Expected array fill value changed",
-                        (byte)'x',
-                        test_array[i + ETHERNET_ADDRESS_ARRAY_LENGTH]);
+            assertEquals((byte)'x', test_array[i + ETHERNET_ADDRESS_ARRAY_LENGTH], "Expected array fill value changed");
         }
 
         // now test a good EthernetAddress case with extra data in the array
@@ -957,19 +907,17 @@ public class EthernetAddressTest extends TestCase
             test_array, EXTRA_DATA_LENGTH/2);
         for (int i = 0; i < EXTRA_DATA_LENGTH/2; i++)
         {
-            assertEquals("Expected array fill value changed",
-                (byte)'x',
-                test_array[i]);
-            assertEquals("Expected array fill value changed",
-                (byte)'x',
-                test_array[i + ETHERNET_ADDRESS_ARRAY_LENGTH +
-                    EXTRA_DATA_LENGTH/2]);
+            assertEquals((byte)'x', test_array[i], "Expected array fill value changed");
+            assertEquals((byte)'x', test_array[i + ETHERNET_ADDRESS_ARRAY_LENGTH +
+                    EXTRA_DATA_LENGTH/2], "Expected array fill value changed");
         }
     }
     
     /**
      * Test of toLong method, of class com.fasterxml.uuid.EthernetAddress.
      */
+    @Test
+
     public void testToLong()
     {
         // test making a couple EthernetAddresss and then check that the toLong
@@ -977,21 +925,19 @@ public class EthernetAddressTest extends TestCase
         
         // test the null EthernetAddress
         EthernetAddress ethernet_address = new EthernetAddress(0L);
-        assertEquals("null EthernetAddress long and toLong did not match",
-                    NULL_ETHERNET_ADDRESS_LONG,
-                    ethernet_address.toLong());
+        assertEquals(NULL_ETHERNET_ADDRESS_LONG, ethernet_address.toLong(), "null EthernetAddress long and toLong did not match");
         
         // test a non-null EthernetAddress
         ethernet_address =
             new EthernetAddress(VALID_ETHERNET_ADDRESS_BYTE_ARRAY);
-        assertEquals("EthernetAddress long and toLong results did not match",
-                    VALID_ETHERNET_ADDRESS_LONG,
-                    ethernet_address.toLong());
+        assertEquals(VALID_ETHERNET_ADDRESS_LONG, ethernet_address.toLong(), "EthernetAddress long and toLong results did not match");
     }
     
     /**
      * Test of toString method, of class com.fasterxml.uuid.EthernetAddress.
      */
+    @Test
+
     public void testToString()
     {
         // test making a few EthernetAddresss and check that the toString
@@ -999,17 +945,12 @@ public class EthernetAddressTest extends TestCase
         
         // test the null EthernetAddress
         EthernetAddress ethernet_address = new EthernetAddress(0L);
-        assertEquals("null EthernetAddress string and toString did not match",
-                    NULL_ETHERNET_ADDRESS_STRING.toLowerCase(),
-                    ethernet_address.toString().toLowerCase());
+        assertEquals(NULL_ETHERNET_ADDRESS_STRING.toLowerCase(), ethernet_address.toString().toLowerCase(), "null EthernetAddress string and toString did not match");
         
         // test a non-null EthernetAddress
         ethernet_address =
             new EthernetAddress(VALID_ETHERNET_ADDRESS_BYTE_ARRAY);
-        assertEquals(
-            "EthernetAddress string and toString results did not match",
-            MIXED_CASE_VALID_ETHERNET_ADDRESS_STRING.toLowerCase(),
-            ethernet_address.toString().toLowerCase());
+        assertEquals(MIXED_CASE_VALID_ETHERNET_ADDRESS_STRING.toLowerCase(), ethernet_address.toString().toLowerCase(), "EthernetAddress string and toString results did not match");
         
         // EthernetAddress implementation returns strings all lowercase.
         // Although relying on this behavior in code is not recommended,
@@ -1018,21 +959,20 @@ public class EthernetAddressTest extends TestCase
         // who relies on this particular behavior.
         ethernet_address =
             new EthernetAddress(VALID_ETHERNET_ADDRESS_BYTE_ARRAY);
-        assertFalse("mixed case EthernetAddress string and toString " +
-                "matched (expected toString to be all lower case)",
-            MIXED_CASE_VALID_ETHERNET_ADDRESS_STRING.equals(
-                ethernet_address.toString()));
-        assertEquals("mixed case string toLowerCase and " +
+        assertFalse(MIXED_CASE_VALID_ETHERNET_ADDRESS_STRING.equals(
+                ethernet_address.toString()), "mixed case EthernetAddress string and toString " +
+                "matched (expected toString to be all lower case)");
+        assertEquals(MIXED_CASE_VALID_ETHERNET_ADDRESS_STRING.toLowerCase(), ethernet_address.toString(), "mixed case string toLowerCase and " +
                 "toString results did not match (expected toString to " +
-                "be all lower case)",
-            MIXED_CASE_VALID_ETHERNET_ADDRESS_STRING.toLowerCase(),
-                ethernet_address.toString());
+                "be all lower case)");
     }
     
     /**
      * Test of valueOf(byte[]) method,
      * of class com.fasterxml.uuid.EthernetAddress.
      */
+    @Test
+
     public void testValueOfByteArray()
     {
         // lets test some error cases
@@ -1093,24 +1033,20 @@ public class EthernetAddressTest extends TestCase
         // gives us a null EthernetAddress (definition of null EthernetAddress)
         EthernetAddress ethernet_address =
             EthernetAddress.valueOf(new byte[ETHERNET_ADDRESS_ARRAY_LENGTH]);
-        assertEquals(
-            "EthernetAddress.valueOf did not create expected EthernetAddress",
-            NULL_ETHERNET_ADDRESS_LONG,
-            ethernet_address.toLong());
+        assertEquals(NULL_ETHERNET_ADDRESS_LONG, ethernet_address.toLong(), "EthernetAddress.valueOf did not create expected EthernetAddress");
         
         // let's test creating an array from a good byte array
         ethernet_address =
             EthernetAddress.valueOf(VALID_ETHERNET_ADDRESS_BYTE_ARRAY);
-        assertEquals(
-            "EthernetAddress.valueOf did not create expected EthernetAddress",
-            VALID_ETHERNET_ADDRESS_LONG,
-            ethernet_address.toLong());
+        assertEquals(VALID_ETHERNET_ADDRESS_LONG, ethernet_address.toLong(), "EthernetAddress.valueOf did not create expected EthernetAddress");
     }
     
     /**
      * Test of valueOf(int[]) method,
      * of class com.fasterxml.uuid.EthernetAddress.
      */
+    @Test
+
     public void testValueOfIntArray()
     {
         // lets test some error cases
@@ -1171,48 +1107,40 @@ public class EthernetAddressTest extends TestCase
         // gives a null EthernetAddress (definition of a null EthernetAddress)
         EthernetAddress ethernet_address =
             EthernetAddress.valueOf(new int[ETHERNET_ADDRESS_ARRAY_LENGTH]);
-        assertEquals(
-            "EthernetAddress.valueOf did not create expected EthernetAddress",
-            NULL_ETHERNET_ADDRESS_LONG,
-            ethernet_address.toLong());
+        assertEquals(NULL_ETHERNET_ADDRESS_LONG, ethernet_address.toLong(), "EthernetAddress.valueOf did not create expected EthernetAddress");
         
         // let's test creating an array from a good int array
         ethernet_address =
             EthernetAddress.valueOf(VALID_ETHERNET_ADDRESS_INT_ARRAY);
-        assertEquals(
-            "EthernetAddress.valueOf did not create expected EthernetAddress",
-            VALID_ETHERNET_ADDRESS_LONG,
-            ethernet_address.toLong());
+        assertEquals(VALID_ETHERNET_ADDRESS_LONG, ethernet_address.toLong(), "EthernetAddress.valueOf did not create expected EthernetAddress");
     }
     
     /**
      * Test of valueOf(long) method,
      * of class com.fasterxml.uuid.EthernetAddress.
      */
+    @Test
+
     public void testValueOfLong()
     {
         // let's test that creating a EthernetAddress from an zero long
         // gives a null EthernetAddress (definition of a null EthernetAddress)
         EthernetAddress ethernet_address =
             EthernetAddress.valueOf(0x0000000000000000L);
-        assertEquals(
-            "EthernetAddress.valueOf did not create expected EthernetAddress",
-            NULL_ETHERNET_ADDRESS_LONG,
-            ethernet_address.toLong());
+        assertEquals(NULL_ETHERNET_ADDRESS_LONG, ethernet_address.toLong(), "EthernetAddress.valueOf did not create expected EthernetAddress");
         
         // let's test creating an array from a good long
         ethernet_address =
             EthernetAddress.valueOf(VALID_ETHERNET_ADDRESS_LONG);
-        assertEquals(
-            "EthernetAddress.valueOf did not create expected EthernetAddress",
-            VALID_ETHERNET_ADDRESS_LONG,
-            ethernet_address.toLong());
+        assertEquals(VALID_ETHERNET_ADDRESS_LONG, ethernet_address.toLong(), "EthernetAddress.valueOf did not create expected EthernetAddress");
     }
     
     /**
      * Test of valueOf(String) method,
      * of class com.fasterxml.uuid.EthernetAddress.
      */
+    @Test
+
     public void testValueOfString()
     {
         // test a null string case
@@ -1302,6 +1230,8 @@ public class EthernetAddressTest extends TestCase
      * 
      * @since 3.0
      */
+    @Test
+
     public void testFromInterface() throws Exception
     {
         EthernetAddress addr = EthernetAddress.fromInterface();
@@ -1309,11 +1239,15 @@ public class EthernetAddressTest extends TestCase
         assertNotNull(addr.toString());
     }
 
+    @Test
+
     public void testFromEgressInterface() {
         EthernetAddress ifAddr = EthernetAddress.fromEgressInterface();
         assertNotNull(ifAddr);
         assertNotNull(ifAddr.toString());
     }
+
+    @Test
 
     public void testDefaultTimeBasedGenerator()
     {
@@ -1323,6 +1257,8 @@ public class EthernetAddressTest extends TestCase
         assertNotNull(ifAddr);
         assertNotNull(ifAddr.toString());
     }
+
+    @Test
 
     public void testBogus() throws Exception
     {
@@ -1381,9 +1317,7 @@ public class EthernetAddressTest extends TestCase
             fail("Caught unexpected exception: " + ex);
         }
         
-        assertEquals("EthernetAddresses were not equal",
-                    expectedEthernetAddressString.toLowerCase(),
-                    ethernet_address.toString().toLowerCase());
+        assertEquals(expectedEthernetAddressString.toLowerCase(), ethernet_address.toString().toLowerCase(), "EthernetAddresses were not equal");
     }
     
     private void badStringValueOfHelper(String ethernetAddressString)
@@ -1418,44 +1352,42 @@ public class EthernetAddressTest extends TestCase
             fail("Caught unexpected exception: " + ex);
         }
         
-        assertEquals("EthernetAddresses were not equal",
-                    expectedEthernetAddressString.toLowerCase(),
-                    ethernet_address.toString().toLowerCase());
+        assertEquals(expectedEthernetAddressString.toLowerCase(), ethernet_address.toString().toLowerCase(), "EthernetAddresses were not equal");
     }
     
     private void assertEthernetAddressesMatchHelper(EthernetAddress expected,
                                                     EthernetAddress actual)
     {
-        assertEquals("EthernetAddresses in long form did not match",
-                    expected.toLong(),
-                    actual.toLong());
-        assertEquals("EthernetAddress equals did not match",
-                    expected,
-                    actual);
+        assertEquals(expected.toLong(), actual.toLong(), "EthernetAddresses in long form did not match");
+        assertEquals(expected, actual, "EthernetAddress equals did not match");
     }
     
     private void assertEthernetAddressEqualOrderHelper(
         EthernetAddress ethernetAddress1,
         EthernetAddress ethernetAddress2)
     {
-        assertTrue(ethernetAddress1 + " did not test as equal to " +
-                ethernetAddress2,
-            0 == ethernetAddress1.compareTo(ethernetAddress2));
-        assertTrue(ethernetAddress2 + " did not test as equal to " +
-                ethernetAddress1,
-            0 == ethernetAddress2.compareTo(ethernetAddress1));
+        assertTrue(
+            0 == ethernetAddress1.compareTo(ethernetAddress2),
+                ethernetAddress1 + " did not test as equal to " +
+                ethernetAddress2);
+        assertTrue(
+            0 == ethernetAddress2.compareTo(ethernetAddress1),
+                ethernetAddress2 + " did not test as equal to " +
+                ethernetAddress1);
     }
     
     private void assertEthernetAddressGreaterOrderHelper(
         EthernetAddress ethernetAddress1,
         EthernetAddress ethernetAddress2)
     {
-        assertTrue(ethernetAddress1 + " did not test as larger then " +
-                ethernetAddress2,
-            0 < ethernetAddress1.compareTo(ethernetAddress2));
-        assertTrue(ethernetAddress2 + " did not test as smaller then " +
-                ethernetAddress1,
-            0 > ethernetAddress2.compareTo(ethernetAddress1));
+        assertTrue(
+            0 < ethernetAddress1.compareTo(ethernetAddress2),
+                ethernetAddress1 + " did not test as larger then " +
+                ethernetAddress2);
+        assertTrue(
+            0 > ethernetAddress2.compareTo(ethernetAddress1),
+                ethernetAddress2 + " did not test as smaller then " +
+                ethernetAddress1);
     }
     
     private void assertEthernetAddressArraysAreEqual(byte[] array1,
@@ -1463,19 +1395,13 @@ public class EthernetAddressTest extends TestCase
                                                     byte[] array2,
                                                     int array2_start)
     {
-        assertTrue("Array1 start offset is invalid",
-                   0 <= array1_start);
-        assertTrue("Array2 start offset is invalid",
-                   0 <= array2_start);
-        assertTrue("Array1 is not long enough for the given start offset",
-            array1.length >= ETHERNET_ADDRESS_ARRAY_LENGTH + array1_start);
-        assertTrue("Array2 is not long enough for the given start offset",
-            array2.length >= ETHERNET_ADDRESS_ARRAY_LENGTH + array2_start);
+        assertTrue(0 <= array1_start, "Array1 start offset is invalid");
+        assertTrue(0 <= array2_start, "Array2 start offset is invalid");
+        assertTrue(array1.length >= ETHERNET_ADDRESS_ARRAY_LENGTH + array1_start, "Array1 is not long enough for the given start offset");
+        assertTrue(array2.length >= ETHERNET_ADDRESS_ARRAY_LENGTH + array2_start, "Array2 is not long enough for the given start offset");
         for (int i = 0; i < ETHERNET_ADDRESS_ARRAY_LENGTH; i++)
         {
-            assertEquals("Array1 and Array2 did not match (index #"+i+")",
-                    array1[i + array1_start],
-                    array2[i + array2_start]);
+            assertEquals(array1[i + array1_start], array2[i + array2_start], "Array1 and Array2 did not match (index #"+i+")");
         }        
     }
     
@@ -1484,14 +1410,10 @@ public class EthernetAddressTest extends TestCase
                                                         byte[] array2,
                                                         int array2_start)
     {
-        assertTrue("Array1 start offset is invalid",
-                   0 <= array1_start);
-        assertTrue("Array2 start offset is invalid",
-                   0 <= array2_start);
-        assertTrue("Array1 is not long enough for the given start offset",
-            array1.length >= ETHERNET_ADDRESS_ARRAY_LENGTH + array1_start);
-        assertTrue("Array2 is not long enough for the given start offset",
-            array2.length >= ETHERNET_ADDRESS_ARRAY_LENGTH + array2_start);
+        assertTrue(0 <= array1_start, "Array1 start offset is invalid");
+        assertTrue(0 <= array2_start, "Array2 start offset is invalid");
+        assertTrue(array1.length >= ETHERNET_ADDRESS_ARRAY_LENGTH + array1_start, "Array1 is not long enough for the given start offset");
+        assertTrue(array2.length >= ETHERNET_ADDRESS_ARRAY_LENGTH + array2_start, "Array2 is not long enough for the given start offset");
         for (int i = 0; i < ETHERNET_ADDRESS_ARRAY_LENGTH; i++)
         {
             // as soon as we find a non-matching byte,

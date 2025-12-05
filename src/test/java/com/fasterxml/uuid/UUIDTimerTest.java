@@ -17,6 +17,9 @@
 
 package com.fasterxml.uuid;
 
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Arrays;
@@ -25,37 +28,16 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
 /**
  * JUnit Test class for the com.fasterxml.uuid.UUIDTimer class.
  *
  * @author Eric Bie
  */
-public class UUIDTimerTest extends TestCase
+public class UUIDTimerTest
 {
     // constants for use in the tests
     private static final int UUID_TIMER_ARRAY_LENGTH = 10;
     private static final int SIZE_OF_TEST_ARRAY = 10000;
-    
-    public UUIDTimerTest(java.lang.String testName)
-    {
-        super(testName);
-    }
-    
-    public static Test suite()
-    {
-        TestSuite suite = new TestSuite(UUIDTimerTest.class);
-        return suite;
-    }
-    
-    public static void main(String[] args)
-    {
-        TestRunner.run(suite());
-    }
     
     /**************************************************************************
      * Begin constructor tests
@@ -64,6 +46,8 @@ public class UUIDTimerTest extends TestCase
      * Test of UUIDTimer(SecureRandom) constructor,
      * of class com.fasterxml.uuid.UUIDTimer.
      */
+    @Test
+
     public void testSecureRandomUUIDTimerConstructor() throws IOException
     {
         // try passing a null SecureRandom argument
@@ -94,6 +78,8 @@ public class UUIDTimerTest extends TestCase
     /**
      * Test of getAndSetTimestamp method, of class com.fasterxml.uuid.UUIDTimer.
      */
+    @Test
+
     public void testGetTimestamp() throws IOException
     {
         // constant for use in this test
@@ -135,9 +121,7 @@ public class UUIDTimerTest extends TestCase
         uuid_timer.getAndSetTimestamp(test_array);
         for (int i = 0; i < EXTRA_DATA_LENGTH; ++i)
         {
-            assertEquals("test_array element was corrupted",
-                        (byte)'x',
-                        test_array[i + UUID_TIMER_ARRAY_LENGTH]);
+            assertEquals((byte)'x', test_array[i + UUID_TIMER_ARRAY_LENGTH], "test_array element was corrupted");
         }
         // check that the timer portion is not all null
         assertArrayNotEqual(test_array,
@@ -184,6 +168,8 @@ public class UUIDTimerTest extends TestCase
      * Test of reproducibility of getTimestamp method, of class
      * com.fasterxml.uuid.UUIDTimer.
      */
+    @Test
+
     public void testGetTimestampReproducible() throws IOException
     {
         final long seed = new Random().nextLong();
@@ -257,9 +243,7 @@ public class UUIDTimerTest extends TestCase
     {
         // now we'll clone the array and reverse it
         Long[] uuid_timer_sorted_arrays = (Long[])uuidTimerLongArray.clone();
-        assertEquals("Cloned array length did not match",
-                    uuidTimerLongArray.length,
-                    uuid_timer_sorted_arrays.length);
+        assertEquals(uuidTimerLongArray.length, uuid_timer_sorted_arrays.length, "Cloned array length did not match");
         
         ReverseOrderUUIDTimerLongComparator rev_order_uuid_timer_comp =
             new ReverseOrderUUIDTimerLongComparator();
@@ -269,14 +253,12 @@ public class UUIDTimerTest extends TestCase
         int sorted_arrays_length = uuid_timer_sorted_arrays.length;
         for (int i = 0; i < sorted_arrays_length; i++)
         {
-            assertTrue(
-                "Reverse order check on uuid timer arrays failed" +
+            assertTrue(uuidTimerLongArray[i].equals(
+                    uuid_timer_sorted_arrays[sorted_arrays_length - (1 + i)]), "Reverse order check on uuid timer arrays failed" +
                     " on element " + i + ": " +
                     uuidTimerLongArray[i].longValue() + " does not equal " +
                     uuid_timer_sorted_arrays[
-                        sorted_arrays_length - (1 + i)].longValue(),
-                uuidTimerLongArray[i].equals(
-                    uuid_timer_sorted_arrays[sorted_arrays_length - (1 + i)]));
+                        sorted_arrays_length - (1 + i)].longValue());
         }
         
         // now let's sort the reversed array and check that it sorted to
@@ -284,12 +266,10 @@ public class UUIDTimerTest extends TestCase
         Arrays.sort(uuid_timer_sorted_arrays);
         for (int i = 0; i < sorted_arrays_length; i++)
         {
-            assertTrue(
-                "Same order check on uuid timer arrays failed on element " +
+            assertTrue(uuidTimerLongArray[i].equals(uuid_timer_sorted_arrays[i]), "Same order check on uuid timer arrays failed on element " +
                     i + ": " + uuidTimerLongArray[i].longValue() +
                     " does not equal " +
-                    uuid_timer_sorted_arrays[i].longValue(),
-                uuidTimerLongArray[i].equals(uuid_timer_sorted_arrays[i]));
+                    uuid_timer_sorted_arrays[i].longValue());
         }
     }
 
@@ -302,11 +282,8 @@ public class UUIDTimerTest extends TestCase
         Set<Long> set = new HashSet<Long>();
         for (int i = 0; i < uuidTimerLongArray.length; i++)
         {
-            assertTrue("Uniqueness test failed on insert into HashSet",
-                set.add(uuidTimerLongArray[i]));
-            assertFalse(
-                "Paranoia Uniqueness test failed (second insert into HashSet)",
-                set.add(uuidTimerLongArray[i]));
+            assertTrue(set.add(uuidTimerLongArray[i]), "Uniqueness test failed on insert into HashSet");
+            assertFalse(set.add(uuidTimerLongArray[i]), "Paranoia Uniqueness test failed (second insert into HashSet)");
         }
     }
     
@@ -324,8 +301,7 @@ public class UUIDTimerTest extends TestCase
         final long GREGORIAN_CALENDAR_START_TO_UTC_START_OFFSET =
             122192928000000000L;
         
-        assertTrue("Start time was not before the end time",
-                startTime < endTime);
+        assertTrue(startTime < endTime, "Start time was not before the end time");
         
         // let's check that all the uuid timer longs in the array have a
         // timestamp which lands between the start and end time
@@ -340,14 +316,10 @@ public class UUIDTimerTest extends TestCase
             uuid_time /= MILLI_CONVERSION_FACTOR;
 
             // now check that the times are correct
-            assertTrue(
-                "Start time: " + startTime +
-                    " was not before UUID timestamp: " + uuid_time,
-                startTime  <= uuid_time);
-            assertTrue(
-                "UUID timestamp: " + uuid_time +
-                    " was not before the end time: " + endTime,
-                uuid_time <= endTime);
+            assertTrue(startTime  <= uuid_time, "Start time: " + startTime +
+                    " was not before UUID timestamp: " + uuid_time);
+            assertTrue(uuid_time <= endTime, "UUID timestamp: " + uuid_time +
+                    " was not before the end time: " + endTime);
         }
     }
 
@@ -356,17 +328,14 @@ public class UUIDTimerTest extends TestCase
     {
         for (int i = 0; i < uuidTimerLongArray.length; i++)
         {
-            assertFalse("Timer Long was null",
-                0 == uuidTimerLongArray[i].longValue());
+            assertFalse(0 == uuidTimerLongArray[i].longValue(), "Timer Long was null");
         }
     }
 
     private void assertArrayNotEqual(byte[] array1, byte[] array2, int length)
     {
-        assertTrue("array1 was not equal or longer then length",
-                    array1.length >= length);
-        assertTrue("array2 was not equal or longer then length",
-                    array2.length >= length);
+        assertTrue(array1.length >= length, "array1 was not equal or longer then length");
+        assertTrue(array2.length >= length, "array2 was not equal or longer then length");
         
         for (int i = 0; i < length; ++i)
         {

@@ -1,6 +1,6 @@
 package perf;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 // Things we do for Code Coverage... altough "perf/MeasurePerformance.java"
 // is only to be manually run, it is included in build, so

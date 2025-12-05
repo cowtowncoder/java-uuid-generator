@@ -1,24 +1,24 @@
 package com.fasterxml.uuid.ext;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static com.fasterxml.uuid.ext.LockedFile.READ_ERROR;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LockedFileTest
 {
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @TempDir
+    Path temporaryFolder;
 
     @Test
     public void constructor_givenNull_shouldThrowNullPointerException() throws IOException {
@@ -33,7 +33,7 @@ public class LockedFileTest
     @Test
     public void constructor_givenEmptyFile_shouldLeaveFileAsIs() throws IOException {
         // given
-        File emptyFile = temporaryFolder.newFile();
+        File emptyFile = Files.createTempFile(temporaryFolder, null, null).toFile();
 
         // when
         new LockedFile(emptyFile);
@@ -47,7 +47,7 @@ public class LockedFileTest
     @Test
     public void constructor_givenNonExistentFile_shouldCreateANewFile() throws IOException {
         // given
-        File blankFile = temporaryFolder.newFile();
+        File blankFile = Files.createTempFile(temporaryFolder, null, null).toFile();
         File nonExistentFile = new File(blankFile + ".nonexistent");
 
         if (Files.exists(nonExistentFile.toPath())) {
@@ -66,7 +66,7 @@ public class LockedFileTest
     @Test
     public void constructor_canOnlyTakeAFile_shouldThrowFileNotFoundException() throws IOException {
         // given
-        File blankFolder = temporaryFolder.newFolder();
+        File blankFolder = Files.createTempDirectory(temporaryFolder, null).toFile();
 
         // when
         try {
@@ -84,7 +84,7 @@ public class LockedFileTest
     @Test
     public void readStamp_givenEmptyFile_shouldReturnREADERROR() throws IOException {
         // given
-        File emptyFile = temporaryFolder.newFile();
+        File emptyFile = Files.createTempFile(temporaryFolder, null, null).toFile();
 
         // when
         LockedFile lockedFile = new LockedFile(emptyFile);
@@ -97,7 +97,7 @@ public class LockedFileTest
     @Test
     public void readStamp_givenGibberishFile_shouldReturnREADERROR() throws IOException {
         // given
-        File gibberishFile = temporaryFolder.newFile();
+        File gibberishFile = Files.createTempFile(temporaryFolder, null, null).toFile();
         try(FileWriter fileWriter = new FileWriter(gibberishFile)) {
             fileWriter.write(UUID.randomUUID().toString().substring(0, 22));
             fileWriter.flush();
@@ -116,7 +116,7 @@ public class LockedFileTest
     @Test
     public void readStamp_givenTimestampedFile_shouldReturnValueInside() throws IOException {
         // given
-        File timeStampedFile = temporaryFolder.newFile();
+        File timeStampedFile = Files.createTempFile(temporaryFolder, null, null).toFile();
         try(FileWriter fileWriter = new FileWriter(timeStampedFile)) {
             // we are faking the timestamp format
             fileWriter.write("[0x0000000000000001]");
@@ -136,7 +136,7 @@ public class LockedFileTest
     @Test
     public void readStamp_givenOverflowedDigitFile_shouldReturnREADERROR() throws IOException {
         // given
-        File timeStampedFile = temporaryFolder.newFile();
+        File timeStampedFile = Files.createTempFile(temporaryFolder, null, null).toFile();
         try(FileWriter fileWriter = new FileWriter(timeStampedFile)) {
             // we are faking an overflowed timestamp
             fileWriter.write("[0x10000000000000000]");
@@ -154,7 +154,7 @@ public class LockedFileTest
     @Test
     public void readStamp_givenMaxLongFile_shouldReturnLargeTimestamp() throws IOException {
         // given
-        File timeStampedFile = temporaryFolder.newFile();
+        File timeStampedFile = Files.createTempFile(temporaryFolder, null, null).toFile();
         try(FileWriter fileWriter = new FileWriter(timeStampedFile)) {
             // we are faking an overflowed timestamp
             fileWriter.write("[0x7fffffffffffffff]");
@@ -172,7 +172,7 @@ public class LockedFileTest
     @Test
     public void writeStamp_givenNegativeTimestamps_shouldThrowIOException() throws IOException {
         // given
-        File timeStampedFile = temporaryFolder.newFile();
+        File timeStampedFile = Files.createTempFile(temporaryFolder, null, null).toFile();
 
         // when
         LockedFile lockedFile = new LockedFile(timeStampedFile);
@@ -193,7 +193,7 @@ public class LockedFileTest
         long numericInputValue = 0L;
         long newTimestamp = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
 
-        File timeStampedFile = temporaryFolder.newFile();
+        File timeStampedFile = Files.createTempFile(temporaryFolder, null, null).toFile();
         try(FileWriter fileWriter = new FileWriter(timeStampedFile)) {
             fileWriter.write(inputValue);
             fileWriter.flush();
@@ -216,7 +216,7 @@ public class LockedFileTest
         String inputValue = "[0x7fffffffffffffff]";
         long newTimestamp = Long.MIN_VALUE;
 
-        File timeStampedFile = temporaryFolder.newFile();
+        File timeStampedFile = Files.createTempFile(temporaryFolder, null, null).toFile();
         try(FileWriter fileWriter = new FileWriter(timeStampedFile)) {
             fileWriter.write(inputValue);
             fileWriter.flush();
@@ -242,7 +242,7 @@ public class LockedFileTest
         long numericInputValue = Long.MAX_VALUE;
         long newTimestamp = Long.MAX_VALUE;
 
-        File timeStampedFile = temporaryFolder.newFile();
+        File timeStampedFile = Files.createTempFile(temporaryFolder, null, null).toFile();
         try(FileWriter fileWriter = new FileWriter(timeStampedFile)) {
             fileWriter.write(inputValue);
             fileWriter.flush();

@@ -7,13 +7,16 @@ import java.util.function.Consumer;
 
 import com.fasterxml.uuid.UUIDClock;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @since 5.2
  */
-public class TimeBasedEpochGeneratorTest extends TestCase
+public class TimeBasedEpochGeneratorTest
 {
+    @Test
     public void testFormat() {
         BigInteger minEntropy = BigInteger.ZERO;
         long minTimestamp = 0;
@@ -34,6 +37,7 @@ public class TimeBasedEpochGeneratorTest extends TestCase
         assertEquals(BigInteger.ONE.shiftLeft(73).subtract(BigInteger.ONE), getEntropy(uuidFull));
     }
 
+    @Test
     public void testIncrement() {
         TimeBasedEpochGenerator generator = new TimeBasedEpochGenerator(staticEntropy(BigInteger.ZERO), staticClock(0));
         assertEquals(BigInteger.valueOf(0), getEntropy(generator.generate()));
@@ -42,12 +46,14 @@ public class TimeBasedEpochGeneratorTest extends TestCase
         assertEquals(BigInteger.valueOf(3), getEntropy(generator.generate()));
     }
 
+    @Test
     public void testCarryOnce() {
         TimeBasedEpochGenerator generator = new TimeBasedEpochGenerator(staticEntropy(BigInteger.valueOf(0xFF)), staticClock(0));
         assertEquals(BigInteger.valueOf(0xFF), getEntropy(generator.generate()));
         assertEquals(BigInteger.valueOf(0x100), getEntropy(generator.generate()));
     }
 
+    @Test
     public void testCarryAll() {
         BigInteger largeEntropy = BigInteger.ONE.shiftLeft(73).subtract(BigInteger.ONE);
         TimeBasedEpochGenerator generator = new TimeBasedEpochGenerator(staticEntropy(largeEntropy), staticClock(0));

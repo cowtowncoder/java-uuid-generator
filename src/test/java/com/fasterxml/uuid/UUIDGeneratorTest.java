@@ -17,16 +17,13 @@
 
 package com.fasterxml.uuid;
 
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.util.*;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.uuid.impl.UUIDUtil;
 import com.fasterxml.uuid.impl.NameBasedGenerator;
@@ -42,7 +39,7 @@ import com.fasterxml.uuid.impl.TimeBasedGenerator;
  * @author Eric Bie
  * @author Tatu Saloranta
  */
-public class UUIDGeneratorTest extends TestCase
+public class UUIDGeneratorTest
 {
     // size of the arrays to create for tests using arrays of values
     // 19-Jun-2022, tatu: Reduce from 10000 since that seems to sometimes
@@ -50,26 +47,11 @@ public class UUIDGeneratorTest extends TestCase
     //    simplistic; not exposing an actual issue)
     private static final int SIZE_OF_TEST_ARRAY = 9000;
     
-    public UUIDGeneratorTest(java.lang.String testName)
-    {
-        super(testName);
-    }
-    
-    public static Test suite()
-    {
-        TestSuite suite = new TestSuite(UUIDGeneratorTest.class);
-        return suite;
-    }
-    
-    public static void main(String[] args)
-    {
-        TestRunner.run(suite());
-    }
-    
     /**
      * Test of getDummyAddress method,
      * of class com.fasterxml.uuid.UUIDGenerator.
      */
+    @Test
     public void testGetDummyAddress()
     {
         // this test will attempt to check for reasonable behavior of the
@@ -95,17 +77,17 @@ public class UUIDGeneratorTest extends TestCase
         {
             byte[] ethernet_address = ethernet_address_array[i].asByteArray();
             // check that none of the EthernetAddresses are null
-            assertFalse("dummy EthernetAddress was null",
-                    Arrays.equals(null_ethernet_address.asByteArray(),
-                                ethernet_address));
+            assertFalse(Arrays.equals(null_ethernet_address.asByteArray(),
+                                ethernet_address),
+                    "dummy EthernetAddress was null");
             
             // check that the "broadcast" bit is set in the created address
             /* 08-Feb-2004, TSa: Fixed as per fix to actual code; apparently
              *   broadcast bit is LSB, not MSB.
              */
-            assertEquals("dummy EthernetAddress was not broadcast",
-                    0x01,
-                    (ethernet_address[0] & 0x01));
+            assertEquals(0x01,
+                    (ethernet_address[0] & 0x01),
+                    "dummy EthernetAddress was not broadcast");
         }
     }
     
@@ -113,6 +95,7 @@ public class UUIDGeneratorTest extends TestCase
      * Test of generateRandomBasedUUID method,
      * of class com.fasterxml.uuid.UUIDGenerator.
      */
+    @Test
     public void testGenerateRandomBasedUUID()
     {
         // this test will attempt to check for reasonable behavior of the
@@ -148,6 +131,7 @@ public class UUIDGeneratorTest extends TestCase
      * Test of generateTimeBasedUUID() method,
      * of class com.fasterxml.uuid.UUIDGenerator.
      */
+    @Test
     public void testGenerateTimeBasedUUID()
     {
         // this test will attempt to check for reasonable behavior of the
@@ -196,6 +180,7 @@ public class UUIDGeneratorTest extends TestCase
      * Test of generateTimeBasedUUID(EthernetAddress) method,
      * of class com.fasterxml.uuid.UUIDGenerator.
      */
+    @Test
     public void testGenerateTimeBasedUUIDWithEthernetAddress()
     {
         // this test will attempt to check for reasonable behavior of the
@@ -245,6 +230,7 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForCorrectEthernetAddress(uuid_array, ethernet_address);
     }
 
+    @Test
     public void testV7value() 
     {
         // Test vector from spec
@@ -256,6 +242,7 @@ public class UUIDGeneratorTest extends TestCase
      * Test of generateTimeBasedEpochUUID() method,
      * of class com.fasterxml.uuid.UUIDGenerator.
      */
+    @Test
     public void testGenerateTimeBasedEpochUUID() throws Exception
     {
         // this test will attempt to check for reasonable behavior of the
@@ -308,6 +295,7 @@ public class UUIDGeneratorTest extends TestCase
      * Test of generateTimeBasedEpochUUID() method with UUIDClock instance,
      * of class com.fasterxml.uuid.UUIDGenerator.
      */
+    @Test
     public void testGenerateTimeBasedEpochUUIDWithUUIDClock() throws Exception
     {
         // this test will attempt to check for reasonable behavior of the
@@ -360,6 +348,7 @@ public class UUIDGeneratorTest extends TestCase
      * Test of generateTimeBasedEpochRandomUUID() method,
      * of class com.fasterxml.uuid.UUIDGenerator.
      */
+    @Test
     public void testGenerateTimeBasedEpochRandomUUID() throws Exception
     {
         // this test will attempt to check for reasonable behavior of the
@@ -412,6 +401,7 @@ public class UUIDGeneratorTest extends TestCase
      * Test of generateTimeBasedEpochRandomUUID() method with UUIDClock instance,
      * of class com.fasterxml.uuid.UUIDGenerator.
      */
+    @Test
     public void testGenerateTimeBasedEpochRandomUUIDWithUUIDClock() throws Exception
     {
         // this test will attempt to check for reasonable behavior of the
@@ -461,6 +451,7 @@ public class UUIDGeneratorTest extends TestCase
     }
 
     // [#70]: allow use of custom UUIDClock
+    @Test
     public void testGenerateTimeBasedEpochUUIDWithFixedClock() throws Exception
     {
         final UUIDClock fixedClock = new UUIDClock() {
@@ -496,6 +487,7 @@ public class UUIDGeneratorTest extends TestCase
      * Test of generateNameBasedUUID(UUID, String)
      * method, of class com.fasterxml.uuid.UUIDGenerator.
      */
+    @Test
     public void testGenerateNameBasedUUIDNameSpaceAndName()
     {
         // this test will attempt to check for reasonable behavior of the
@@ -564,16 +556,17 @@ public class UUIDGeneratorTest extends TestCase
         // check that all uuids were unique
         checkUUIDArrayForUniqueness(uuid_array);
         checkUUIDArrayForUniqueness(uuid_array2);
-        
+
         // check that both arrays are equal to one another
-        assertTrue("expected both arrays to be equal, they were not!",
-            Arrays.equals(uuid_array, uuid_array2));
+        assertTrue(Arrays.equals(uuid_array, uuid_array2),
+            "expected both arrays to be equal, they were not!");
     }
-    
+
     /**
      * Test of generateNameBasedUUID(UUID, String, MessageDigest)
      * method, of class com.fasterxml.uuid.UUIDGenerator.
      */
+    @Test
     public void testGenerateNameBasedUUIDNameSpaceNameAndMessageDigest()
     {
         MessageDigest MESSAGE_DIGEST = null;
@@ -648,16 +641,17 @@ public class UUIDGeneratorTest extends TestCase
         // check that all uuids were unique
         checkUUIDArrayForUniqueness(uuid_array);
         checkUUIDArrayForUniqueness(uuid_array2);
-        
+
         // check that both arrays are equal to one another
-        assertTrue("expected both arrays to be equal, they were not!",
-            Arrays.equals(uuid_array, uuid_array2));
+        assertTrue(Arrays.equals(uuid_array, uuid_array2),
+            "expected both arrays to be equal, they were not!");
     }
-    
+
     /**
      * Test of generateNameBasedUUID()
      * method, of class com.fasterxml.uuid.UUIDGenerator.
      */
+    @Test
     public void testGenerateNameBasedUUIDWithDefaults()
     {
         // this test will attempt to check for reasonable behavior of the
@@ -726,14 +720,15 @@ public class UUIDGeneratorTest extends TestCase
         checkUUIDArrayForUniqueness(uuid_array2);
 
         // check that both arrays are equal to one another
-        assertTrue("expected both arrays to be equal, they were not!",
-            Arrays.equals(uuid_array, uuid_array2));
+        assertTrue(Arrays.equals(uuid_array, uuid_array2),
+            "expected both arrays to be equal, they were not!");
     }
 
     /**
      * Test of generateTimeBasedReorderedUUID() method,
      * of class com.fasterxml.uuid.UUIDGenerator.
      */
+    @Test
     public void testGenerateTimeBasedReorderedUUID()
     {
         // this test will attempt to check for reasonable behavior of the
@@ -782,6 +777,7 @@ public class UUIDGeneratorTest extends TestCase
      * Test of generateTimeBasedReorderedUUID(EthernetAddress) method,
      * of class com.fasterxml.uuid.UUIDGenerator.
      */
+    @Test
     public void testGenerateTimeBasedReorderedUUIDWithEthernetAddress()
     {
         // this test will attempt to check for reasonable behavior of the
@@ -858,9 +854,9 @@ public class UUIDGeneratorTest extends TestCase
     {
         // now we'll clone the array and reverse it
         UUID uuid_sorted_array[] = (UUID[])uuidArray.clone();
-        assertEquals("Cloned array length did not match",
-                    uuidArray.length,
-                    uuid_sorted_array.length);
+        assertEquals(uuidArray.length,
+                    uuid_sorted_array.length,
+                    "Cloned array length did not match");
         
         ReverseOrderUUIDComparator rev_order_uuid_comp =
             new ReverseOrderUUIDComparator();
@@ -869,10 +865,9 @@ public class UUIDGeneratorTest extends TestCase
         // let's check that the array is actually reversed
         for (int i = 0; i < uuid_sorted_array.length; i++)
         {
-            assertTrue(
-                "Reverse order check on uuid arrays failed on element " + i,
-                uuidArray[i].equals(
-                    uuid_sorted_array[uuid_sorted_array.length - (1 + i)]));
+            assertTrue(uuidArray[i].equals(
+                    uuid_sorted_array[uuid_sorted_array.length - (1 + i)]),
+                "Reverse order check on uuid arrays failed on element " + i);
         }
         
         // now let's sort the reversed array and check that it
@@ -880,9 +875,8 @@ public class UUIDGeneratorTest extends TestCase
         Arrays.sort(uuid_sorted_array);
         for (int i = 0; i < uuid_sorted_array.length; i++)
         {
-            assertTrue(
-                "Same order check on uuid arrays failed on element " + i,
-                uuidArray[i].equals(uuid_sorted_array[i]));
+            assertTrue(uuidArray[i].equals(uuid_sorted_array[i]),
+                "Same order check on uuid arrays failed on element " + i);
         }        
     }
     
@@ -895,10 +889,10 @@ public class UUIDGeneratorTest extends TestCase
         HashSet<UUID> hash_set = new HashSet<UUID>();
         for (int i = 0; i < uuidArray.length; i++)
         {
-            assertTrue("Uniqueness test failed on insert into HashSet: index "+i+", value "+uuidArray[i],
-                    hash_set.add(uuidArray[i]));
-            assertFalse("Paranoia Uniqueness test failed (second insert)",
-                    hash_set.add(uuidArray[i]));
+            assertTrue(hash_set.add(uuidArray[i]),
+                    "Uniqueness test failed on insert into HashSet: index "+i+", value "+uuidArray[i]);
+            assertFalse(hash_set.add(uuidArray[i]),
+                    "Paranoia Uniqueness test failed (second insert)");
         }
     }
     
@@ -918,14 +912,14 @@ public class UUIDGeneratorTest extends TestCase
             
             // extract type from the UUID and check for correct type
             int type = (temp_uuid[UUIDUtil.BYTE_OFFSET_TYPE] & 0xFF) >> 4;
-            assertEquals("Expected type did not match",
-                        expectedType.raw(),
-                        type);            
+            assertEquals(expectedType.raw(),
+                        type,
+                        "Expected type did not match");
             // extract variant from the UUID and check for correct variant
             int variant = (temp_uuid[UUIDUtil.BYTE_OFFSET_VARIATION] & 0xFF) >> 6;
-            assertEquals("Expected variant did not match",
-                        2,
-                        variant);            
+            assertEquals(2,
+                        variant,
+                        "Expected variant did not match");            
         }
     }
 
@@ -942,8 +936,8 @@ public class UUIDGeneratorTest extends TestCase
 
         // 21-Feb-2020, tatu: Not sure why this would be checked, as timestamps come from
         //     System.currenTimeMillis()...
-        assertTrue("Start time: " + startTime +" was after the end time: " + endTime,
-            startTime <= endTime);
+        assertTrue(startTime <= endTime,
+            "Start time: " + startTime +" was after the end time: " + endTime);
 
         // let's check that all uuids in the array have a timestamp which lands
         // between the start and end time
@@ -971,14 +965,12 @@ public class UUIDGeneratorTest extends TestCase
             uuid_time /= MILLI_CONVERSION_FACTOR;
 
             // now check that the times are correct
-            assertTrue(
+            assertTrue(startTime  <= uuid_time,
                 "Start time: " + startTime +
-                    " was not before UUID timestamp: " + uuid_time,
-                startTime  <= uuid_time);
-            assertTrue(
+                    " was not before UUID timestamp: " + uuid_time);
+            assertTrue(uuid_time <= endTime,
                 "UUID timestamp: " + uuid_time +
-                    " was not before the end time: " + endTime,
-                uuid_time <= endTime);            
+                    " was not before the end time: " + endTime);
         }
     }
 
@@ -997,8 +989,8 @@ public class UUIDGeneratorTest extends TestCase
 
         // 21-Feb-2020, tatu: Not sure why this would be checked, as timestamps come from
         //     System.currenTimeMillis()...
-        assertTrue("Start time: " + startTime +" was after the end time: " + endTime,
-            startTime <= endTime);
+        assertTrue(startTime <= endTime,
+            "Start time: " + startTime +" was after the end time: " + endTime);
 
         // let's check that all uuids in the array have a timestamp which lands
         // between the start and end time
@@ -1025,14 +1017,12 @@ public class UUIDGeneratorTest extends TestCase
             uuid_time /= MILLI_CONVERSION_FACTOR;
 
             // now check that the times are correct
-            assertTrue(
+            assertTrue(startTime  <= uuid_time,
                 "Start time: " + startTime +
-                    " was not before UUID timestamp: " + uuid_time,
-                startTime  <= uuid_time);
-            assertTrue(
+                    " was not before UUID timestamp: " + uuid_time);
+            assertTrue(uuid_time <= endTime,
                 "UUID timestamp: " + uuid_time +
-                    " was not before the end time: " + endTime,
-                uuid_time <= endTime);
+                    " was not before the end time: " + endTime);
         }
     }
 
@@ -1040,19 +1030,20 @@ public class UUIDGeneratorTest extends TestCase
     private void checkUUIDArrayForCorrectCreationTimeEpoch(UUID[] uuidArray,
             long startTime, long endTime)
     {
-        assertTrue("Start time: " + startTime + " was after the end time: " + endTime, startTime <= endTime);
+        assertTrue(startTime <= endTime,
+            "Start time: " + startTime + " was after the end time: " + endTime);
 
         // let's check that all uuids in the array have a timestamp which lands
         // between the start and end time
         for (int i = 0; i < uuidArray.length; i++) {
             byte[] temp_uuid = UUIDUtil.asByteArray(uuidArray[i]);
             ByteBuffer buff = ByteBuffer.wrap(temp_uuid);
-            final long uuid_time = buff.getLong() >>> 16; 
+            final long uuid_time = buff.getLong() >>> 16;
             // now check that the times are correct
-            assertTrue("Start time: " + startTime + " was not before UUID timestamp: " + uuid_time,
-                       startTime <= uuid_time);
-            assertTrue("UUID: " + i + " timestamp: " + uuid_time + " was not before the end time: " + endTime,
-                       uuid_time <= endTime);
+            assertTrue(startTime <= uuid_time,
+                       "Start time: " + startTime + " was not before UUID timestamp: " + uuid_time);
+            assertTrue(uuid_time <= endTime,
+                       "UUID: " + i + " timestamp: " + uuid_time + " was not before the end time: " + endTime);
         }
     }
 
@@ -1064,10 +1055,9 @@ public class UUIDGeneratorTest extends TestCase
             byte[] uuid_ethernet_address = new byte[6];
             System.arraycopy(UUIDUtil.asByteArray(uuidArray[i]), 10, uuid_ethernet_address, 0, 6);
             byte[] ethernet_address = ethernetAddress.asByteArray();
-            
-            assertTrue(
-                "UUID ethernet address did not equal passed ethernetAddress",
-                Arrays.equals(ethernet_address, uuid_ethernet_address));
+
+            assertTrue(Arrays.equals(ethernet_address, uuid_ethernet_address),
+                "UUID ethernet address did not equal passed ethernetAddress");
         }
     }
     

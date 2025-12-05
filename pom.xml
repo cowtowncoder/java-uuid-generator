@@ -74,11 +74,25 @@ JUG supports 3 original official UUID generation methods as well as later additi
         <scope>runtime</scope>
         <optional>true</optional>
     </dependency>
-    <!-- For testing, JUnit is needed -->
+    <!-- For testing, JUnit 5 is needed -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${version.junit}</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${version.junit5}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- For JUnit 4 parameterized tests migration -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <version>${version.junit5}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- For Hamcrest matchers used in tests -->
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest</artifactId>
+      <version>2.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
