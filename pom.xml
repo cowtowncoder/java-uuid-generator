@@ -198,6 +198,12 @@ https://stackoverflow.com/questions/37958104/maven-javadoc-no-source-files-for-p
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>perf/**</exclude>
+            <exclude>test/**</exclude>
+          </excludes>
+        </configuration>
         <executions>
           <execution>
             <goals>
