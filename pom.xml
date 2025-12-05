@@ -6,7 +6,7 @@
   <parent>
       <groupId>com.fasterxml</groupId>
       <artifactId>oss-parent</artifactId>
-      <version>58</version>
+      <version>69</version>
   </parent>
   <groupId>com.fasterxml.uuid</groupId>
   <artifactId>java-uuid-generator</artifactId>
@@ -15,7 +15,7 @@
     -->
   <packaging>bundle</packaging>
   <name>Java UUID Generator</name>
-  <version>5.1.1-SNAPSHOT</version>
+  <version>5.2.0-SNAPSHOT</version>
   <description>
 Java UUID Generator (JUG) is a Java library for generating
 Universally Unique IDentifiers, UUIDs (see http://en.wikipedia.org/wiki/UUID).
@@ -45,7 +45,7 @@ JUG supports 3 original official UUID generation methods as well as later additi
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j.version>1.7.36</slf4j.version>
 
-    <project.build.outputTimestamp>2024-06-02T23:59:30Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2025-09-26T22:42:25Z</project.build.outputTimestamp>
   </properties>
   <licenses>
     <license>
@@ -198,6 +198,11 @@ https://stackoverflow.com/questions/37958104/maven-javadoc-no-source-files-for-p
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <!-- 28-May-2025, tatu: Ensure we use new Sonatype Central Portal: -->
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </build>

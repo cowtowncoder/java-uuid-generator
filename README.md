@@ -28,7 +28,7 @@ and newly (in 2022-) proposed (see [uuid6](https://uuid6.github.io/uuid6-ietf-dr
 | Type | Status |
 | ---- | ------ |
 | Build (CI) | [![Build (github)](https://github.com/cowtowncoder/java-uuid-generator/actions/workflows/main.yml/badge.svg)](https://github.com/cowtowncoder/java-uuid-generator/actions/workflows/main.yml) |
-| Artifact |  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.fasterxml.uuid/java-uuid-generator/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.fasterxml.uuid/java-uuid-generator/) |
+| Artifact |  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.fasterxml.uuid/java-uuid-generator/badge.svg)](https://search.maven.org/artifact/com.fasterxml.uuid/java-uuid-generator) |
 | OSS Sponsorship | [![Tidelift](https://tidelift.com/badges/package/maven/com.fasterxml.uuid:java-uuid-generator)](https://tidelift.com/subscription/pkg/maven-com-fasterxml-uuid-java-uuid-generator?utm_source=maven-com-fasterxml-uuid-java-uuid-generator&utm_medium=referral&utm_campaign=readme) |
 | Javadocs | [![Javadoc](https://javadoc.io/badge/com.fasterxml.uuid/java-uuid-generator.svg)](http://www.javadoc.io/doc/com.fasterxml.uuid/java-uuid-generator)
 | Code coverage (5.x) | [![codecov.io](https://codecov.io/github/cowtowncoder/java-uuid-generator/coverage.svg?branch=master)](https://codecov.io/github/cowtowncoder/java-uuid-generator?branch=master) |
@@ -83,7 +83,7 @@ For example:
 ```java
 UUID uuid = Generators.timeBasedGenerator().generate(); // Version 1
 UUID uuid = Generators.randomBasedGenerator().generate(); // Version 4
-UUID uuid = Generators.nameBasedgenerator().generate("string to hash"); // Version 5
+UUID uuid = Generators.nameBasedGenerator().generate("string to hash"); // Version 5
 // With JUG 4.1+: support for https://github.com/uuid6/uuid6-ietf-draft versions 6 and 7:
 UUID uuid = Generators.timeBasedReorderedGenerator().generate(); // Version 6
 UUID uuid = Generators.timeBasedEpochGenerator().generate(); // Version 7

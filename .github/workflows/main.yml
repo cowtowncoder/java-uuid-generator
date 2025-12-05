@@ -2,7 +2,7 @@ name: Build
 on:
   push:
     branches:
-    - master
+    - main
     - "4.3"
     - "3.0"
     paths-ignore:
@@ -10,36 +10,38 @@ on:
     - "release-notes/*"
   pull_request:
     branches:
-    - master
+    - main
 permissions:
   contents: read
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: 'ubuntu-latest'
     strategy:
       fail-fast: false
       matrix:
-        java_version: ['8', '11', '17', '21']
-        os: ['ubuntu-20.04']
+        java_version: ['8', '11', '17', '21', '25']
     env:
       JAVA_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
     steps:
-    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+    - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
     - name: Set up JDK
-      uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4.5.0
+      uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
       with:
         distribution: "temurin"
         java-version: ${{ matrix.java_version }}
         cache: 'maven'
+        server-id: central-snapshots
+        server-username: CI_DEPLOY_USERNAME
+        server-password: CI_DEPLOY_PASSWORD
     - name: Build
       run: ./mvnw -B -q -ff -ntp verify
     - name: Generate code coverage
-      if: github.event_name != 'pull_request' && matrix.java_version == '8'
+      if: ${{ github.event_name != 'pull_request' && matrix.java_version == '8' }}
       run: ./mvnw -B -q -ff -ntp test
     - name: Publish code coverage
-      if: github.event_name != 'pull_request' && matrix.java_version == '8'
-      uses: codecov/codecov-action@015f24e6818733317a2da2edd6290ab26238649a # v5.0.7
+      if: ${{ github.event_name != 'pull_request' && matrix.java_version == '8' }}
+      uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./target/site/jacoco/jacoco.xml
+        files: ./target/site/jacoco/jacoco.xml
         flags: unittests
