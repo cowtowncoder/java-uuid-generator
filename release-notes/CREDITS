@@ -151,3 +151,7 @@ Daniel Albuquerque (worldtiki@github)
 Alexander Ilinykh (divinenickname@github)
   * Contributed improvements to README.md, pom.xml (OSGi inclusion)
    [5.1.1]
+
+Chad Parry (chadparry@github)
+  * Contributed #124: TimeBasedEpochGenerator should prevent overflow
+   [5.3.0]

@@ -6,6 +6,8 @@ Releases
 
 5.2.0 (not yet released)
 
+#124: TimeBasedEpochGenerator should prevent overflow
+ (Chad P)
 - Update to `oss-parent` v69
 
 5.1.1 (26-Sep-2025)
