@@ -21,4 +21,7 @@ syntax: glob
 *.ipr
 .idea
 
+# and projects own things
+*.lck
+
 *~
