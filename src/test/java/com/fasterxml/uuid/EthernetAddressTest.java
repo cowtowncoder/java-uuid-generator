@@ -1425,4 +1425,28 @@ public class EthernetAddressTest
         }
         fail("Array1 and Array2 matched");
     }
+
+    @Test
+    public void longConstructorUsesOnlyLowestSixBytes() {
+        long expected = 0x0123456789abL;
+        EthernetAddress canonical = new EthernetAddress(expected);
+        for (long highBits : new long[] { 0x0001000000000000L, Long.MIN_VALUE, 0xffff000000000000L }) {
+            EthernetAddress address = new EthernetAddress(highBits | expected);
+            assertEquals(expected, address.toLong());
+            assertEquals(canonical, address);
+            assertEquals(canonical.hashCode(), address.hashCode());
+            assertEquals(0, canonical.compareTo(address));
+            assertEquals(canonical.toString(), address.toString());
+            assertArrayEquals(canonical.toByteArray(), address.toByteArray());
+        }
+    }
+
+    @Test
+    public void longFactoryRoundTripsNegativeInput() {
+        EthernetAddress address = EthernetAddress.valueOf(-1L);
+        assertEquals(0xffffffffffffL, address.toLong());
+        assertEquals(address, new EthernetAddress(address.toString()));
+        assertEquals(address, new EthernetAddress(address.toByteArray()));
+    }
+
 }

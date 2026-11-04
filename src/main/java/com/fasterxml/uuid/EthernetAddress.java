@@ -169,7 +169,7 @@ public class EthernetAddress
      *    bytes.
      */
     public EthernetAddress(long addr) {
-        _address = addr;
+        _address = addr & 0x0000ffffffffffffL;
     }
     
     /**
